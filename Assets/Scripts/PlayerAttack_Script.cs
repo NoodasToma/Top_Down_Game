@@ -30,7 +30,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
     }
 
-    IEnumerator swing()
+    IEnumerator swing()  // coroutine that manages attack cooldowns
     {
         playerAnimator.SetTrigger("Attack");
         
@@ -41,6 +41,7 @@ public class PlayerAttack_Script : MonoBehaviour
         attackRoutine = null;
     }
 
+    // draws a sphere around the player and checks if an enemy inside is within angle to get hit if it is it takes damage
     void attack()
     {
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, range,layer);
@@ -60,7 +61,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
     }
 
-
+    //returns the direction player is lookin
     public Vector3 getAim()
     {
         Vector3 v = this.gameObject.GetComponent<Player_Movement>().getDirection();
@@ -70,7 +71,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
 
   
-
+    //gizmos for debuggin
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

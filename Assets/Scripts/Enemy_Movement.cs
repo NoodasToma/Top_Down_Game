@@ -16,7 +16,7 @@ public class Enemy_Movement : MonoBehaviour
 
     public float rotSpeed;
 
-    public float weight;
+    public float pushability;
 
     public bool isKnockable;
 
@@ -39,7 +39,7 @@ public class Enemy_Movement : MonoBehaviour
         originalColor = GetComponent<Renderer>().material.color;
     }
 
-    IEnumerator calcDistance()
+    IEnumerator calcDistance() // coroutine calculates distance to a player every 0.25 seconds
     {
 
         while (true)
@@ -65,7 +65,7 @@ public class Enemy_Movement : MonoBehaviour
 
 
 
-    void moveTowardsPlayer()
+    void moveTowardsPlayer() // Moves enemy towards player changing rotation and avoiding other enemies
     {
         Vector3 targetLoc = target.transform.position - transform.position;
 
@@ -80,13 +80,15 @@ public class Enemy_Movement : MonoBehaviour
         targetLoc = targetLoc.normalized;
 
 
-        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies,layer); // check if enemies are colliding with each other and change direction accordingly
+        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies,layer); //detect enemy colliders within distance
 
-      
+
+        // check if enemies are colliding with each other and change direction accordingly
+
         if (enemiesNear.Length > 0)
         {
             foreach (Collider c in enemiesNear)
-            {   
+            {
                 if (c.gameObject == gameObject) continue;
                 GameObject enemyCollided = c.gameObject;
 
@@ -94,8 +96,8 @@ public class Enemy_Movement : MonoBehaviour
 
                 float distanc = awayDir.magnitude;
                 if (distanc > 0.1f) targetLoc += awayDir.normalized / distanc;
-                
-                
+
+
             }
         }
 
@@ -114,30 +116,35 @@ public class Enemy_Movement : MonoBehaviour
 
     void attack()
     {
-       
+        // rotating the target while its in range to attack the player
         Vector3 targetLoc = target.transform.position - transform.position;
         targetLoc.y = 0;
         Quaternion rotDir = Quaternion.LookRotation(targetLoc);
         if (targetLoc != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed);
+
+        //TODO()
     }
 
+    // everything that needs to happen when enemy gets hit
     public void takeDamage(float damage)
     {
+        // take damage
         float highlightTime = 0.25f;
         hp -= damage;
         if (hp <= 0) GameObject.Destroy(this.gameObject);
 
-        
 
 
+        //get knocked back
         if (isKnockable) knockBack();
 
-        if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+        //highlight
+        if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
         flashCoroutine = StartCoroutine(highglightAttack(highlightTime));
 
     }
 
-    IEnumerator highglightAttack(float duration)
+    IEnumerator highglightAttack(float duration) //coroutine that highlights the enemy hit for the duration and changes it back
     {
         Renderer ren = GetComponent<Renderer>();
         ren.material.color = Color.white;
@@ -152,10 +159,12 @@ public class Enemy_Movement : MonoBehaviour
         Vector3 direction = transform.position - target.transform.position;
         direction.y = 0;
 
-        transform.Translate(direction * weight * Time.deltaTime, Space.World);
+        transform.Translate(direction * pushability * Time.deltaTime, Space.World);
     }
 
 
+
+    // gizmos for debugging
     void OnDrawGizmosSelected()
     {
          Gizmos.color = Color.red;

@@ -43,18 +43,21 @@ public class Player_Movement : MonoBehaviour
         movePlayerWithAim();
     }
 
+    //get wasd input
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
 
     }
-
+    // get mouse location
     public void OnMouseLook(InputAction.CallbackContext context)
     {
         mouseLook = context.ReadValue<Vector2>();
 
     }
+    
 
+    // move player while changing the aim direction simalteniously
 
      void movePlayerWithAim()
     {
@@ -84,14 +87,14 @@ public class Player_Movement : MonoBehaviour
         
     }
 
-    public Vector3 getDirection()
+    public Vector3 getDirection() // direction player is looking at needed for player_attack_script
     {
         Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
         return lookPos.normalized;
     }
 
-    bool isMovingBackwards(Vector3 v1, Vector3 v2)
+    bool isMovingBackwards(Vector3 v1, Vector3 v2) // check if enemy is moving and facing in opposite directions
     {
         v1 = Vector3.Normalize(v1);
         v2 = Vector3.Normalize(v2);

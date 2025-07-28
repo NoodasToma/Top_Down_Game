@@ -13,7 +13,7 @@ public class Camera_Follow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.FindGameObjectWithTag("Player").transform;  // find player
 
     }
 
@@ -24,7 +24,7 @@ public class Camera_Follow : MonoBehaviour
         if (target != null)
         {
             Vector3 targetPos = target.position + offset;
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime); // Move camera to player overtime
         }
         
         if(Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
