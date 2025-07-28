@@ -129,7 +129,7 @@ public class Enemy_Movement : MonoBehaviour
     }
 
     // everything that needs to happen when enemy gets hit
-    public void takeDamage(float damage)
+    public void takeDamage(float damage, float force)
     {
         // take damage
         float highlightTime = 0.25f;
@@ -139,7 +139,7 @@ public class Enemy_Movement : MonoBehaviour
 
 
         //get knocked back
-        if (isKnockable) knockBack();
+        if (isKnockable) knockBack(force);
 
         //highlight
         if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
@@ -157,12 +157,12 @@ public class Enemy_Movement : MonoBehaviour
         ren.material.color = originalColor;
     }
 
-    void knockBack()
+    void knockBack(float force)
     {
         Vector3 direction = transform.position - target.transform.position;
         direction.y = 0;
 
-        transform.Translate(direction * pushability * Time.deltaTime, Space.World);
+        transform.Translate(direction * (force/pushability) * Time.deltaTime, Space.World);
     }
 
 

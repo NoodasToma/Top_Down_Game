@@ -13,6 +13,10 @@ public class PlayerAttack_Script : MonoBehaviour
     public float cooldown;
     public float angleOfAttack;
 
+    public float radiusOfRangedAttack;
+
+    public float forceOfAttack;
+
     public LayerMask layer;
 
     private Animator playerAnimator;
@@ -63,19 +67,19 @@ public class PlayerAttack_Script : MonoBehaviour
                 float angle = Vector3.Angle(getAim(), positionEnemy);
                 if (angle <= angleOfAttack && c.gameObject != null)
                 {
-                    c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage);
+                    c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage,forceOfAttack);
                 }
             }
         }
         else
         {
             RaycastHit hit;
-            bool isHit = Physics.Raycast(hitBoxOrigin, getAim(), out hit, range, layer);
+            bool isHit = Physics.SphereCast(hitBoxOrigin,radiusOfRangedAttack, getAim(), out hit, range, layer);
             Debug.Log(isHit);
             if (isHit)
             {
                 Debug.Log(hit.transform.name);
-                hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage);
+                hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage,forceOfAttack);
             }
         }
         
