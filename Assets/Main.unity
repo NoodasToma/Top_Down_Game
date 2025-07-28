@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1947,6 +1947,7 @@ GameObject:
   - component: {fileID: 7638170902741269532}
   - component: {fileID: 7638170902741269531}
   - component: {fileID: 7638170902741269530}
+  - component: {fileID: 7638170902741269534}
   m_Layer: 0
   m_Name: Test_Human
   m_TagString: Player
@@ -2072,8 +2073,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
+  playerHP: 100
   rotationSpeed: 0.15
   playerAnimator: {fileID: 7638170902741269530}
+--- !u!136 &7638170902741269534
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7638170902741269529}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.79
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: -0.21, y: 3.48, z: -0.03}
 --- !u!4 &7691147400680755832
 Transform:
   m_ObjectHideFlags: 0

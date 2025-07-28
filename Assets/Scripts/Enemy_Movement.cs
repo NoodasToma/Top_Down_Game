@@ -76,14 +76,14 @@ public class Enemy_Movement : MonoBehaviour
 
         Quaternion rotDir = Quaternion.LookRotation(rotLock);
 
-        
 
-        if (rotLock != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed*Time.deltaTime);
+
+        if (rotLock != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed * Time.deltaTime);
 
         targetLoc = targetLoc.normalized;
 
 
-        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies,layer); //detect enemy colliders within distance
+        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies, layer); //detect enemy colliders within distance
 
 
         // check if enemies are colliding with each other and change direction accordingly
@@ -162,7 +162,7 @@ public class Enemy_Movement : MonoBehaviour
         Vector3 direction = transform.position - target.transform.position;
         direction.y = 0;
 
-        transform.Translate(direction * (force/pushability) * Time.deltaTime, Space.World);
+        transform.Translate(direction * (force / pushability) * Time.deltaTime, Space.World);
     }
 
 
@@ -170,8 +170,13 @@ public class Enemy_Movement : MonoBehaviour
     // gizmos for debugging
     void OnDrawGizmosSelected()
     {
-         Gizmos.color = Color.red;
-         Gizmos.DrawWireSphere(transform.position, distanceFromAllies); 
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, distanceFromAllies);
     }
+    public bool InAttackRange()
+{
+    if (target == null) return false;
+    return (target.transform.position - transform.position).magnitude <= attackRange;
+}
 
 }

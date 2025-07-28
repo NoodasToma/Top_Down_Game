@@ -10,6 +10,7 @@ public class Player_Movement : MonoBehaviour
 
     private Camera mainCamera;
     public float speed;
+    public float playerHP=100f;
 
     private Vector2 move, mouseLook;
 
@@ -18,6 +19,7 @@ public class Player_Movement : MonoBehaviour
     private Vector3 rotationTarget;
 
     public Animator playerAnimator;
+    private Material _originalMaterial;
 
 
 
@@ -29,6 +31,11 @@ public class Player_Movement : MonoBehaviour
     {
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
+        var renderer = GetComponentInChildren<Renderer>();
+        if (renderer != null)
+        {
+            _originalMaterial = new Material(renderer.material); // Create a copy
+        }
     }
 
     // Update is called once per frame
@@ -41,7 +48,38 @@ public class Player_Movement : MonoBehaviour
         if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
 
         movePlayerWithAim();
+        
     }
+    
+     public void TakeDamage(float damage)
+    {
+        playerHP -= damage;
+        
+        // Visual feedback (flash effect)
+         // Visual feedback (flash effect)
+        StartCoroutine(DamageFlash());
+
+        if (playerHP <= 0)
+        {
+            playerHP = 0;
+            Debug.Log("Player defeated!");
+        }
+    }
+
+    IEnumerator DamageFlash()
+    {
+        var renderer = GetComponentInChildren<Renderer>();
+        if (renderer != null && _originalMaterial != null)
+        {
+            // Create a temporary material instance for flashing
+            renderer.material.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            
+            // Restore the original material properties
+            renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
+        }
+    }
+
 
     //get wasd input
     public void OnMove(InputAction.CallbackContext context)
