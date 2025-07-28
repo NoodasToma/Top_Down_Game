@@ -355,7 +355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5335693003840606184, guid: ab5edcda4b9b05b4bb3ce44a06d465e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.48
       objectReference: {fileID: 0}
     - target: {fileID: 5335693003840606184, guid: ab5edcda4b9b05b4bb3ce44a06d465e9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadiusmin: 40
   spawnRadiusmax: 100
-  spawnRate: 0.5
+  spawnRate: 3
   enemy: {fileID: 4153270372909759199, guid: ab5edcda4b9b05b4bb3ce44a06d465e9, type: 3}
 --- !u!1001 &1413344539
 PrefabInstance:
@@ -1965,7 +1965,7 @@ Transform:
   m_GameObject: {fileID: 7638170902741269529}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.175}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2156,6 +2156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   range: 5
+  isRanged: 1
   cooldown: 0.5
   angleOfAttack: 25
   layer:

@@ -12,6 +12,9 @@ public class Enemy_Movement : MonoBehaviour
     public float movementSpeed;
     public float attackSpeed;
 
+
+    public float damage;
+
     public GameObject target;
 
     public float rotSpeed;
@@ -122,7 +125,7 @@ public class Enemy_Movement : MonoBehaviour
         Quaternion rotDir = Quaternion.LookRotation(targetLoc);
         if (targetLoc != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed);
 
-        //TODO()
+        //TODO()  //  AttackPlayer(damage,range,radius ...)
     }
 
     // everything that needs to happen when enemy gets hit

@@ -8,6 +8,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
     public float range;
 
+    public bool isRanged;
+
     public float cooldown;
     public float angleOfAttack;
 
@@ -16,6 +18,7 @@ public class PlayerAttack_Script : MonoBehaviour
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
+
 
     // Start is called before the first frame update
     void Start()
@@ -43,21 +46,39 @@ public class PlayerAttack_Script : MonoBehaviour
 
     // draws a sphere around the player and checks if an enemy inside is within angle to get hit if it is it takes damage
     void attack()
-    {
-        Collider[] hitEnemies = Physics.OverlapSphere(transform.position, range,layer);
-        if (hitEnemies.Length <= 0) return;
-    
-        foreach (Collider c in hitEnemies)
+    {  
+       Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
+
+        if (!isRanged)
         {
-            Vector3 positionEnemy = c.transform.position - transform.position;
-            positionEnemy.y = 0;
-            positionEnemy = positionEnemy.normalized;
-            float angle = Vector3.Angle(getAim(), positionEnemy);
-            if (angle < angleOfAttack && c.gameObject != null)
+            
+            Collider[] hitEnemies = Physics.OverlapSphere(hitBoxOrigin, range, layer);
+            if (hitEnemies.Length <= 0) return;
+
+            foreach (Collider c in hitEnemies)
             {
-                c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage);
+                Vector3 positionEnemy = c.transform.position - transform.position;
+                positionEnemy.y = 0;
+                positionEnemy = positionEnemy.normalized;
+                float angle = Vector3.Angle(getAim(), positionEnemy);
+                if (angle <= angleOfAttack && c.gameObject != null)
+                {
+                    c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage);
+                }
             }
         }
+        else
+        {
+            RaycastHit hit;
+            bool isHit = Physics.Raycast(hitBoxOrigin, getAim(), out hit, range, layer);
+            Debug.Log(isHit);
+            if (isHit)
+            {
+                Debug.Log(hit.transform.name);
+                hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage);
+            }
+        }
+        
 
     }
 
@@ -70,22 +91,32 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
 
-  
+
     //gizmos for debuggin
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range); // Match radius
+        Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
+        if (!isRanged)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, range); // Match radius
 
-        Vector3 center = getAim();
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, center * range);
+            Vector3 center = getAim();
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(hitBoxOrigin, center * range);
 
-        Vector3 left = Quaternion.Euler(0, angleOfAttack, 0) * center;
-        Vector3 right = Quaternion.Euler(0, -angleOfAttack, 0) * center;
+            Vector3 left = Quaternion.Euler(0, angleOfAttack, 0) * center;
+            Vector3 right = Quaternion.Euler(0, -angleOfAttack, 0) * center;
 
-        Gizmos.DrawRay(transform.position, left * range);
-        Gizmos.DrawRay(transform.position, right * range);
+            Gizmos.DrawRay(hitBoxOrigin, left * range);
+            Gizmos.DrawRay(hitBoxOrigin, right * range);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(hitBoxOrigin, getAim() * range);
+        }
+        
 
         
     }
