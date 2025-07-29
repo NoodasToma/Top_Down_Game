@@ -433,7 +433,7 @@ MonoBehaviour:
   pushability: 10
   isKnockable: 1
   distanceFromAllies: 1.5
-  distanceFromWalls: 3
+  distanceFromWalls: 1.5
   enemies:
     serializedVersion: 2
     m_Bits: 8

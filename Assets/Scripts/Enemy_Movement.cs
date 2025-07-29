@@ -38,6 +38,8 @@ public class Enemy_Movement : MonoBehaviour
 
     Slider enemyHealthBar;
 
+    
+
 
 
     // Start is called before the first frame update
@@ -88,6 +90,7 @@ public class Enemy_Movement : MonoBehaviour
         Vector3 rotLock = new Vector3(targetLoc.x, 0, targetLoc.z);
 
         Quaternion rotDir = Quaternion.LookRotation(rotLock);
+        
 
 
 
@@ -105,16 +108,19 @@ public class Enemy_Movement : MonoBehaviour
         {
             foreach (Collider c in wallsNear)
             {
+
                 if (c.gameObject == gameObject) continue;
                 GameObject wallCollided = c.gameObject;
 
                 Vector3 awayDir = transform.position - c.ClosestPoint(transform.position);
 
                 float distanc = awayDir.magnitude;
-                Vector3 awayFromWall = (awayDir.normalized / distanc) * 2.0f;
+                Vector3 awayFromWall = (awayDir.normalized / distanc) * 5.0f;
+                
+                Vector3 sidewaysFromWall = Quaternion.Euler(0, UnityEngine.Random.Range(90, 180), 0) * awayFromWall ;
 
-                Vector3 sidewaysFromWall = Quaternion.Euler(0, 90, 0) * awayFromWall;
-
+              
+                
                 if (distanc > 0.1f) targetLoc += awayFromWall + sidewaysFromWall;
 
 
