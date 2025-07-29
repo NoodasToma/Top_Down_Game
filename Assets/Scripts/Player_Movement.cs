@@ -21,6 +21,10 @@ public class Player_Movement : MonoBehaviour
     public Animator playerAnimator;
     private Material _originalMaterial;
 
+    private bool alive = true;
+
+    Ui_script ui_Script;
+
 
 
 
@@ -29,6 +33,7 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ui_Script = GameObject.FindGameObjectWithTag("HpBar").GetComponent<Ui_script>();
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
         var renderer = GetComponentInChildren<Renderer>();
@@ -41,29 +46,33 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (alive)
+        {
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(mouseLook);
 
-        RaycastHit hit;
-        Ray ray = mainCamera.ScreenPointToRay(mouseLook);
+            if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
 
-        if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
-
-        movePlayerWithAim();
-        
+            movePlayerWithAim();
+        }
     }
-    
-     public void TakeDamage(float damage)
+
+    public void TakeDamage(float damage)
     {
         playerHP -= damage;
-        
+
         // Visual feedback (flash effect)
-         // Visual feedback (flash effect)
+        // Visual feedback (flash effect)
         StartCoroutine(DamageFlash());
 
         if (playerHP <= 0)
         {
             playerHP = 0;
-            Debug.Log("Player defeated!");
+            alive = false;
+            GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
         }
+
+        ui_Script.setHpBar(playerHP);
     }
 
     IEnumerator DamageFlash()

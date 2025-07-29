@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy_Movement : MonoBehaviour
 {
@@ -10,10 +11,6 @@ public class Enemy_Movement : MonoBehaviour
     private bool inRange;
     public float attackRange;
     public float movementSpeed;
-    public float attackSpeed;
-
-
-    public float damage;
 
     public GameObject target;
 
@@ -31,15 +28,23 @@ public class Enemy_Movement : MonoBehaviour
 
     public LayerMask layer;
 
+    private Enemy_Attack attackScript;
+
+    Slider enemyHealthBar;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemyHealthBar = gameObject.GetComponent<Slider>();
+        enemyHealthBar.maxValue = hp;
+        setHealthBar(hp);
         target = GameObject.FindGameObjectWithTag("Player");
 
         StartCoroutine(calcDistance());
 
         originalColor = GetComponent<Renderer>().material.color;
+
+        attackScript = GetComponent<Enemy_Attack>();
     }
 
     IEnumerator calcDistance() // coroutine calculates distance to a player every 0.25 seconds
@@ -125,7 +130,7 @@ public class Enemy_Movement : MonoBehaviour
         Quaternion rotDir = Quaternion.LookRotation(targetLoc);
         if (targetLoc != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed);
 
-        //TODO()  //  AttackPlayer(damage,range,radius ...)
+        attackScript.Attack();
     }
 
     // everything that needs to happen when enemy gets hit
@@ -144,6 +149,8 @@ public class Enemy_Movement : MonoBehaviour
         //highlight
         if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
         flashCoroutine = StartCoroutine(highglightAttack(highlightTime));
+
+        setHealthBar(hp);
 
     }
 
@@ -173,10 +180,12 @@ public class Enemy_Movement : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, distanceFromAllies);
     }
-    public bool InAttackRange()
-{
-    if (target == null) return false;
-    return (target.transform.position - transform.position).magnitude <= attackRange;
-}
+
+
+    void setHealthBar(float val)
+    {
+        enemyHealthBar.value = val;
+    }
+   
 
 }

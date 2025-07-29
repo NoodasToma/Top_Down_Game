@@ -40,6 +40,7 @@ public class PlayerAttack_Script : MonoBehaviour
     IEnumerator swing()  // coroutine that manages attack cooldowns
     {
         playerAnimator.SetTrigger("Attack");
+
         
         yield return new WaitForSeconds(cooldown);
 
@@ -55,7 +56,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
         if (!isRanged)
         {
-            
+
             Collider[] hitEnemies = Physics.OverlapSphere(hitBoxOrigin, range, layer);
             if (hitEnemies.Length <= 0) return;
 
@@ -67,20 +68,21 @@ public class PlayerAttack_Script : MonoBehaviour
                 float angle = Vector3.Angle(getAim(), positionEnemy);
                 if (angle <= angleOfAttack && c.gameObject != null)
                 {
-                    c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage,forceOfAttack);
+                    c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
                 }
             }
         }
         else
         {
             RaycastHit hit;
-            bool isHit = Physics.SphereCast(hitBoxOrigin,radiusOfRangedAttack, getAim(), out hit, range, layer);
+            bool isHit = Physics.SphereCast(hitBoxOrigin, radiusOfRangedAttack, getAim(), out hit, range, layer);
             Debug.Log(isHit);
             if (isHit)
             {
                 Debug.Log(hit.transform.name);
-                hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage,forceOfAttack);
+                hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
             }
+            
         }
         
 
