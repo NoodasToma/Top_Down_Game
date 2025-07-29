@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,11 +28,17 @@ public class Enemy_Movement : MonoBehaviour
 
     public float distanceFromAllies;
 
-    public LayerMask layer;
+    public float distanceFromWalls;
+
+    public LayerMask enemies;
+
+    public LayerMask walls;
 
     private Enemy_Attack attackScript;
 
     Slider enemyHealthBar;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -88,8 +96,30 @@ public class Enemy_Movement : MonoBehaviour
         targetLoc = targetLoc.normalized;
 
 
-        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies, layer); //detect enemy colliders within distance
+        Collider[] enemiesNear = Physics.OverlapSphere(transform.position, distanceFromAllies, enemies); //detect enemy colliders within distance
+        Collider[] wallsNear = Physics.OverlapSphere(transform.position, distanceFromWalls, walls);
 
+
+        //same thing for walls
+        if (wallsNear.Length > 0)
+        {
+            foreach (Collider c in wallsNear)
+            {
+                if (c.gameObject == gameObject) continue;
+                GameObject wallCollided = c.gameObject;
+
+                Vector3 awayDir = transform.position - c.ClosestPoint(transform.position);
+
+                float distanc = awayDir.magnitude;
+                Vector3 awayFromWall = (awayDir.normalized / distanc) * 2.0f;
+
+                Vector3 sidewaysFromWall = Quaternion.Euler(0, 90, 0) * awayFromWall;
+
+                if (distanc > 0.1f) targetLoc += awayFromWall + sidewaysFromWall;
+
+
+            }
+        }
 
         // check if enemies are colliding with each other and change direction accordingly
 
@@ -179,6 +209,9 @@ public class Enemy_Movement : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, distanceFromAllies);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, distanceFromWalls);
     }
 
 
@@ -186,6 +219,8 @@ public class Enemy_Movement : MonoBehaviour
     {
         enemyHealthBar.value = val;
     }
+
+
    
 
 }

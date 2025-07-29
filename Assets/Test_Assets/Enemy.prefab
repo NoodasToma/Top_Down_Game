@@ -433,9 +433,13 @@ MonoBehaviour:
   pushability: 10
   isKnockable: 1
   distanceFromAllies: 1.5
-  layer:
+  distanceFromWalls: 3
+  enemies:
     serializedVersion: 2
     m_Bits: 8
+  walls:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &-5725822058020856956
 MonoBehaviour:
   m_ObjectHideFlags: 0
