@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAttack_Script : MonoBehaviour
@@ -22,6 +23,10 @@ public class PlayerAttack_Script : MonoBehaviour
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
+    public GameObject fireballPrefab;
+    public float fireballSpeed = 10f;
+    public float fireballExplosionRadius = 3f;
+    public GameObject explosionEffect;
 
 
     // Start is called before the first frame update
@@ -33,7 +38,9 @@ public class PlayerAttack_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0)&&attackRoutine==null) attackRoutine = StartCoroutine(swing());
+        if (Input.GetKeyDown(KeyCode.Mouse0) && attackRoutine == null) attackRoutine = StartCoroutine(swing());
+        if (Input.GetKeyDown(KeyCode.E) && attackRoutine == null) fireball();
+
 
     }
 
@@ -84,9 +91,23 @@ public class PlayerAttack_Script : MonoBehaviour
             }
             
         }
-        
 
     }
+    void fireball()
+{
+    Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
+
+    GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
+    Rigidbody rb = fireball.GetComponent<Rigidbody>();
+    if (rb != null)
+    {
+        rb.velocity = getAim() * fireballSpeed;
+    }
+
+    Destroy(fireball, 5f);
+}
+
+   
 
     //returns the direction player is lookin
     public Vector3 getAim()
