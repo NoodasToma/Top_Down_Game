@@ -440,6 +440,7 @@ MonoBehaviour:
   walls:
     serializedVersion: 2
     m_Bits: 64
+  bloodSplatterPrefab: {fileID: 9196140948547642493, guid: c2847ff1ae91a91428cf51adeecccb2f, type: 3}
 --- !u!114 &-5725822058020856956
 MonoBehaviour:
   m_ObjectHideFlags: 0

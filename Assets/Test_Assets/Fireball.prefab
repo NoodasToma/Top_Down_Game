@@ -105,7 +105,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.001
+  m_Radius: 0.01
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2149819609223431532
 Rigidbody:
@@ -149,7 +149,7 @@ MonoBehaviour:
   damage: 20
   knockbackForce: 10
   explosionRadius: 3
-  explosionEffect: {fileID: 0}
+  explosionEffect: {fileID: 2110273527632712912, guid: 258d9a317e15f974298598f8f187e71b, type: 3}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8

@@ -37,6 +37,7 @@ public class Enemy_Movement : MonoBehaviour
     private Enemy_Attack attackScript;
 
     Slider enemyHealthBar;
+    public GameObject bloodSplatterPrefab;
 
 
 
@@ -184,15 +185,26 @@ public class Enemy_Movement : MonoBehaviour
 
     }
 
-    IEnumerator highglightAttack(float duration) //coroutine that highlights the enemy hit for the duration and changes it back
-    {
-        Renderer ren = GetComponent<Renderer>();
-        ren.material.color = Color.white;
+    IEnumerator highglightAttack(float duration)
+{
+    Renderer ren = GetComponent<Renderer>();
+    ren.material.color = Color.red;  // Highlight enemy red on hit
 
-        yield return new WaitForSeconds(duration);
+    // Instantiate blood splatter effect prefab at enemy's position
+    GameObject bloodSplatter = Instantiate(bloodSplatterPrefab, transform.position, Quaternion.identity);
 
-        ren.material.color = originalColor;
-    }
+    // Optional: Parent the splatter to the enemy so it moves with them
+    bloodSplatter.transform.SetParent(transform);
+
+    // Wait for the duration of the highlight
+    yield return new WaitForSeconds(duration);
+
+    // Revert color
+    ren.material.color = originalColor;
+
+    // Destroy blood splatter effect after highlight ends
+    Destroy(bloodSplatter);
+}
 
     void knockBack(float force)
     {
