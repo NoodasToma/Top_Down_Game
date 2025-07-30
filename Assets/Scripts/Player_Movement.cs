@@ -10,7 +10,7 @@ public class Player_Movement : MonoBehaviour
 
     private Camera mainCamera;
     public float speed;
-    public float playerHP=100f;
+    public float playerHP = 100f;
 
     private Vector2 move, mouseLook;
 
@@ -25,6 +25,14 @@ public class Player_Movement : MonoBehaviour
 
     Ui_script ui_Script;
 
+    private enum state
+    {
+        Basic, Dodging
+
+    }
+
+    private state currentState;
+    public float dashSpeed;
 
 
 
@@ -33,6 +41,7 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentState = state.Basic;
         ui_Script = GameObject.FindGameObjectWithTag("HpBar").GetComponent<Ui_script>();
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
@@ -59,6 +68,7 @@ public class Player_Movement : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (currentState == state.Dodging) return;
         playerHP -= damage;
 
         // Visual feedback (flash effect)
@@ -83,7 +93,7 @@ public class Player_Movement : MonoBehaviour
             // Create a temporary material instance for flashing
             renderer.material.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            
+
             // Restore the original material properties
             renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
         }
@@ -102,11 +112,11 @@ public class Player_Movement : MonoBehaviour
         mouseLook = context.ReadValue<Vector2>();
 
     }
-    
+
 
     // move player while changing the aim direction simalteniously
 
-     void movePlayerWithAim()
+    void movePlayerWithAim()
     {
         Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
@@ -118,20 +128,29 @@ public class Player_Movement : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
         }
+        Vector3 movementDir = new Vector3(move.x, 0f, move.y);
+        
+        if (currentState != state.Dodging && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            dodge(movementDir);
+        }
+        else
+        {
 
-        Vector3 vector3 = new Vector3(move.x, 0f, move.y);
 
-        movingAnim(vector3);
+            movingAnim(movementDir);
 
 
-        transform.Translate(vector3 * speed * Time.deltaTime, Space.World);
+            transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
 
-        playerAnimator.SetBool("MovesBack", isMovingBackwards(vector3, lookPos));
+            playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
+        }
+        
 
         // Debug.Log("Movement Dir is" + " " + Vector3.Normalize(vector3) + " " + "Look dir is " + " " + Vector3.Normalize(lookPos));
 
-        
+
     }
 
     public Vector3 getDirection() // direction player is looking at needed for player_attack_script
@@ -162,6 +181,25 @@ public class Player_Movement : MonoBehaviour
         {
             playerAnimator.SetBool("isMoving", false);
         }
-        
+
+    }
+
+    IEnumerator dodgeRoutine(Vector3 dodgeDir)
+    {   
+    
+        dodge(dodgeDir);
+        yield return new WaitForSeconds(0.25f);
+        currentState = state.Basic;
+    }
+
+    void dodge(Vector3 dodgeDir)
+    {
+        float tempSpeed = dashSpeed;
+        currentState = state.Dodging;
+        while (tempSpeed > 0)
+        {
+            transform.Translate(dodgeDir * tempSpeed * Time.deltaTime, Space.World);
+            tempSpeed-=tempSpeed/10*Time.deltaTime;
+        }
     }
 }
