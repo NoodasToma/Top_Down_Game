@@ -5,11 +5,14 @@ using UnityEngine.UI;
 
 public class Ui_script : MonoBehaviour
 {
-     Slider healthBar;
+    Slider healthBar;
+    //cooldown for fireball skill
     public Image fireballimg;
     public float fireballCDTime = 5f;
     public bool fireballOnCooldown = false;
     public KeyCode fireballKeyCode;
+    public Text scoreText; //kill counter
+    private int killCount = 0;
 
 
 
@@ -22,6 +25,7 @@ public class Ui_script : MonoBehaviour
         setHpBar(maxHp);
         //fireball cooldown 
         fireballimg.fillAmount = 1;
+        scoreText.text = "Kills: 0";
     }
 
     // Update is called once per frame
@@ -30,32 +34,43 @@ public class Ui_script : MonoBehaviour
         FireballCD();
     }
 
-    public IEnumerator FireballCooldown() {
+    public IEnumerator FireballCooldown()
+    {
         if (fireballOnCooldown) yield break;
-    fireballOnCooldown = true;
-    fireballimg.fillAmount = 1; 
-    float timer = fireballCDTime;
+        fireballOnCooldown = true;
+        fireballimg.fillAmount = 1;
+        float timer = fireballCDTime;
 
-    while (timer > 0) {
-        timer -= Time.deltaTime;
-        fireballimg.fillAmount = timer / fireballCDTime; 
-        yield return null;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            fireballimg.fillAmount = timer / fireballCDTime;
+            yield return null;
+        }
+
+        fireballimg.fillAmount = 1;
+        fireballOnCooldown = false;
     }
 
-    fireballimg.fillAmount = 1; 
-    fireballOnCooldown = false;
-}
-
-void FireballCD() {
-    if (Input.GetKey(fireballKeyCode) && !fireballOnCooldown) {
-        StartCoroutine(FireballCooldown());
+    void FireballCD()
+    {
+        if (Input.GetKey(fireballKeyCode) && !fireballOnCooldown)
+        {
+            StartCoroutine(FireballCooldown());
+        }
     }
-}
 
     public void setHpBar(float val)
     {
         healthBar.value = val;
     }
+    //kill count
+    public void AddKill()
+{
+    killCount++;
+      Debug.Log("Kill added: " + killCount);
+    scoreText.text = "Kills: " + killCount;
+}
     
 
 }

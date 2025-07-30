@@ -176,7 +176,20 @@ public class Enemy_Movement : MonoBehaviour
         // take damage
         float highlightTime = 0.25f;
         hp -= damage;
-        if (hp <= 0) GameObject.Destroy(this.gameObject);
+        if (hp <= 0)
+        {
+            GameObject ui = GameObject.Find("Healthbar"); 
+    if (ui != null)
+    {
+        Ui_script uiScript = ui.GetComponent<Ui_script>();
+        if (uiScript != null)
+        {
+            uiScript.AddKill(); // this updates the kill counter
+        }
+    }
+            GameObject.Destroy(this.gameObject);
+            
+         }
 
 
 
