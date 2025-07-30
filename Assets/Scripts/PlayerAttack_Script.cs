@@ -27,7 +27,9 @@ public class PlayerAttack_Script : MonoBehaviour
     public float fireballSpeed = 10f;
     public float fireballExplosionRadius = 3f;
     public GameObject explosionEffect;
-
+    // fireball cooldown. if you change this make sure to change cooldown times in the UI script too 
+    public float fireballCDTime = 5f;
+    private Coroutine fireballRoutine;
 
     // Start is called before the first frame update
     void Start()
@@ -39,9 +41,17 @@ public class PlayerAttack_Script : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && attackRoutine == null) attackRoutine = StartCoroutine(swing());
-        if (Input.GetKeyDown(KeyCode.E) && attackRoutine == null) fireball();
-
-
+        // Original full check
+        if (Input.GetKeyDown(KeyCode.E) && fireballRoutine == null)
+        {
+            fireballRoutine = StartCoroutine(fire());
+        }
+    
+    }
+    IEnumerator fire() {
+        fireball();
+         yield return new WaitForSeconds(fireballCDTime);
+        fireballRoutine = null;
     }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
@@ -94,18 +104,21 @@ public class PlayerAttack_Script : MonoBehaviour
 
     }
     void fireball()
-{
-    Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
-
-    GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
-    Rigidbody rb = fireball.GetComponent<Rigidbody>();
-    if (rb != null)
     {
-        rb.velocity = getAim() * fireballSpeed;
-    }
+        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
 
-    Destroy(fireball, 5f);
-}
+        GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
+        Rigidbody rb = fireball.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = getAim() * fireballSpeed;
+        }
+
+        Destroy(fireball, 5f);
+        
+
+    }
+    
 
    
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FireballTrigger : MonoBehaviour
 {
-    public float damage = 50f;
+    public float damage = 100f;
     public float knockbackForce = 10f;
     public float explosionRadius = 3f;
     public GameObject explosionEffect;
