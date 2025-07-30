@@ -12,11 +12,12 @@ public class Enemy_Attack : MonoBehaviour
     public bool showGizmos = true;
 
     private float _nextAttackTime;
+    public Player_Movement playerScript;
    
 
     void Start()
     {
-        
+        playerScript = GameObject.FindWithTag("Player").GetComponent<Player_Movement>();
     }
 
     void Update()
@@ -38,7 +39,7 @@ public class Enemy_Attack : MonoBehaviour
                 if (col.CompareTag("Player"))
                 {
                     var player = col.GetComponent<Player_Movement>();
-                    if (player != null)
+                    if (playerScript.alive)
                     {
                         player.TakeDamage(attackDamage);
                         break;

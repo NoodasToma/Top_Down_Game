@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Ui_script : MonoBehaviour
 {
@@ -13,6 +15,9 @@ public class Ui_script : MonoBehaviour
     public KeyCode fireballKeyCode;
     public Text scoreText; //kill counter
     private int killCount = 0;
+    //Game Over Screen
+    public GameObject gameOverUI;
+    public SpawnEnemies spawnScript;
 
 
 
@@ -26,12 +31,14 @@ public class Ui_script : MonoBehaviour
         //fireball cooldown 
         fireballimg.fillAmount = 1;
         scoreText.text = "Kills: 0";
+        gameOverUI.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         FireballCD();
+        if (Input.GetKeyDown(KeyCode.R) && gameOverUI)  restart();
     }
 
     public IEnumerator FireballCooldown()
@@ -66,11 +73,23 @@ public class Ui_script : MonoBehaviour
     }
     //kill count
     public void AddKill()
-{
-    killCount++;
-      Debug.Log("Kill added: " + killCount);
-    scoreText.text = "Kills: " + killCount;
-}
-    
+    {
+        killCount++;
+        Debug.Log("Kill added: " + killCount);
+        scoreText.text = "Kills: " + killCount;
+    }
+
+
+    public void gameOver()
+    {
+        gameOverUI.SetActive(true);
+        spawnScript.stopSpawning = true;
+    }
+
+    public void restart()
+    {
+        Debug.Log("Button clicked!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
 }

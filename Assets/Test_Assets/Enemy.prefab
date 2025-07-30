@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0542c67266895488126720a9194ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 10
+  attackDamage: 1000
   attackCooldown: 1
   attackRange: 2
   attackHurtboxRadius: 2

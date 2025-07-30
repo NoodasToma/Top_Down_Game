@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnEnemies : MonoBehaviour
@@ -11,13 +12,14 @@ public class SpawnEnemies : MonoBehaviour
   public GameObject enemy;
 
   private int enemyCount = 0;
+  public bool stopSpawning = false;
 
 
   // Start is called before the first frame update
   void Start()
   {
-
-    InvokeRepeating("spawnEnemy", 1f, spawnRate);
+   
+      InvokeRepeating("spawnEnemy", 1f, spawnRate); 
 
 
   }
@@ -30,8 +32,7 @@ public class SpawnEnemies : MonoBehaviour
 
   public void spawnEnemy()
   {
-
-    if (enemyCount >= 100) return;
+    if (stopSpawning || enemyCount >= 100) return;
     float spawnRadius = Random.Range(spawnRadiusmin, spawnRadiusmax);
 
 

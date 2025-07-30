@@ -21,7 +21,7 @@ public class Player_Movement : MonoBehaviour
     public Animator playerAnimator;
     private Material _originalMaterial;
 
-    private bool alive = true;
+    public bool alive = true;
 
     Ui_script ui_Script;
 
@@ -65,10 +65,11 @@ public class Player_Movement : MonoBehaviour
         // Visual feedback (flash effect)
         StartCoroutine(DamageFlash());
 
-        if (playerHP <= 0)
+        if (playerHP <= 0 && alive)
         {
             playerHP = 0;
             alive = false;
+            ui_Script.gameOver();
             GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
         }
 
