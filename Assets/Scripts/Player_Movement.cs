@@ -34,6 +34,14 @@ public class Player_Movement : MonoBehaviour
     private state currentState;
     public float dashSpeed;
 
+   
+    public float dodgeDuration = 0.25f;
+    public float dodgeCooldown = 1f;
+
+    private bool isDodging = false;
+    private bool dodgeOnCooldown = false;
+
+
 
 
 
@@ -57,6 +65,14 @@ public class Player_Movement : MonoBehaviour
     {
         if (alive)
         {
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
+            {
+                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
+                if (dodgeDir != Vector3.zero)
+                {
+                    StartCoroutine(dodgeRoutine(dodgeDir));
+                }
+            }
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
 
@@ -68,6 +84,7 @@ public class Player_Movement : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (!alive) return;
         if (currentState == state.Dodging) return;
         playerHP -= damage;
 
@@ -80,6 +97,7 @@ public class Player_Movement : MonoBehaviour
             playerHP = 0;
             alive = false;
             GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
+            playerAnimator.SetTrigger("Dead");
         }
 
         ui_Script.setHpBar(playerHP);
@@ -129,13 +147,8 @@ public class Player_Movement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
         }
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
-        
-        if (currentState != state.Dodging && Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            dodge(movementDir);
-        }
-        else
-        {
+
+       
 
 
             movingAnim(movementDir);
@@ -145,11 +158,11 @@ public class Player_Movement : MonoBehaviour
 
             playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
-        }
-        
+
 
         // Debug.Log("Movement Dir is" + " " + Vector3.Normalize(vector3) + " " + "Look dir is " + " " + Vector3.Normalize(lookPos));
 
+        Debug.Log(currentState);
 
     }
 
@@ -187,19 +200,28 @@ public class Player_Movement : MonoBehaviour
     IEnumerator dodgeRoutine(Vector3 dodgeDir)
     {   
     
-        dodge(dodgeDir);
-        yield return new WaitForSeconds(0.25f);
+        isDodging = true;
+        dodgeOnCooldown = true;
+        currentState = state.Dodging;
+
+        float timer = 0f;
+
+        playerAnimator.SetTrigger("Dodge");
+
+        while (timer < dodgeDuration)
+        {
+            transform.Translate(dodgeDir * dashSpeed * Time.deltaTime, Space.World);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
         currentState = state.Basic;
+        isDodging = false;
+
+        yield return new WaitForSeconds(dodgeCooldown); // cooldown wait
+        dodgeOnCooldown = false;
+        
     }
 
-    void dodge(Vector3 dodgeDir)
-    {
-        float tempSpeed = dashSpeed;
-        currentState = state.Dodging;
-        while (tempSpeed > 0)
-        {
-            transform.Translate(dodgeDir * tempSpeed * Time.deltaTime, Space.World);
-            tempSpeed-=tempSpeed/10*Time.deltaTime;
-        }
-    }
+  
 }
