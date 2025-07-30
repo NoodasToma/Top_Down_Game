@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -13,7 +14,7 @@ public class Ui_script : MonoBehaviour
     public float fireballCDTime = 5f;
     public bool fireballOnCooldown = false;
     public KeyCode fireballKeyCode;
-    public Text scoreText; //kill counter
+    public TextMeshProUGUI scoreText; //kill counter
     private int killCount = 0;
     //Game Over Screen
     public GameObject gameOverUI;
@@ -26,12 +27,15 @@ public class Ui_script : MonoBehaviour
     {
         healthBar = gameObject.GetComponent<Slider>();
         float maxHp = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().playerHP;
+        scoreText = GameObject.FindGameObjectWithTag("killCounter").GetComponent<TextMeshProUGUI>();
+        Debug.Log(scoreText);
         healthBar.maxValue = maxHp;
         setHpBar(maxHp);
         //fireball cooldown 
         fireballimg.fillAmount = 1;
         scoreText.text = "Kills: 0";
         gameOverUI.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -91,5 +95,6 @@ public class Ui_script : MonoBehaviour
         Debug.Log("Button clicked!");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    
 
 }

@@ -50,6 +50,7 @@ public class PlayerAttack_Script : MonoBehaviour
     }
     IEnumerator fire() {
         fireball();
+        playerAnimator.SetTrigger("Fireball");
          yield return new WaitForSeconds(fireballCDTime);
         fireballRoutine = null;
     }

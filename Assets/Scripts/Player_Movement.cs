@@ -10,7 +10,7 @@ public class Player_Movement : MonoBehaviour
 
     private Camera mainCamera;
     public float speed;
-    public float playerHP=100f;
+    public float playerHP = 100f;
 
     private Vector2 move, mouseLook;
 
@@ -25,6 +25,22 @@ public class Player_Movement : MonoBehaviour
 
     Ui_script ui_Script;
 
+    private enum state
+    {
+        Basic, Dodging
+
+    }
+
+    private state currentState;
+    public float dashSpeed;
+
+   
+    public float dodgeDuration = 0.25f;
+    public float dodgeCooldown = 1f;
+
+    private bool isDodging = false;
+    private bool dodgeOnCooldown = false;
+
 
 
 
@@ -33,6 +49,7 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentState = state.Basic;
         ui_Script = GameObject.FindGameObjectWithTag("HpBar").GetComponent<Ui_script>();
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
@@ -48,6 +65,14 @@ public class Player_Movement : MonoBehaviour
     {
         if (alive)
         {
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
+            {
+                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
+                if (dodgeDir != Vector3.zero)
+                {
+                    StartCoroutine(dodgeRoutine(dodgeDir));
+                }
+            }
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
 
@@ -59,6 +84,8 @@ public class Player_Movement : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (!alive) return;
+        if (currentState == state.Dodging) return;
         playerHP -= damage;
 
         // Visual feedback (flash effect)
@@ -71,6 +98,7 @@ public class Player_Movement : MonoBehaviour
             alive = false;
             ui_Script.gameOver();
             GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
+            playerAnimator.SetTrigger("Dead");
         }
 
         ui_Script.setHpBar(playerHP);
@@ -84,7 +112,7 @@ public class Player_Movement : MonoBehaviour
             // Create a temporary material instance for flashing
             renderer.material.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            
+
             // Restore the original material properties
             renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
         }
@@ -103,11 +131,11 @@ public class Player_Movement : MonoBehaviour
         mouseLook = context.ReadValue<Vector2>();
 
     }
-    
+
 
     // move player while changing the aim direction simalteniously
 
-     void movePlayerWithAim()
+    void movePlayerWithAim()
     {
         Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
@@ -119,20 +147,24 @@ public class Player_Movement : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
         }
+        Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
-        Vector3 vector3 = new Vector3(move.x, 0f, move.y);
-
-        movingAnim(vector3);
+       
 
 
-        transform.Translate(vector3 * speed * Time.deltaTime, Space.World);
+            movingAnim(movementDir);
 
-        playerAnimator.SetBool("MovesBack", isMovingBackwards(vector3, lookPos));
+
+            transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
+
+            playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
+
 
 
         // Debug.Log("Movement Dir is" + " " + Vector3.Normalize(vector3) + " " + "Look dir is " + " " + Vector3.Normalize(lookPos));
 
-        
+        Debug.Log(currentState);
+
     }
 
     public Vector3 getDirection() // direction player is looking at needed for player_attack_script
@@ -163,6 +195,34 @@ public class Player_Movement : MonoBehaviour
         {
             playerAnimator.SetBool("isMoving", false);
         }
+
+    }
+
+    IEnumerator dodgeRoutine(Vector3 dodgeDir)
+    {   
+    
+        isDodging = true;
+        dodgeOnCooldown = true;
+        currentState = state.Dodging;
+
+        float timer = 0f;
+
+        playerAnimator.SetTrigger("Dodge");
+
+        while (timer < dodgeDuration)
+        {
+            transform.Translate(dodgeDir * dashSpeed * Time.deltaTime, Space.World);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        currentState = state.Basic;
+        isDodging = false;
+
+        yield return new WaitForSeconds(dodgeCooldown); // cooldown wait
+        dodgeOnCooldown = false;
         
     }
+
+  
 }
