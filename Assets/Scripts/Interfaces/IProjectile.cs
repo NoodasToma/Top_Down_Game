@@ -9,14 +9,3 @@ namespace Combat
         }
     }
 }
-
-
-    // public interface IProjectile
-    // {
-    //     public GameObject owner {get ; set;}
-    //     public ProjectileEffect onHitEffect{get; set;}
-    //     public void OnHit(GameObject target)
-    //     {
-    //         onHitEffect?.Invoke(this);
-    //     }
-    // }
