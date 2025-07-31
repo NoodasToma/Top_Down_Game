@@ -167,7 +167,7 @@ public class Player_Movement : MonoBehaviour
 
         // Debug.Log("Movement Dir is" + " " + Vector3.Normalize(vector3) + " " + "Look dir is " + " " + Vector3.Normalize(lookPos));
 
-        Debug.Log(currentState);
+        // Debug.Log(currentState);
 
     }
 
