@@ -53,6 +53,8 @@ public class PlayerAttack_Script : MonoBehaviour
     ThrowingItems throwItem;
     public itemClass itemClass;
 
+     private bool isAimingThrow = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,14 +82,53 @@ public class PlayerAttack_Script : MonoBehaviour
         {
             skillRoutine = StartCoroutine(minorSkill());
         }
-        if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
-        {
-            throwRoutine = StartCoroutine(throwing());
-        }
+        
     
-
+     if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
+        {
+            StartAiming();
+        }
+        
+        if (isAimingThrow && Input.GetKeyUp(KeyCode.G))
+        {
+            ExecuteThrow();
+        }
+        
+        if (isAimingThrow && Input.GetMouseButtonDown(1)) // Right click to cancel
+        {
+            CancelThrow();
+        }
         checkedForchangeFortesting();
 
+    }
+
+    void StartAiming()
+    {
+        isAimingThrow = true;
+        throwItem.StartAiming(itemClass);
+    }
+    
+    void ExecuteThrow()
+    {
+        if (!isAimingThrow) return;
+        
+        throwItem.ExecuteThrow();
+        isAimingThrow = false;
+        
+        // Start cooldown
+        if (throwRoutine == null)
+            throwRoutine = StartCoroutine(ThrowCooldown());
+    }
+    
+    void CancelThrow()
+    {
+        isAimingThrow = false;
+        throwItem.CancelAiming();
+    }
+    IEnumerator ThrowCooldown()
+    {
+        yield return new WaitForSeconds(throwingItemCD);
+        throwRoutine = null;
     }
     IEnumerator minorSkill()
     {
@@ -97,13 +138,13 @@ public class PlayerAttack_Script : MonoBehaviour
         skillRoutine = null;
     }
 
-    IEnumerator throwing()
-    {
-        throwItem.itemToThrow(itemClass);
-        // playerAnimator.SetTrigger("rames gaaketeb");
-        yield return new WaitForSeconds(throwingItemCD);
-        throwRoutine = null;
-    }
+    // IEnumerator throwing()
+    // {
+    //     throwItem.itemToThrow(itemClass);
+    //     // playerAnimator.SetTrigger("rames gaaketeb");
+    //     yield return new WaitForSeconds(throwingItemCD);
+    //     throwRoutine = null;
+    // }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
     {
