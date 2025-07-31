@@ -43,9 +43,10 @@ public class Player_Movement : MonoBehaviour
     private bool isDodging = false;
     private bool dodgeOnCooldown = false;
 
+    [SerializeField]
+    private Rigidbody rb;
 
-
-
+     
 
 
     // Start is called before the first frame update
@@ -79,9 +80,13 @@ public class Player_Movement : MonoBehaviour
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
 
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
-
+        }
+    }
+    void FixedUpdate()
+    {
+        if (alive)
+        {
             movePlayerWithAim();
-
             debugIframes();
         }
     }
@@ -149,7 +154,9 @@ public class Player_Movement : MonoBehaviour
 
         if (aimDir != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            // transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, rotation, rotationSpeed  * Time.fixedDeltaTime));
+
         }
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
@@ -159,7 +166,8 @@ public class Player_Movement : MonoBehaviour
         movingAnim(movementDir);
 
 
-        transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
+        // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  no mor transform
+        rb.velocity = movementDir * speed;
 
         playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
@@ -173,15 +181,15 @@ public class Player_Movement : MonoBehaviour
 
     public Vector3 getDirection() // direction player is looking at needed for player_attack_script
     {
-        Vector3 lookPos = rotationTarget - transform.position;
+        Vector3 lookPos = rotationTarget - rb.position;
         lookPos.y = 0;
         return lookPos.normalized;
     }
 
     bool isMovingBackwards(Vector3 v1, Vector3 v2) // check if enemy is moving and facing in opposite directions
     {
-        v1 = Vector3.Normalize(v1);
-        v2 = Vector3.Normalize(v2);
+        v1 = v1.normalized;
+        v2 = v2.normalized;
 
         if (Vector3.Dot(v1, v2) < 0) return true;
 
@@ -217,7 +225,8 @@ public class Player_Movement : MonoBehaviour
 
         while (timer < dodgeDuration)
         {
-            transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
+            // transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
+            rb.velocity = dodgeDir * fallingDashspeed;
             timer += Time.deltaTime;
             fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
             yield return null;

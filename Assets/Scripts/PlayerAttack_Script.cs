@@ -64,7 +64,7 @@ public class PlayerAttack_Script : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         playerSkill = GetComponent<PlayerSkillScript>();
         throwItem = GetComponent<ThrowingItems>();
-
+ 
         //Todo  at the start assign damaga range etc based on class
     }
 
@@ -171,7 +171,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
 
         Vector3 push = getAim() * 1f;
-        transform.position += push;
+        // transform.position += push;
 
 
         yield return new WaitForSeconds(player.cooldownOfAttack);
