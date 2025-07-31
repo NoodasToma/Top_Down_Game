@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerSkillScript : MonoBehaviour
-{
+{   
+    
     public GameObject fireballPrefab;
     public float fireballSpeed = 10f;
     public float fireballExplosionRadius = 3f;
@@ -49,22 +50,28 @@ public class PlayerSkillScript : MonoBehaviour
                 break;
             case playerClass.Fighter:
                 //Todo
-             break;
+                break;
             case playerClass.Rogue:
-            //Todo
-            break;
+                //Todo
+                break;
             case playerClass.Ranger:
                 //Todo
-            break;
+                break;
             case playerClass.Alchemist:
-            //Todo
-            break;
+                //Todo
+                break;
             case playerClass.Warlock:
                 //Todo
-             break;
+                break;
             default:
 
-             break;
+                break;
         }
     }
+
+
+    
+
+
+   
 }
