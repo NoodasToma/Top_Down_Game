@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class Ui_script : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class Ui_script : MonoBehaviour
     //Game Over Screen
     public GameObject gameOverUI;
     public SpawnEnemies spawnScript;
+    //Pause Menu Screen
+    public GameObject pauseMenuUI;
+    public bool isPaused;
 
 
 
@@ -35,6 +39,8 @@ public class Ui_script : MonoBehaviour
         fireballimg.fillAmount = 1;
         scoreText.text = "Kills: 0";
         gameOverUI.SetActive(false);
+        pauseMenuUI.SetActive(false);
+        isPaused = false;
 
     }
 
@@ -42,7 +48,20 @@ public class Ui_script : MonoBehaviour
     void Update()
     {
         FireballCD();
-        if (Input.GetKeyDown(KeyCode.R) && gameOverUI)  restart();
+        if (Input.GetKeyDown(KeyCode.R) && gameOverUI.activeSelf) restart();
+       if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
+{
+    if (!isPaused)
+        pause();
+    else
+        resume();
+}
+        if (Input.GetKeyDown(KeyCode.Escape))
+    {
+        Debug.Log("Escape pressed");
+        Debug.Log("gameOverUI active: " + gameOverUI.activeSelf);
+        Debug.Log("pauseMenuUI active: " + pauseMenuUI.activeSelf);
+    }
     }
 
     public IEnumerator FireballCooldown()
@@ -94,7 +113,20 @@ public class Ui_script : MonoBehaviour
     {
         Debug.Log("Button clicked!");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (isPaused) { Time.timeScale = 1f; }
     }
-    
+    public void pause()
+    {
+        pauseMenuUI.SetActive(true);
+         isPaused = true;
+        Time.timeScale = 0f;
+    }
+    public void resume()
+    { 
+        pauseMenuUI.SetActive(false); 
+        Time.timeScale = 1f;          
+        isPaused = false;
+    }
+
 
 }
