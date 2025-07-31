@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRadiusmin: 40
-  spawnRadiusmax: 10
+  spawnRadiusmax: 50
   spawnRate: 3
   enemy: {fileID: 4153270372909759199, guid: ab5edcda4b9b05b4bb3ce44a06d465e9, type: 3}
   stopSpawning: 0
@@ -2488,18 +2488,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: 0
-  damage: 10
-  range: 5
-  isRanged: 0
-  cooldownOfAttack: 0.25
-  angleOfAttack: 40
-  radiusOfRangedAttack: 0.1
-  forceOfAttack: 100
+  Class: 0
   layer:
     serializedVersion: 2
     m_Bits: 8
-  skillCdMinor: 5
+  test_damage: 50
+  test_range: 5
+  test_isRanged: 1
+  test_cooldownOfAttack: 0.25
+  test_angleOfAttack: 45
+  test_radiusOfRangedAttack: 1
+  test_forceOfAttack: 100
+  test_skillCdMinor: 5
+  comboCd: 1
+  comboResetTime: 1
 --- !u!114 &1816870885764332977
 MonoBehaviour:
   m_ObjectHideFlags: 0
