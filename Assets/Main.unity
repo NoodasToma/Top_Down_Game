@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1324,7 +1324,7 @@ Transform:
   m_GameObject: {fileID: 1426448735}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.2, y: 27.01, z: 0}
+  m_LocalPosition: {x: -14.2, y: 2.7, z: 0}
   m_LocalScale: {x: 6.416973, y: 6.416973, z: 25.28544}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2372,6 +2372,7 @@ GameObject:
   - component: {fileID: 1816870885764332977}
   - component: {fileID: 1816870885764332976}
   - component: {fileID: 1816870885764332975}
+  - component: {fileID: 1816870885764332979}
   - component: {fileID: 1816870885764332974}
   m_Layer: 0
   m_Name: Test_Human
@@ -2487,21 +2488,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerClass: 0
   damage: 10
   range: 5
   isRanged: 0
-  cooldown: 0.5
+  cooldownOfAttack: 0.25
   angleOfAttack: 40
   radiusOfRangedAttack: 0.1
   forceOfAttack: 100
   layer:
     serializedVersion: 2
     m_Bits: 8
-  fireballPrefab: {fileID: 8254322831252680528, guid: 6b621efdb35b3674590d480fe2fa2eff, type: 3}
-  fireballSpeed: 15
-  fireballExplosionRadius: 20
-  explosionEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}
-  fireballCDTime: 5
+  skillCdMinor: 5
 --- !u!114 &1816870885764332977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2520,7 +2518,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 0}
   alive: 1
   dashSpeed: 20
-  dodgeDuration: 0.25
+  dodgeDuration: 0.5
+  iFrameDuration: 0
   dodgeCooldown: 1
 --- !u!114 &1816870885764332978
 MonoBehaviour:
@@ -2584,6 +2583,22 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1816870885764332979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332224214560352023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b21c5750411e9b45b338080f630031c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireballPrefab: {fileID: 8254322831252680528, guid: 6b621efdb35b3674590d480fe2fa2eff, type: 3}
+  fireballSpeed: 10
+  fireballExplosionRadius: 3
+  explosionEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}
 --- !u!1 &1871331837847872510
 GameObject:
   m_ObjectHideFlags: 0

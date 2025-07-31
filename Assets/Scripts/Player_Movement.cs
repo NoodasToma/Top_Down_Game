@@ -34,8 +34,10 @@ public class Player_Movement : MonoBehaviour
     private state currentState;
     public float dashSpeed;
 
-   
+
     public float dodgeDuration = 0.25f;
+
+    public float iFrameDuration;
     public float dodgeCooldown = 1f;
 
     private bool isDodging = false;
@@ -79,6 +81,8 @@ public class Player_Movement : MonoBehaviour
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
 
             movePlayerWithAim();
+
+            debugIframes();
         }
     }
 
@@ -149,15 +153,15 @@ public class Player_Movement : MonoBehaviour
         }
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
-       
 
 
-            movingAnim(movementDir);
+
+        movingAnim(movementDir);
 
 
-            transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
+        transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
 
-            playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
+        playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
 
 
@@ -199,11 +203,13 @@ public class Player_Movement : MonoBehaviour
     }
 
     IEnumerator dodgeRoutine(Vector3 dodgeDir)
-    {   
-    
+    {
+
         isDodging = true;
         dodgeOnCooldown = true;
         currentState = state.Dodging;
+
+        float fallingDashspeed = dashSpeed;
 
         float timer = 0f;
 
@@ -211,17 +217,26 @@ public class Player_Movement : MonoBehaviour
 
         while (timer < dodgeDuration)
         {
-            transform.Translate(dodgeDir * dashSpeed * Time.deltaTime, Space.World);
+            transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
             timer += Time.deltaTime;
+            fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
             yield return null;
         }
 
+        yield return new WaitForSeconds(iFrameDuration);
         currentState = state.Basic;
         isDodging = false;
 
         yield return new WaitForSeconds(dodgeCooldown); // cooldown wait
         dodgeOnCooldown = false;
-        
+
+    }
+
+    void debugIframes()
+    {   
+        var renderer = GetComponentInChildren<Renderer>();
+        if (currentState == state.Dodging) renderer.material.color = Color.black;
+        else renderer.material.color = Color.white;
     }
 
   

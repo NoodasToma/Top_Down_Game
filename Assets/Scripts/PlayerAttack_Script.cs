@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class PlayerAttack_Script : MonoBehaviour
 {
+    public playerClass playerClass;
     public float damage;
 
     public float range;
 
     public bool isRanged;
 
-    public float cooldown;
+    public float cooldownOfAttack;
     public float angleOfAttack;
 
     public float radiusOfRangedAttack;
@@ -23,18 +24,19 @@ public class PlayerAttack_Script : MonoBehaviour
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
-    public GameObject fireballPrefab;
-    public float fireballSpeed = 10f;
-    public float fireballExplosionRadius = 3f;
-    public GameObject explosionEffect;
-    // fireball cooldown. if you change this make sure to change cooldown times in the UI script too 
-    public float fireballCDTime = 5f;
-    private Coroutine fireballRoutine;
+    private Coroutine skillRoutine;
+
+    public float skillCdMinor = 5f;
+
+    PlayerSkillScript playerSkill;
 
     // Start is called before the first frame update
     void Start()
     {
         playerAnimator = GetComponent<Animator>();
+        playerSkill = GetComponent<PlayerSkillScript>();
+
+        //Todo  at the start assign damaga range etc based on class
     }
 
     // Update is called once per frame
@@ -42,17 +44,17 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && attackRoutine == null) attackRoutine = StartCoroutine(swing());
         // Original full check
-        if (Input.GetKeyDown(KeyCode.E) && fireballRoutine == null)
+        if (Input.GetKeyDown(KeyCode.E) && skillRoutine == null)
         {
-            fireballRoutine = StartCoroutine(fire());
+            skillRoutine = StartCoroutine(minorSkill());
         }
     
     }
-    IEnumerator fire() {
-        fireball();
+    IEnumerator minorSkill() {
+        playerSkill.minorSkill(playerClass);
         playerAnimator.SetTrigger("Fireball");
-         yield return new WaitForSeconds(fireballCDTime);
-        fireballRoutine = null;
+         yield return new WaitForSeconds(skillCdMinor);
+        skillRoutine = null;
     }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
@@ -60,7 +62,7 @@ public class PlayerAttack_Script : MonoBehaviour
         playerAnimator.SetTrigger("Attack");
 
         
-        yield return new WaitForSeconds(cooldown);
+        yield return new WaitForSeconds(cooldownOfAttack);
 
         attack();
 
@@ -104,21 +106,7 @@ public class PlayerAttack_Script : MonoBehaviour
         }
 
     }
-    void fireball()
-    {
-        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
-
-        GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
-        Rigidbody rb = fireball.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.velocity = getAim() * fireballSpeed;
-        }
-
-        Destroy(fireball, 5f);
-        
-
-    }
+   
     
 
    
