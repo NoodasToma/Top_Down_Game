@@ -27,14 +27,19 @@ public class PlayerAttack_Script : MonoBehaviour
     private Coroutine skillRoutine;
 
     public float skillCdMinor = 5f;
+    public float throwingItemCD = 5f;
+    private Coroutine throwRoutine;
 
     PlayerSkillScript playerSkill;
+    ThrowingItems throwItem;
+    public itemClass itemClass;
 
     // Start is called before the first frame update
     void Start()
     {
         playerAnimator = GetComponent<Animator>();
         playerSkill = GetComponent<PlayerSkillScript>();
+        throwItem = GetComponent<ThrowingItems>();
 
         //Todo  at the start assign damaga range etc based on class
     }
@@ -48,6 +53,10 @@ public class PlayerAttack_Script : MonoBehaviour
         {
             skillRoutine = StartCoroutine(minorSkill());
         }
+        if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
+        {
+            throwRoutine = StartCoroutine(throwing());
+        }
     
     }
     IEnumerator minorSkill() {
@@ -55,6 +64,14 @@ public class PlayerAttack_Script : MonoBehaviour
         playerAnimator.SetTrigger("Fireball");
          yield return new WaitForSeconds(skillCdMinor);
         skillRoutine = null;
+    }
+
+    IEnumerator throwing()
+    {
+        throwItem.itemToThrow(itemClass);
+        // playerAnimator.SetTrigger("rames gaaketeb");
+        yield return new WaitForSeconds(throwingItemCD);
+        throwRoutine = null;
     }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
@@ -68,7 +85,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
         attackRoutine = null;
     }
-
+    
     // draws a sphere around the player and checks if an enemy inside is within angle to get hit if it is it takes damage
     void attack()
     {  
