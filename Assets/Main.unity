@@ -3634,34 +3634,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Class: 0
   Class: 1
   layer:
     serializedVersion: 2
     m_Bits: 8
   throwingItemCD: 5
   test_damage: 40
-  test_range: 5
-  test_isRanged: 0
+  test_range: 50
+  test_isRanged: 1
   test_cooldownOfAttack: 0.25
   test_angleOfAttack: 45
   test_radiusOfRangedAttack: 0
   test_forceOfAttack: 250
   test_skillCdMinor: 5
-  comboCd: 0.8
+  comboCd: 0.5
   comboResetTime: 1
   itemClass: 1
-  test_damage: 0
-  test_range: 0
-  test_isRanged: 0
-  test_cooldownOfAttack: 0
-  test_angleOfAttack: 0
-  test_radiusOfRangedAttack: 0
-  test_forceOfAttack: 0
-  test_skillCdMinor: 5
-  comboCd: 0
-  comboResetTime: 1
-  itemClass: 0
 --- !u!114 &1816870885764332977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3761,6 +3749,7 @@ MonoBehaviour:
   fireballSpeed: 10
   fireballExplosionRadius: 3
   explosionEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}
+  arrowIndicatorPrefab: {fileID: 2700091513918254190, guid: bcdd36801923fc749a46b597fd4168c3, type: 3}
 --- !u!114 &1816870885764332980
 MonoBehaviour:
   m_ObjectHideFlags: 0

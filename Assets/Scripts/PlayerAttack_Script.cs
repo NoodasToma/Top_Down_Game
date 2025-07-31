@@ -46,6 +46,8 @@ public class PlayerAttack_Script : MonoBehaviour
     private float lastClickTime = 0f;
     private bool isAttacking = false;
 
+    private bool skillOnCD;
+
 
 
 
@@ -74,13 +76,18 @@ public class PlayerAttack_Script : MonoBehaviour
             float lastAttackTime = Time.time - lastClickTime;
             if (lastAttackTime > comboResetTime) comboIndex = 0;
             lastClickTime = Time.time;
-            if(attackRoutine==null)attackRoutine = StartCoroutine(swing());
-         
-         }   
-        // Original full check
-        if (Input.GetKeyDown(KeyCode.E) && skillRoutine == null)
-        {
-            skillRoutine = StartCoroutine(minorSkill());
+            if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
+
+        }
+        if (!skillOnCD) { 
+            
+            if (Input.GetKeyDown(KeyCode.E)) playerSkill.AimSkill(player.playerClass);
+            // Original full check
+            if (Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
+            {
+                skillOnCD = true;
+                skillRoutine = StartCoroutine(minorSkill());
+            }
         }
         
     
@@ -136,6 +143,7 @@ public class PlayerAttack_Script : MonoBehaviour
         playerAnimator.SetTrigger("Fireball");
         yield return new WaitForSeconds(player.skillCdMinor);
         skillRoutine = null;
+        skillOnCD = false;
     }
 
     // IEnumerator throwing()
@@ -151,7 +159,7 @@ public class PlayerAttack_Script : MonoBehaviour
         isAttacking = true;
 
         float speedTemp = GetComponent<Player_Movement>().speed;
-        if(!player.isRanged)GetComponent<Player_Movement>().speed = 0;
+        if(!player.isRanged)GetComponent<Player_Movement>().speed = speedTemp/4;
         
 
         switch (comboIndex)
@@ -162,7 +170,7 @@ public class PlayerAttack_Script : MonoBehaviour
         }
 
 
-        Vector3 push = getAim() * 0.5f;
+        Vector3 push = getAim() * 1f;
         transform.position += push;
 
 
