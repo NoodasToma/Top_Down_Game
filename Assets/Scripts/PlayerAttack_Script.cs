@@ -18,7 +18,7 @@ public class PlayerAttack_Script : MonoBehaviour
     private Coroutine attackRoutine;
     private Coroutine skillRoutine;
 
-    public float skillCdMinor = 5f;
+    
     public float throwingItemCD = 5f;
     private Coroutine throwRoutine;
 
@@ -42,7 +42,7 @@ public class PlayerAttack_Script : MonoBehaviour
     private bool comboOnCd;
 
     private int comboIndex = 0;
-    public float comboResetTime = 1f;
+    public float comboResetTime;
     private float lastClickTime = 0f;
     private bool isAttacking = false;
 
@@ -117,7 +117,7 @@ public class PlayerAttack_Script : MonoBehaviour
         {
             case 0: playerAnimator.SetTrigger("Attack"); break;
             case 1: playerAnimator.SetTrigger("Fireball"); break;
-            case 2: playerAnimator.SetTrigger("Dodge"); break;
+            case 2: playerAnimator.SetTrigger("Attack"); break;
         }
 
 

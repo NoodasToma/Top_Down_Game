@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2389,7 +2389,7 @@ RectTransform:
   - {fileID: 1846201248}
   - {fileID: 1172558574}
   - {fileID: 543857179}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1813462780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2783,7 +2783,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1643566018}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1813462781
@@ -3633,20 +3634,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: 0
-  damage: 10
-  range: 5
-  isRanged: 0
-  cooldownOfAttack: 0.25
-  angleOfAttack: 40
-  radiusOfRangedAttack: 0.1
-  forceOfAttack: 100
+  Class: 0
   layer:
     serializedVersion: 2
     m_Bits: 8
-  skillCdMinor: 5
   throwingItemCD: 5
-  itemClass: 0
+  test_damage: 40
+  test_range: 5
+  test_isRanged: 0
+  test_cooldownOfAttack: 0.25
+  test_angleOfAttack: 45
+  test_radiusOfRangedAttack: 0
+  test_forceOfAttack: 250
+  test_skillCdMinor: 5
+  comboCd: 0.8
+  comboResetTime: 1
+  itemClass: 1
 --- !u!114 &1816870885764332977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3665,8 +3668,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 0}
   alive: 1
   dashSpeed: 20
-  dodgeDuration: 0.5
-  iFrameDuration: 0
+  dodgeDuration: 0.25
+  iFrameDuration: 0.25
   dodgeCooldown: 1
 --- !u!114 &1816870885764332978
 MonoBehaviour:
@@ -4883,7 +4886,6 @@ SceneRoots:
   - {fileID: 606076505}
   - {fileID: 1515855184}
   - {fileID: 1828519881}
-  - {fileID: 1643566018}
   - {fileID: 1813462780}
   - {fileID: 1426448739}
   - {fileID: 915900413}
