@@ -43,6 +43,8 @@ public class Player_Movement : MonoBehaviour
     private bool isDodging = false;
     private bool dodgeOnCooldown = false;
 
+    public LayerMask walls;
+
 
 
 
@@ -80,10 +82,15 @@ public class Player_Movement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
 
-            movePlayerWithAim();
-
+            
+          
             debugIframes();
         }
+    }
+
+    void FixedUpdate()
+    {
+        movePlayerWithAim(); 
     }
 
     public void TakeDamage(float damage)
@@ -141,6 +148,7 @@ public class Player_Movement : MonoBehaviour
 
     void movePlayerWithAim()
     {
+
         Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
@@ -154,7 +162,7 @@ public class Player_Movement : MonoBehaviour
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
 
-
+        if (movingToWall(movementDir)) movementDir = Vector3.zero;
 
         movingAnim(movementDir);
 
@@ -216,7 +224,7 @@ public class Player_Movement : MonoBehaviour
         playerAnimator.SetTrigger("Dodge");
 
         while (timer < dodgeDuration)
-        {
+        {if (movingToWall(dodgeDir)) break;
             transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
             timer += Time.deltaTime;
             fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
@@ -233,11 +241,26 @@ public class Player_Movement : MonoBehaviour
     }
 
     void debugIframes()
-    {   
+    {
         var renderer = GetComponentInChildren<Renderer>();
         if (currentState == state.Dodging) renderer.material.color = Color.black;
         else renderer.material.color = Color.white;
     }
 
-  
+    bool movingToWall(Vector3 playerMovingDir)
+    {
+        RaycastHit hit;
+        bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
+        Debug.Log(hitsWall);
+        return hitsWall;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Vector3 movementDir = new Vector3(move.x, 0f, move.y);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, movementDir.normalized*2f);
+    }
+
+
 }

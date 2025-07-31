@@ -18,7 +18,7 @@ public class Enemy_Movement : MonoBehaviour
 
     public float rotSpeed;
 
-    public float pushability;
+    public float weight;
 
     public bool isKnockable;
 
@@ -230,7 +230,7 @@ public class Enemy_Movement : MonoBehaviour
         Vector3 direction = transform.position - target.transform.position;
         direction.y = 0;
 
-        transform.Translate(direction * (force / pushability) * Time.deltaTime, Space.World);
+        transform.Translate(direction * (force / weight) * Time.deltaTime, Space.World);
     }
 
 

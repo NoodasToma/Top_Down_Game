@@ -18,6 +18,15 @@ public class Camera_Follow : MonoBehaviour
     }
 
     // Update is called once per frame
+<<<<<<< Updated upstream
+    void FixedUpdate()
+=======
+
+    void Update()
+>>>>>>> Stashed changes
+    {
+        
+    }
     void FixedUpdate()
     {
 

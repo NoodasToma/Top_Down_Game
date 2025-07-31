@@ -430,7 +430,7 @@ MonoBehaviour:
   movementSpeed: 5
   target: {fileID: 0}
   rotSpeed: 5
-  pushability: 10
+  weight: 5
   isKnockable: 1
   distanceFromAllies: 1.5
   distanceFromWalls: 1.5
