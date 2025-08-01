@@ -207,7 +207,7 @@ public class Enemy_Movement : MonoBehaviour
     IEnumerator highglightAttack(float duration)
 {
     Renderer ren = GetComponent<Renderer>();
-    ren.material.color = Color.red;  // Highlight enemy red on hit
+    ren.material.color = Color.white;  // Highlight enemy red on hit
 
     // Instantiate blood splatter effect prefab at enemy's position
     GameObject bloodSplatter = Instantiate(bloodSplatterPrefab, transform.position, Quaternion.identity);

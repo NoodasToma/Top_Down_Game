@@ -9,6 +9,7 @@ TagManager:
   - Ability
   - killCounter
   - Button
+  - CameraHolder
   layers:
   - Default
   - TransparentFX
