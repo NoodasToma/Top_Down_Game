@@ -60,6 +60,7 @@ public class PlayerAttack_Script : MonoBehaviour
     public itemClass itemClass;
 
     private bool isAimingThrow = false;
+    private bool isAimingSkill = false;
 
     // Start is called before the first frame update
     void Start()
@@ -83,17 +84,26 @@ public class PlayerAttack_Script : MonoBehaviour
             if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
 
         }
-        if (!skillOnCD)
-        {
+       if (!skillOnCD)
+{
+    if (Input.GetKeyDown(KeyCode.E))
+    {
+        isAimingSkill = true; // Start aiming skill
+        playerSkill.AimSkill(player.playerClass);
+    }
 
-            if (Input.GetKeyDown(KeyCode.E)) playerSkill.AimSkill(player.playerClass);
-            // Original full check
-            if (Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
-            {
-                skillOnCD = true;
-                skillRoutine = StartCoroutine(minorSkill());
-            }
-        }
+    if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
+    {
+        skillOnCD = true;
+        skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
+        isAimingSkill = false; // Reset aiming state
+    }
+
+    if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
+    {
+        CancelSkill(); // Call cancel method
+    }
+}
 
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
@@ -132,6 +142,11 @@ public class PlayerAttack_Script : MonoBehaviour
             throwRoutine = StartCoroutine(ThrowCooldown());
     }
 
+    void CancelSkill()
+{
+    isAimingSkill = false;
+    playerSkill.CancelAiming(); // Tells skill script to stop aiming and hide indicator
+}
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -151,13 +166,6 @@ public class PlayerAttack_Script : MonoBehaviour
         skillOnCD = false;
     }
 
-    // IEnumerator throwing()
-    // {
-    //     throwItem.itemToThrow(itemClass);
-    //     // playerAnimator.SetTrigger("rames gaaketeb");
-    //     yield return new WaitForSeconds(throwingItemCD);
-    //     throwRoutine = null;
-    // }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
     {

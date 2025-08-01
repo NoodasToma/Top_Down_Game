@@ -11,15 +11,19 @@ public class SpawnEnemies : MonoBehaviour
 
   public GameObject enemy;
 
-  private int enemyCount = 0;
+  private int enemyCount1 = 0;
+  private int enemyCount2=0;
   public bool stopSpawning = false;
+  public GameObject strongEnemy;
+  private int totalSpawned = 0;
 
 
   // Start is called before the first frame update
   void Start()
   {
-   
-      InvokeRepeating("spawnEnemy", 1f, spawnRate); 
+
+    InvokeRepeating("spawnEnemy", 1f, spawnRate); 
+      
 
 
   }
@@ -32,23 +36,31 @@ public class SpawnEnemies : MonoBehaviour
 
   public void spawnEnemy()
   {
-    if (stopSpawning || enemyCount >= 100) return;
+    if (stopSpawning || totalSpawned>=10) return;
     float spawnRadius = Random.Range(spawnRadiusmin, spawnRadiusmax);
-
-
-
     Vector2 spawnDir = Random.insideUnitCircle.normalized * spawnRadius;
-
-
-
     Vector3 spawnPos = transform.position + new Vector3(spawnDir.x, 0, spawnDir.y);
 
-    Instantiate(enemy, spawnPos, Quaternion.identity);
 
-    enemyCount++;
+    GameObject enemyToSpawn;
+
+if (totalSpawned < 5)
+{
+    enemyToSpawn = enemy;
+    enemyCount1++;
+}
+else
+{
+    enemyToSpawn = strongEnemy;
+    enemyCount2++;
+}
+
+    Instantiate(enemyToSpawn, spawnPos, Quaternion.identity);
+
+    totalSpawned++;
 
   }
-
+  
   void OnDrawGizmosSelected()
   {
     Gizmos.color = Color.red;
