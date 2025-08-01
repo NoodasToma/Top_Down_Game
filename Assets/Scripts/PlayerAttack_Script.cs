@@ -196,43 +196,7 @@ public class PlayerAttack_Script : MonoBehaviour
         attackRoutine = null;
     }
     
-    // draws a sphere around the player and checks if an enemy inside is within angle to get hit if it is it takes damage
-    // void attack()
-    // {
-    //     Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
-
-    //     if (!isRanged)
-    //     {
-
-    //         Collider[] hitEnemies = Physics.OverlapSphere(hitBoxOrigin, range, layer);
-    //         if (hitEnemies.Length <= 0) return;
-
-    //         foreach (Collider c in hitEnemies)
-    //         {
-    //             Vector3 positionEnemy = c.transform.position - transform.position;
-    //             positionEnemy.y = 0;
-    //             positionEnemy = positionEnemy.normalized;
-    //             float angle = Vector3.Angle(getAim(), positionEnemy);
-    //             if (angle <= angleOfAttack && c.gameObject != null)
-    //             {
-    //                 c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         RaycastHit hit;
-    //         bool isHit = Physics.SphereCast(hitBoxOrigin, radiusOfRangedAttack, getAim(), out hit, range, layer);
-    //         Debug.Log(isHit);
-    //         if (isHit)
-    //         {
-    //             Debug.Log(hit.transform.name);
-    //             hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
-    //         }
-
-    //     }
-
-    // }
+   
 
 
 
