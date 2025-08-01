@@ -15,7 +15,7 @@ public class ProjectileCollision : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Projectile hit: " + other.name);
+        
 
         if (isHealing)
         {

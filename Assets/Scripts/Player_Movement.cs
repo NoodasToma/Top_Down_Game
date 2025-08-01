@@ -251,7 +251,6 @@ public class Player_Movement : MonoBehaviour
     {
         RaycastHit hit;
         bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
-        Debug.Log(hitsWall);
         return hitsWall;
     }
 

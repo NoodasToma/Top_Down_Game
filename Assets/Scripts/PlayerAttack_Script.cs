@@ -13,6 +13,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
     public LayerMask layer;
 
+    public LayerMask wall;
+
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
@@ -296,12 +298,26 @@ public class PlayerAttack_Script : MonoBehaviour
     void RangerAttack(Vector3 originOfattack)
     {
         RaycastHit hit;
-        bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range, layer);
-        Debug.Log(isHit);
-        if (isHit)
+        RaycastHit wallhit;
+        bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range,layer);
+        bool isWall = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out wallhit, player.range,wall);
+
+      
+    
+        if (isHit || isWall)
         {
+            
+            if (isHit && isWall)
+            {
+             Debug.Log(originOfattack);
+             Debug.Log(hit.collider.name);
+             Debug.Log(wallhit.collider.name);
+             if ((wallhit.transform.position - originOfattack).magnitude <= (hit.transform.position - originOfattack).magnitude) return;
+            }
+
+            if (!isHit) return;
             CameraShake(0.05f, 0.1f);
-            freezeFrame(0.01f);
+            freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
             hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
         }
