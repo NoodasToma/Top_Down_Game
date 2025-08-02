@@ -5,6 +5,7 @@ using OpenCover.Framework.Model;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using Combat;
 
 public class PlayerAttack_Script : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class PlayerAttack_Script : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         playerSkill = GetComponent<PlayerSkillScript>();
         throwItem = GetComponent<ThrowingItems>();
- 
+    
         //Todo  at the start assign damaga range etc based on class
     }
 
@@ -215,7 +216,7 @@ public class PlayerAttack_Script : MonoBehaviour
     //             float angle = Vector3.Angle(getAim(), positionEnemy);
     //             if (angle <= angleOfAttack && c.gameObject != null)
     //             {
-    //                 c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
+    //                 c.gameObject.GetComponent<Enemy_Movement>().TakeDamage(damage, forceOfAttack);
     //             }
     //         }
     //     }
@@ -227,7 +228,7 @@ public class PlayerAttack_Script : MonoBehaviour
     //         if (isHit)
     //         {
     //             Debug.Log(hit.transform.name);
-    //             hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, forceOfAttack);
+    //             hit.transform.gameObject.GetComponent<Enemy_Movement>().TakeDamage(damage, forceOfAttack);
     //         }
 
     //     }
@@ -268,6 +269,7 @@ public class PlayerAttack_Script : MonoBehaviour
             Gizmos.DrawRay(hitBoxOrigin, right * player.range);
         }
         else
+
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(hitBoxOrigin, getAim() * player.range);
@@ -320,7 +322,7 @@ public class PlayerAttack_Script : MonoBehaviour
             float angle = Vector3.Angle(getAim(), positionEnemy);
             if (angle <= player.angleOfAttack && c.gameObject != null)
             {
-                c.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
+                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.forceOfAttack));
             }
         }
     }
@@ -333,7 +335,7 @@ public class PlayerAttack_Script : MonoBehaviour
         if (isHit)
         {
             Debug.Log(hit.transform.name);
-            hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
+            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.forceOfAttack));
         }
     }
 
