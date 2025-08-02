@@ -90,15 +90,9 @@ public class Player_Movement : MonoBehaviour
         if (alive)
         {
             movePlayerWithAim();
-
             debugIframes();
         }
     }
-    void FixedUpdate()
-{
-    if (!alive) return;
-    movePlayerWithAim(); 
-}
 
 
     public void TakeDamage(float damage)

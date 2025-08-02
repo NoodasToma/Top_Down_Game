@@ -94,8 +94,6 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         Quaternion rotDir = Quaternion.LookRotation(rotLock);
         
 
-
-
         if (rotLock != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed * Time.deltaTime);
 
         targetLoc = targetLoc.normalized;
