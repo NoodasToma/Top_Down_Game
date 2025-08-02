@@ -78,26 +78,26 @@ public class PlayerSkillScript : MonoBehaviour
     }
 }
 
-    public void AimSkill(playerClass playerClass)
+    public void AimSkill(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 startAim();
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 //Todo
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 //Todo
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:
@@ -106,26 +106,26 @@ public class PlayerSkillScript : MonoBehaviour
         }
     }
 
-    public void minorSkill(playerClass playerClass)
+    public void minorSkill(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 fireball();
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 //Todo
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 //Todo
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:

@@ -35,13 +35,11 @@ public class Character_Passives : MonoBehaviour
         if (ui_Script == null)
             Debug.LogError("Character_Passives: Ui_script component missing!");
 
-
-
     }
 
     public void CheckForCheatDeath(float damage)
     {
-        if (attackScript == null || attackScript.Class != playerClass.Sorcerer)
+        if (attackScript == null || attackScript.pClass != PlayerClass.Sorcerer)
         {
             // Not a sorcerer, apply normal damage
             ApplyNormalDamage(damage);

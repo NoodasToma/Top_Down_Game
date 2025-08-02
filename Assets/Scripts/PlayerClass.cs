@@ -1,12 +1,12 @@
-public enum playerClass
+public enum PlayerClass
 {
 
     Fighter, Sorcerer, Rogue, Warlock, Alchemist, Ranger
 }
 
-public class playerClassStats
+public class PlayerClassStats
 {
-    public playerClass playerClass;
+    public PlayerClass playerClass;
     public float damage;
 
     public float range;
@@ -22,7 +22,7 @@ public class playerClassStats
 
     public float skillCdMinor;
 
-    public playerClassStats(playerClass playerClass, float damage, float range, bool isRanged, float cooldownOfAttack, float angleOfAttack, float radiusOfRangedAttack, float forceOfAttack, float skillCdMinor)
+    public PlayerClassStats(PlayerClass playerClass, float damage, float range, bool isRanged, float cooldownOfAttack, float angleOfAttack, float radiusOfRangedAttack, float forceOfAttack, float skillCdMinor)
     {
         this.playerClass = playerClass;
         this.damage = damage;
@@ -36,14 +36,14 @@ public class playerClassStats
 
     }
 
-    public playerClassStats()
+    public PlayerClassStats()
     {
         
     }
 
 
      // Setters
-    public void SetPlayerClass(playerClass playerClass) => this.playerClass = playerClass;
+    public void SetPlayerClass(PlayerClass playerClass) => this.playerClass = playerClass;
     public void SetDamage(float damage) => this.damage = damage;
     public void SetRange(float range) => this.range = range;
     public void SetIsRanged(bool isRanged) => this.isRanged = isRanged;

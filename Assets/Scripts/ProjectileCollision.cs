@@ -56,7 +56,7 @@ public class ProjectileCollision : MonoBehaviour
             Vector3 knockDir = (c.transform.position - transform.position).normalized;
             knockDir.y = 0;
 
-            c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(-healAmount)); 
+            c.gameObject.GetComponent<IDamageable>().Heal(healAmount); 
 
         }
 

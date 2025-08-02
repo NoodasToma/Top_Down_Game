@@ -9,8 +9,8 @@ using Combat;
 
 public class PlayerAttack_Script : MonoBehaviour
 {
-    public playerClass Class;
-    private playerClassStats player = new playerClassStats();
+    public PlayerClass pClass;
+    private PlayerClassStats player = new PlayerClassStats();
 
     public LayerMask layer;
 
@@ -66,7 +66,7 @@ public class PlayerAttack_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        constructChar(Class);
+        constructChar(pClass);
         playerAnimator = GetComponent<Animator>();
         playerSkill = GetComponent<PlayerSkillScript>();
         throwItem = GetComponent<ThrowingItems>();
@@ -256,27 +256,27 @@ public class PlayerAttack_Script : MonoBehaviour
 
     }
 
-    void basicAttack(playerClass playerClass)
+    void basicAttack(PlayerClass playerClass)
     {
         Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 RangerAttack(hitBoxOrigin);
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 FighterAttack(hitBoxOrigin);
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 RangerAttack(hitBoxOrigin);
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:
@@ -334,32 +334,32 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
 
-    void constructChar(playerClass playerClass)
+    void constructChar(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Sorcerer:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                  test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
-            case playerClass.Fighter:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Fighter:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
-            case playerClass.Rogue:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Rogue:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
-            case playerClass.Ranger:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Ranger:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
-            case playerClass.Alchemist:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Alchemist:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
-            case playerClass.Warlock:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
+            case PlayerClass.Warlock:
+                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
                 break;
             default:
@@ -395,7 +395,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
         if (player.skillCdMinor != test_skillCdMinor)
             player.SetSkillCdMinor(test_skillCdMinor);
-        if (player.playerClass != Class) player.SetPlayerClass(Class);
+        if (player.playerClass != pClass) player.SetPlayerClass(pClass);
     }
 
 

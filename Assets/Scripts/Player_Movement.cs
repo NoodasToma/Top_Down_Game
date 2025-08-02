@@ -103,7 +103,7 @@ public class Player_Movement : MonoBehaviour
         Character_Passives passives = GetComponent<Character_Passives>();
         PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
 
-        if (passives != null && attackScript != null && attackScript.Class == playerClass.Sorcerer)
+        if (passives != null && attackScript != null && attackScript.pClass == PlayerClass.Sorcerer)
         {
             // Let Character_Passives handle damage and cheat death for Sorcerer
             passives.CheckForCheatDeath(damage);
