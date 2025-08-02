@@ -1,4 +1,5 @@
 using System;
+using Combat;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy_Movement : MonoBehaviour
+public class Enemy_Movement : MonoBehaviour, IDamageable
 {
     public float hp;
 
@@ -171,39 +172,36 @@ public class Enemy_Movement : MonoBehaviour
     }
 
     // everything that needs to happen when enemy gets hit
-    public void takeDamage(float damage, float force)
+    public void TakeDamage(float damage, float force)
+    {
+        TakeDamage(new Damage(damage, force));
+    }
+    public void TakeDamage(Damage damage)
     {
         // take damage
         float highlightTime = 0.25f;
-        hp -= damage;
+        hp -= damage.amount;
+        
         if (hp <= 0)
         {
-            GameObject ui = GameObject.Find("Healthbar"); 
-    if (ui != null)
-    {
-        Ui_script uiScript = ui.GetComponent<Ui_script>();
-        if (uiScript != null)
-        {
-            uiScript.AddKill(); // this updates the kill counter
-        }
-    }
+            GameObject.Find("Healthbar")?.GetComponent<Ui_script>()?.AddKill(); //if healthbar is faund find ui scritp and add kill
             GameObject.Destroy(this.gameObject);
-            
-         }
-
-
+        }
 
         //get knocked back
-        if (isKnockable) knockBack(force);
+        if (isKnockable) knockBack(damage.knockBackForce);
 
         //highlight
         if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
         flashCoroutine = StartCoroutine(highglightAttack(highlightTime));
 
         setHealthBar(hp);
-
     }
-
+    public void Heal(float amount)
+    {
+        hp += amount;
+        setHealthBar(hp);
+    }
     IEnumerator highglightAttack(float duration)
 {
     Renderer ren = GetComponent<Renderer>();
