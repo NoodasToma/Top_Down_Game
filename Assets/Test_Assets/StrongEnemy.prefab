@@ -463,11 +463,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057a7f1d87236f344b07ae4c88880035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  hp: 1000
   attackRange: 2
   movementSpeed: 10
   target: {fileID: 0}
-  rotSpeed: 5
+  rotSpeed: 50
   weight: 5
   isKnockable: 1
   distanceFromAllies: 1.5
