@@ -67,6 +67,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
         if (alive)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
@@ -82,21 +83,34 @@ public class Player_Movement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
 
-            
-          
+
+
             debugIframes();
         }
     }
-
     void FixedUpdate()
-    {
-        movePlayerWithAim(); 
-    }
+{
+    if (!alive) return;
+    movePlayerWithAim(); 
+}
+
 
     public void TakeDamage(float damage)
     {
         if (!alive) return;
         if (currentState == state.Dodging) return;
+
+        Character_Passives passives = GetComponent<Character_Passives>();
+        PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
+
+        if (passives != null && attackScript != null && attackScript.Class == playerClass.Sorcerer)
+        {
+            // Let Character_Passives handle damage and cheat death for Sorcerer
+            passives.CheckForCheatDeath(damage);
+            return; // Exit so damage is handled only in CheckForCheatDeath
+        }
+
+
         playerHP -= damage;
 
         // Visual feedback (flash effect)

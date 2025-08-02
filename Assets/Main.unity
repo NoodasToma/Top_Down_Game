@@ -3568,6 +3568,7 @@ GameObject:
   - component: {fileID: 1816870885764332979}
   - component: {fileID: 1816870885764332974}
   - component: {fileID: 1816870885764332980}
+  - component: {fileID: 1816870885764332981}
   m_Layer: 0
   m_Name: Test_Human
   m_TagString: Player
@@ -3682,7 +3683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Class: 1
+  Class: 0
   layer:
     serializedVersion: 2
     m_Bits: 8
@@ -3714,7 +3715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  playerHP: 1000
+  playerHP: 10
   rotationSpeed: 0.15
   playerAnimator: {fileID: 0}
   alive: 1
@@ -3824,6 +3825,19 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &1816870885764332981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332224214560352023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba778e5d6d807b5419e708c68d3482f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionPrefab: {fileID: 8254322831252680528, guid: 6b621efdb35b3674590d480fe2fa2eff, type: 3}
 --- !u!1 &1871331837847872510
 GameObject:
   m_ObjectHideFlags: 0
@@ -5257,3 +5271,4 @@ SceneRoots:
   - {fileID: 3817554455605874027}
   - {fileID: 815184935}
   - {fileID: 3811007065373214335}
+  - {fileID: 915900413}
