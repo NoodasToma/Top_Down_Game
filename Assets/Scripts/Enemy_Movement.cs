@@ -19,7 +19,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
     public float rotSpeed;
 
-    public float pushability;
+    public float weight;
 
     public bool isKnockable;
 
@@ -205,7 +205,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     IEnumerator highglightAttack(float duration)
 {
     Renderer ren = GetComponent<Renderer>();
-    ren.material.color = Color.red;  // Highlight enemy red on hit
+    ren.material.color = Color.white;  // Highlight enemy red on hit
 
     // Instantiate blood splatter effect prefab at enemy's position
     GameObject bloodSplatter = Instantiate(bloodSplatterPrefab, transform.position, Quaternion.identity);
@@ -228,7 +228,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         Vector3 direction = transform.position - target.transform.position;
         direction.y = 0;
 
-        transform.Translate(direction * (force / pushability) * Time.deltaTime, Space.World);
+        transform.Translate(direction * (force / weight) * Time.deltaTime, Space.World);
     }
 
 

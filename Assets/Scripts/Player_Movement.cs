@@ -45,6 +45,8 @@ public class Player_Movement : MonoBehaviour
 
     [SerializeField]
     private Rigidbody rb;
+    public LayerMask walls;
+
 
      
 
@@ -66,6 +68,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
         if (alive)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
@@ -87,14 +90,33 @@ public class Player_Movement : MonoBehaviour
         if (alive)
         {
             movePlayerWithAim();
+
             debugIframes();
         }
     }
+    void FixedUpdate()
+{
+    if (!alive) return;
+    movePlayerWithAim(); 
+}
+
 
     public void TakeDamage(float damage)
     {
         if (!alive) return;
         if (currentState == state.Dodging) return;
+
+        Character_Passives passives = GetComponent<Character_Passives>();
+        PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
+
+        if (passives != null && attackScript != null && attackScript.Class == playerClass.Sorcerer)
+        {
+            // Let Character_Passives handle damage and cheat death for Sorcerer
+            passives.CheckForCheatDeath(damage);
+            return; // Exit so damage is handled only in CheckForCheatDeath
+        }
+
+
         playerHP -= damage;
 
         // Visual feedback (flash effect)
@@ -146,6 +168,7 @@ public class Player_Movement : MonoBehaviour
 
     void movePlayerWithAim()
     {
+
         Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
@@ -161,7 +184,7 @@ public class Player_Movement : MonoBehaviour
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
 
-
+        if (movingToWall(movementDir)) movementDir = Vector3.zero;
 
         movingAnim(movementDir);
 
@@ -242,11 +265,25 @@ public class Player_Movement : MonoBehaviour
     }
 
     void debugIframes()
-    {   
+    {
         var renderer = GetComponentInChildren<Renderer>();
         if (currentState == state.Dodging) renderer.material.color = Color.black;
         else renderer.material.color = Color.white;
     }
 
-  
+    bool movingToWall(Vector3 playerMovingDir)
+    {
+        RaycastHit hit;
+        bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
+        return hitsWall;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Vector3 movementDir = new Vector3(move.x, 0f, move.y);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, movementDir.normalized*2f);
+    }
+
+
 }

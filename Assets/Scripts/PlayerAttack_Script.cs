@@ -14,12 +14,16 @@ public class PlayerAttack_Script : MonoBehaviour
 
     public LayerMask layer;
 
+    public LayerMask wall;
+
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
     private Coroutine skillRoutine;
 
-    
+    private Coroutine frameFreezer;
+
+
     public float throwingItemCD = 5f;
     private Coroutine throwRoutine;
 
@@ -56,7 +60,8 @@ public class PlayerAttack_Script : MonoBehaviour
     ThrowingItems throwItem;
     public itemClass itemClass;
 
-     private bool isAimingThrow = false;
+    private bool isAimingThrow = false;
+    private bool isAimingSkill = false;
 
     // Start is called before the first frame update
     void Start()
@@ -80,28 +85,38 @@ public class PlayerAttack_Script : MonoBehaviour
             if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
 
         }
-        if (!skillOnCD) { 
-            
-            if (Input.GetKeyDown(KeyCode.E)) playerSkill.AimSkill(player.playerClass);
-            // Original full check
-            if (Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
-            {
-                skillOnCD = true;
-                skillRoutine = StartCoroutine(minorSkill());
-            }
-        }
-        
-    
-     if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
+       if (!skillOnCD)
+{
+    if (Input.GetKeyDown(KeyCode.E))
+    {
+        isAimingSkill = true; // Start aiming skill
+        playerSkill.AimSkill(player.playerClass);
+    }
+
+    if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
+    {
+        skillOnCD = true;
+        skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
+        isAimingSkill = false; // Reset aiming state
+    }
+
+    if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
+    {
+        CancelSkill(); // Call cancel method
+    }
+}
+
+
+        if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
         {
             StartAiming();
         }
-        
+
         if (isAimingThrow && Input.GetKeyUp(KeyCode.G))
         {
             ExecuteThrow();
         }
-        
+
         if (isAimingThrow && Input.GetMouseButtonDown(1)) // Right click to cancel
         {
             CancelThrow();
@@ -115,19 +130,24 @@ public class PlayerAttack_Script : MonoBehaviour
         isAimingThrow = true;
         throwItem.StartAiming(itemClass);
     }
-    
+
     void ExecuteThrow()
     {
         if (!isAimingThrow) return;
-        
+
         throwItem.ExecuteThrow();
         isAimingThrow = false;
-        
+
         // Start cooldown
         if (throwRoutine == null)
             throwRoutine = StartCoroutine(ThrowCooldown());
     }
-    
+
+    void CancelSkill()
+{
+    isAimingSkill = false;
+    playerSkill.CancelAiming(); // Tells skill script to stop aiming and hide indicator
+}
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -147,21 +167,14 @@ public class PlayerAttack_Script : MonoBehaviour
         skillOnCD = false;
     }
 
-    // IEnumerator throwing()
-    // {
-    //     throwItem.itemToThrow(itemClass);
-    //     // playerAnimator.SetTrigger("rames gaaketeb");
-    //     yield return new WaitForSeconds(throwingItemCD);
-    //     throwRoutine = null;
-    // }
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
     {
         isAttacking = true;
 
         float speedTemp = GetComponent<Player_Movement>().speed;
-        if(!player.isRanged)GetComponent<Player_Movement>().speed = speedTemp/4;
-        
+        if (!player.isRanged) GetComponent<Player_Movement>().speed = speedTemp / 4;
+
 
         switch (comboIndex)
         {
@@ -171,7 +184,7 @@ public class PlayerAttack_Script : MonoBehaviour
         }
 
 
-        Vector3 push = getAim() * 1f;
+        // Vector3 push = getAim() * 1f;
         // transform.position += push;
 
 
@@ -181,12 +194,12 @@ public class PlayerAttack_Script : MonoBehaviour
 
         comboIndex++;
 
-         if (comboIndex > 2)
+        if (comboIndex > 2)
         {
-        comboIndex = 0;
-        comboOnCd = true;
-        yield return new WaitForSeconds(comboCd);  // Cooldown before new combo
-        comboOnCd = false;
+            comboIndex = 0;
+            comboOnCd = true;
+            yield return new WaitForSeconds(comboCd);  // Cooldown before new combo
+            comboOnCd = false;
         }
 
         isAttacking = false;
@@ -196,44 +209,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
         attackRoutine = null;
     }
-    
-    // draws a sphere around the player and checks if an enemy inside is within angle to get hit if it is it takes damage
-    // void attack()
-    // {
-    //     Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
 
-    //     if (!isRanged)
-    //     {
 
-    //         Collider[] hitEnemies = Physics.OverlapSphere(hitBoxOrigin, range, layer);
-    //         if (hitEnemies.Length <= 0) return;
-
-    //         foreach (Collider c in hitEnemies)
-    //         {
-    //             Vector3 positionEnemy = c.transform.position - transform.position;
-    //             positionEnemy.y = 0;
-    //             positionEnemy = positionEnemy.normalized;
-    //             float angle = Vector3.Angle(getAim(), positionEnemy);
-    //             if (angle <= angleOfAttack && c.gameObject != null)
-    //             {
-    //                 c.gameObject.GetComponent<Enemy_Movement>().TakeDamage(damage, forceOfAttack);
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         RaycastHit hit;
-    //         bool isHit = Physics.SphereCast(hitBoxOrigin, radiusOfRangedAttack, getAim(), out hit, range, layer);
-    //         Debug.Log(isHit);
-    //         if (isHit)
-    //         {
-    //             Debug.Log(hit.transform.name);
-    //             hit.transform.gameObject.GetComponent<Enemy_Movement>().TakeDamage(damage, forceOfAttack);
-    //         }
-
-    //     }
-
-    // }
 
 
 
@@ -310,10 +287,11 @@ public class PlayerAttack_Script : MonoBehaviour
 
     void FighterAttack(Vector3 originOfattack)
     {
-        
+
         Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
         if (hitEnemies.Length <= 0) return;
-
+        CameraShake(0.1f, 0.2f);
+        freezeFrame(0.05f);
         foreach (Collider c in hitEnemies)
         {
             Vector3 positionEnemy = c.transform.position - transform.position;
@@ -330,10 +308,26 @@ public class PlayerAttack_Script : MonoBehaviour
     void RangerAttack(Vector3 originOfattack)
     {
         RaycastHit hit;
-        bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range, layer);
-        Debug.Log(isHit);
-        if (isHit)
+        RaycastHit wallhit;
+        bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range,layer);
+        bool isWall = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out wallhit, player.range,wall);
+
+      
+    
+        if (isHit || isWall)
         {
+            
+            if (isHit && isWall)
+            {
+             Debug.Log(originOfattack);
+             Debug.Log(hit.collider.name);
+             Debug.Log(wallhit.collider.name);
+             if ((wallhit.transform.position - originOfattack).magnitude <= (hit.transform.position - originOfattack).magnitude) return;
+            }
+
+            if (!isHit) return;
+            CameraShake(0.05f, 0.1f);
+            freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
             hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.forceOfAttack));
         }
@@ -401,7 +395,47 @@ public class PlayerAttack_Script : MonoBehaviour
 
         if (player.skillCdMinor != test_skillCdMinor)
             player.SetSkillCdMinor(test_skillCdMinor);
-        if(player.playerClass!=Class) player.SetPlayerClass(Class);
+        if (player.playerClass != Class) player.SetPlayerClass(Class);
     }
-    
+
+
+    void CameraShake(float duration, float magnitude)
+    {
+        GameObject cameraHolder = GameObject.FindGameObjectWithTag("CameraHolder");
+        Vector3 orignalPos = cameraHolder.transform.localPosition;
+        StartCoroutine(screenShaker(duration, magnitude, cameraHolder, orignalPos));
+    }
+
+    IEnumerator screenShaker(float duration, float magnitude, GameObject cameraholder, Vector3 originalPos)
+    {
+        float timePassed = 0f;
+
+        while (timePassed < duration)
+        {
+
+            float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+            float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
+
+            cameraholder.transform.localPosition = originalPos + new Vector3(x, y, 0f);
+
+            timePassed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        cameraholder.transform.localPosition = originalPos;
+    }
+
+    void freezeFrame(float duration)
+    {
+        if(frameFreezer==null) frameFreezer = StartCoroutine(frameFreeze(duration));
+    }
+
+    IEnumerator frameFreeze(float duration)
+    {
+        Time.timeScale = 0.5f;
+        yield return new WaitForSeconds(duration);
+        Time.timeScale = 1f;
+        frameFreezer = null;
+    }
 }
