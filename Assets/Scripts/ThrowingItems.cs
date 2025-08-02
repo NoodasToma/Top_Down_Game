@@ -10,13 +10,17 @@ public class ThrowingItems : MonoBehaviour
     private PlayerAttack_Script playerAttack_Script;
 
     public GameObject indicatorPrefab;
-    private GameObject indicatorInstance;
+    public GameObject indicatorInstance;
     public float maxThrowRange = 15f;
     public LayerMask groundLayer;
 
     private bool isAiming = false;
     private itemClass currentItemToThrow;
     private Vector3 throwTarget;
+
+    public LayerMask obstacleLayer; 
+     
+    
 
     void Start()
     {
@@ -31,15 +35,11 @@ public class ThrowingItems : MonoBehaviour
             UpdateThrowIndicator();
         }
     }
-
-    // Public method to start aiming
     public void StartAiming(itemClass item)
     {
         isAiming = true;
         currentItemToThrow = item;
     }
-
-    // Public method to execute the throw
     public void ExecuteThrow()
     {
         if (!isAiming || indicatorInstance == null) return;
@@ -51,9 +51,6 @@ public class ThrowingItems : MonoBehaviour
             Destroy(indicatorInstance);
     }
 
-    
-
-    // Public method to cancel aiming
     public void CancelAiming()
     {
         isAiming = false;
@@ -62,35 +59,54 @@ public class ThrowingItems : MonoBehaviour
     }
 
     void UpdateThrowIndicator()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+{
+    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, 100f, groundLayer))
         {
             Vector3 targetPoint = hit.point;
             Vector3 playerPos = transform.position;
-            
-            // Calculate horizontal distance only
-            float horizontalDistance = Vector3.Distance(
-                new Vector3(playerPos.x, 0, playerPos.z),
-                new Vector3(targetPoint.x, 0, targetPoint.z)
-            );
-            
-            if (horizontalDistance > maxThrowRange)
+
+            Vector3 toTarget = targetPoint - playerPos;
+            toTarget.y = 0f; // Flatten to XZ plane
+            if (toTarget.magnitude > maxThrowRange)
             {
-                Vector3 direction = (targetPoint - playerPos).normalized;
-                targetPoint = playerPos + direction * maxThrowRange;
-                targetPoint.y = hit.point.y; // Maintain original Y position
+                toTarget = toTarget.normalized * maxThrowRange;
+                targetPoint = playerPos + toTarget;
             }
 
-            if (indicatorInstance == null)
-                indicatorInstance = Instantiate(indicatorPrefab, targetPoint, Quaternion.identity);
+            Vector3 playerEyePos = transform.position + Vector3.up * 1.5f;
+            Vector3 dir = (targetPoint - playerEyePos).normalized;
+            float dist = Vector3.Distance(playerEyePos, targetPoint);
 
-            indicatorInstance.transform.position = targetPoint;
-            throwTarget = targetPoint; // Store the target for throwing
-        }
+            RaycastHit obstacleHit;
+            Vector3 finalPoint = targetPoint;
+
+            if (Physics.Raycast(playerEyePos, dir, out obstacleHit, dist, obstacleLayer))
+            {
+                finalPoint = obstacleHit.point;
+            }
+
+            finalPoint.y += 0.05f; // offset to prevent clipping into ground
+            if (indicatorInstance == null)
+            {
+                indicatorInstance = Instantiate(indicatorPrefab);
+            }
+            indicatorInstance.transform.position = finalPoint;
+
+        indicatorInstance.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            indicatorInstance.SetActive(true);
+            throwTarget = finalPoint;
     }
+        else
+        {
+            if (indicatorInstance != null)
+            {
+                indicatorInstance.SetActive(false);
+            }
+        }
+}
 
     public void ThrowItemAtIndicator(itemClass itemClass)
     {
