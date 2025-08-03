@@ -4,6 +4,7 @@ using Combat;
 public class Character_Passives : MonoBehaviour
 {
     private Player_Movement movementScript;
+    private StatsManager stats;
     private PlayerAttack_Script attackScript;
     Ui_script ui_Script;
 
@@ -14,6 +15,7 @@ public class Character_Passives : MonoBehaviour
     {
         movementScript = GetComponent<Player_Movement>();
         attackScript = GetComponent<PlayerAttack_Script>();
+        stats = GetComponent<StatsManager>();
         ui_Script = GetComponent<Ui_script>();
 
         movementScript = GetComponent<Player_Movement>();
@@ -46,13 +48,13 @@ public class Character_Passives : MonoBehaviour
             return;
         }
 
-        float projectedHP = movementScript.playerHP - damage;
+        float projectedHP = stats.currentHP - damage;
 
         if (!hasCheatedDeath && projectedHP <= 0 && movementScript.alive)
         {
             // Activate Cheat Death
             hasCheatedDeath = true;
-            movementScript.playerHP = 1f;
+            stats.currentHP = 1f;
             ui_Script.setHpBar(1f);
             StartCoroutine(TriggerExplosion());
             return; // Do NOT apply damage, Cheat Death saved you
@@ -64,15 +66,15 @@ public class Character_Passives : MonoBehaviour
 
     private void ApplyNormalDamage(float damage)
     {
-        movementScript.playerHP -= damage;
-        ui_Script.setHpBar(movementScript.playerHP);
+        stats.currentHP -= damage;
+        ui_Script.setHpBar(stats.currentHP);
 
-        if (movementScript.playerHP <= 0 && movementScript.alive)
+        if (stats.currentHP <= 0 && movementScript.alive)
         {
-            movementScript.playerHP = 0;
+            stats.currentHP = 0;
             movementScript.alive = false;
             ui_Script.gameOver();
-            GameObject.Destroy(movementScript.gameObject.GetComponent<PlayerAttack_Script>());
+            GameObject.Destroy(this.gameObject);
             movementScript.playerAnimator.SetTrigger("Dead");
         }
     }

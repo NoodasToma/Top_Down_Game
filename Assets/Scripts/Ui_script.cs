@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 
 public class Ui_script : MonoBehaviour
 {
+    
+    public Animator playerAnimator;
     Slider healthBar;
     //cooldown for fireball skill
     public Image fireballimg;
@@ -25,16 +27,14 @@ public class Ui_script : MonoBehaviour
     public bool isPaused;
 
 
-
-
     void Start()
     {
         healthBar = gameObject.GetComponent<Slider>();
-        float maxHp = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().playerHP;
+        float maxHP = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>().maxHP;
         scoreText = GameObject.FindGameObjectWithTag("killCounter").GetComponent<TextMeshProUGUI>();
         Debug.Log(scoreText);
-        healthBar.maxValue = maxHp;
-        setHpBar(maxHp);
+        healthBar.maxValue = maxHP;
+        setHpBar(maxHP);
         //fireball cooldown 
         fireballimg.fillAmount = 1;
         scoreText.text = "Kills: 0";

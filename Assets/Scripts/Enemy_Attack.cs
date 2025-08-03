@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Combat;
 public class Enemy_Attack : MonoBehaviour
 {
     [Header("Attack Settings")]
@@ -12,12 +12,10 @@ public class Enemy_Attack : MonoBehaviour
     public bool showGizmos = true;
 
     private float _nextAttackTime;
-    public Player_Movement playerScript;
    
 
     void Start()
     {
-        playerScript = GameObject.FindWithTag("Player").GetComponent<Player_Movement>();
     }
 
     void Update()
@@ -38,12 +36,9 @@ public class Enemy_Attack : MonoBehaviour
             {
                 if (col.CompareTag("Player"))
                 {
-                    var player = col.GetComponent<Player_Movement>();
-                    if (playerScript.alive)
-                    {
-                        player.TakeDamage(attackDamage);
-                        break;
-                    }
+                    var player = col.GetComponent<IDamageable>();
+                    player.TakeDamage(new Damage(attackDamage));
+                    break;
                 }
             }
             _nextAttackTime = Time.time + attackCooldown;

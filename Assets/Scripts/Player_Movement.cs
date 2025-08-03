@@ -10,8 +10,6 @@ public class Player_Movement : MonoBehaviour
 
     private Camera mainCamera;
     public float speed;
-    public float playerHP = 100f;
-
     private Vector2 move, mouseLook;
 
     public float rotationSpeed;
@@ -19,19 +17,11 @@ public class Player_Movement : MonoBehaviour
     private Vector3 rotationTarget;
 
     public Animator playerAnimator;
-    private Material _originalMaterial;
 
     public bool alive = true;
 
-    Ui_script ui_Script;
 
-    private enum state
-    {
-        Basic, Dodging
-
-    }
-
-    private state currentState;
+    public StatsManager stats;
     public float dashSpeed;
 
 
@@ -54,34 +44,19 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentState = state.Basic;
-        ui_Script = GameObject.FindGameObjectWithTag("HpBar").GetComponent<Ui_script>();
+        stats = GetComponent<StatsManager>();
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        var renderer = GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
-            _originalMaterial = new Material(renderer.material); // Create a copy
-        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-       
         if (alive)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
-            {
-                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
-                if (dodgeDir != Vector3.zero)
-                {
-                    StartCoroutine(dodgeRoutine(dodgeDir));
-                }
-            }
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
-
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
         }
     }
@@ -95,55 +70,11 @@ public class Player_Movement : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage)
-    {
-        if (!alive) return;
-        if (currentState == state.Dodging) return;
-
-        Character_Passives passives = GetComponent<Character_Passives>();
-        PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
-
-        if (passives != null && attackScript != null && attackScript.pClass == PlayerClass.Sorcerer)
-        {
-            // Let Character_Passives handle damage and cheat death for Sorcerer
-            passives.CheckForCheatDeath(damage);
-            return; // Exit so damage is handled only in CheckForCheatDeath
-        }
+    
 
 
-        playerHP -= damage;
 
-        // Visual feedback (flash effect)
-        // Visual feedback (flash effect)
-        StartCoroutine(DamageFlash());
-
-        if (playerHP <= 0 && alive)
-        {
-            playerHP = 0;
-            alive = false;
-            ui_Script.gameOver();
-            GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
-            playerAnimator.SetTrigger("Dead");
-        }
-
-        ui_Script.setHpBar(playerHP);
-    }
-
-    IEnumerator DamageFlash()
-    {
-        var renderer = GetComponentInChildren<Renderer>();
-        if (renderer != null && _originalMaterial != null)
-        {
-            // Create a temporary material instance for flashing
-            renderer.material.color = Color.red;
-            yield return new WaitForSeconds(0.1f);
-
-            // Restore the original material properties
-            renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
-        }
-    }
-
-
+//input events
     //get wasd input
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -157,13 +88,26 @@ public class Player_Movement : MonoBehaviour
 
     }
 
-
+    public void OnDodge(InputAction.CallbackContext context)
+    {
+         if (alive)
+        {
+            if (!isDodging && !dodgeOnCooldown)
+            {
+                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
+                if (dodgeDir != Vector3.zero)
+                {
+                    StartCoroutine(dodgeRoutine(dodgeDir));
+                }
+            }
+        }
+    }
     // move player while changing the aim direction simalteniously
 
     void movePlayerWithAim()
     {
 
-        Vector3 lookPos = rotationTarget - transform.position;
+        Vector3 lookPos = rotationTarget - rb.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
 
@@ -178,12 +122,12 @@ public class Player_Movement : MonoBehaviour
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
 
-        if (movingToWall(movementDir)) movementDir = Vector3.zero;
+        // if (movingToWall(movementDir)) movementDir = Vector3.zero;
 
         movingAnim(movementDir);
 
 
-        // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  no mor transform
+        // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  //no mor transform
         rb.velocity = movementDir * speed;
 
         playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
@@ -232,7 +176,7 @@ public class Player_Movement : MonoBehaviour
 
         isDodging = true;
         dodgeOnCooldown = true;
-        currentState = state.Dodging;
+        stats.currentState = StatsManager.STATE.Dodging;
 
         float fallingDashspeed = dashSpeed;
 
@@ -250,7 +194,7 @@ public class Player_Movement : MonoBehaviour
         }
 
         yield return new WaitForSeconds(iFrameDuration);
-        currentState = state.Basic;
+        stats.currentState = StatsManager.STATE.Basic;
         isDodging = false;
 
         yield return new WaitForSeconds(dodgeCooldown); // cooldown wait
@@ -261,16 +205,16 @@ public class Player_Movement : MonoBehaviour
     void debugIframes()
     {
         var renderer = GetComponentInChildren<Renderer>();
-        if (currentState == state.Dodging) renderer.material.color = Color.black;
+        if (stats.currentState == StatsManager.STATE.Dodging) renderer.material.color = Color.black;
         else renderer.material.color = Color.white;
     }
 
-    bool movingToWall(Vector3 playerMovingDir)
-    {
-        RaycastHit hit;
-        bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
-        return hitsWall;
-    }
+    // bool movingToWall(Vector3 playerMovingDir)
+    // {
+    //     RaycastHit hit;
+    //     bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
+    //     return hitsWall;
+    // }
 
     void OnDrawGizmosSelected()
     {
