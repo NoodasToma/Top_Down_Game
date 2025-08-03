@@ -2223,7 +2223,7 @@ Transform:
   m_GameObject: {fileID: 1426448735}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.2, y: 38.4, z: 0}
+  m_LocalPosition: {x: -14.2, y: 0.9, z: 0}
   m_LocalScale: {x: 6.416973, y: 6.416973, z: 25.28544}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2925,7 +2925,7 @@ GameObject:
   - component: {fileID: 1846201250}
   - component: {fileID: 1846201249}
   m_Layer: 5
-  m_Name: Fireball
+  m_Name: Skill
   m_TagString: Ability
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3359,7 +3359,7 @@ GameObject:
   - component: {fileID: 2106186789}
   - component: {fileID: 2106186788}
   m_Layer: 5
-  m_Name: Fireball CD
+  m_Name: Skill CD
   m_TagString: Ability
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3715,7 +3715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  playerHP: 10
+  playerHP: 1000
   rotationSpeed: 0.15
   playerAnimator: {fileID: 0}
   alive: 1
@@ -3821,10 +3821,14 @@ MonoBehaviour:
   healingPrefab: {fileID: 6523922809955225492, guid: 9ef840ea5efdb444ebcb89faeb23a9e6, type: 3}
   throwableSpeed: 10
   indicatorPrefab: {fileID: 1285784819758821938, guid: 7219b8d416b09504a8e3a212991f6d85, type: 3}
+  indicatorInstance: {fileID: 0}
   maxThrowRange: 10
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1816870885764332981
 MonoBehaviour:
   m_ObjectHideFlags: 0

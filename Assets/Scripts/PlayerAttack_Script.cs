@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerAttack_Script : MonoBehaviour
 {
     public playerClass Class;
-    private playerClassStats player = new playerClassStats();
+    public playerClassStats player = new playerClassStats();
 
     public LayerMask layer;
 
@@ -49,9 +49,11 @@ public class PlayerAttack_Script : MonoBehaviour
     public float comboResetTime;
     private float lastClickTime = 0f;
     private bool isAttacking = false;
-
     private bool skillOnCD;
 
+     public GameObject currentIndicator;
+    public GameObject fireBoltPrefab;
+    public bool rangedIsAiming= false;
 
 
 
@@ -143,10 +145,17 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
     void CancelSkill()
+    {
+        isAimingSkill = false;
+        playerSkill.CancelAiming(); // Tells skill script to stop aiming and hide indicator
+    }
+
+    void cancelRangedAimingAttack()
 {
-    isAimingSkill = false;
-    playerSkill.CancelAiming(); // Tells skill script to stop aiming and hide indicator
+    rangedIsAiming = false;
+    playerSkill.CancelAiming(); // Same as skill cancel
 }
+
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -260,7 +269,7 @@ public class PlayerAttack_Script : MonoBehaviour
         switch (playerClass)
         {
             case playerClass.Sorcerer:
-                RangerAttack(hitBoxOrigin);
+                sorcererAttack();
                 break;
             case playerClass.Fighter:
                 FighterAttack(hitBoxOrigin);
@@ -330,6 +339,29 @@ public class PlayerAttack_Script : MonoBehaviour
             hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
         }
     }
+    public void sorcererAttack()
+{
+    GameObject.Destroy(currentIndicator);
+
+    Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
+    GameObject fireBolt = Instantiate(fireBoltPrefab, spawnPos, Quaternion.identity);
+
+    // Ignore collision with player
+    Collider playerCollider = GetComponent<Collider>();
+    Collider fireBoltCollider = fireBolt.GetComponent<Collider>();
+    if (playerCollider != null && fireBoltCollider != null)
+    {
+        Physics.IgnoreCollision(fireBoltCollider, playerCollider);
+    }
+
+    Rigidbody rb = fireBolt.GetComponent<Rigidbody>();
+    if (rb != null)
+    {
+        rb.velocity = getAim() * 55;
+    }
+
+    Destroy(fireBolt, 5f);
+}
 
 
     void constructChar(playerClass playerClass)
