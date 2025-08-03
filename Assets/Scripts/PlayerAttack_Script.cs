@@ -85,26 +85,25 @@ public class PlayerAttack_Script : MonoBehaviour
             if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
 
         }
-       if (!skillOnCD)
-{
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-        isAimingSkill = true; // Start aiming skill
-        playerSkill.AimSkill(player.playerClass);
-    }
+        if (!skillOnCD)
+        {  
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                
+            }
 
-    if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
-    {
-        skillOnCD = true;
-        skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
-        isAimingSkill = false; // Reset aiming state
-    }
+            if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
+            {
+                skillOnCD = true;
+                skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
+                isAimingSkill = false; // Reset aiming state
+            }
 
-    if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
-    {
-        CancelSkill(); // Call cancel method
-    }
-}
+            if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
+            {
+                CancelSkill(); // Call cancel method
+            }
+        }
 
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)

@@ -6,7 +6,7 @@ public class Character_Passives : MonoBehaviour
     private Player_Movement movementScript;
     private StatsManager stats;
     private PlayerAttack_Script attackScript;
-    Ui_script ui_Script;
+    private Ui_script ui_Script;
 
     public GameObject explosionPrefab; // Assign in Inspector (big explosion effect)
     private bool hasCheatedDeath = false;

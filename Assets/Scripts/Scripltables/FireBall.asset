@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90daf8f90b7fa11419420d304d960799, type: 3}
+  m_Name: FireBall
+  m_EditorClassIdentifier: 
+  cooldown: 1
+  onCooldown: 0
+  range: 100
+  fireballSpeed: 10
+  arrowIndicatorPrefab: {fileID: 2700091513918254190, guid: bcdd36801923fc749a46b597fd4168c3, type: 3}
+  fireballPrefab: {fileID: 8254322831252680528, guid: 6b621efdb35b3674590d480fe2fa2eff, type: 3}
+  explosionEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}

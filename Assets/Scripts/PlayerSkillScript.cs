@@ -63,20 +63,17 @@ public class PlayerSkillScript : MonoBehaviour
 
     void startAim()
     {
-        isAiming = true;
-        currentIndicator = Instantiate(arrowIndicatorPrefab);
-        lineRenderer = currentIndicator.GetComponent<LineRenderer>();
     }
     public void CancelAiming()
-{
-    isAiming = false;
-    
-    if (currentIndicator != null)
     {
-        Destroy(currentIndicator); // Destroy the arrow indicator object
-        currentIndicator = null;
+        isAiming = false;
+        
+        if (currentIndicator != null)
+        {
+            Destroy(currentIndicator); // Destroy the arrow indicator object
+            currentIndicator = null;
+        }
     }
-}
 
     public void AimSkill(PlayerClass playerClass)
     {

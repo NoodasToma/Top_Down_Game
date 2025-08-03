@@ -1178,6 +1178,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 796639311}
   m_CullTransparentMesh: 1
+--- !u!1 &801138548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 801138551}
+  - component: {fileID: 801138550}
+  - component: {fileID: 801138549}
+  m_Layer: 0
+  m_Name: VisualScripting SceneVariables
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &801138549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801138548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765181c9ef4b24d32a4f7cbd2ef370dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &801138550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801138548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"Kind":"Scene","collection":{"$content":[{"name":"dsd","value":null,"typeHandle":{"Identification":null,"$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
+--- !u!4 &801138551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801138548}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &806117856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &982895207
 Transform:
   m_ObjectHideFlags: 0
@@ -1505,6 +1565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7f6a3c87129694db9431e7b74fad16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 0}
   fireballimg: {fileID: 1846201249}
   fireballCDTime: 5
   fireballOnCooldown: 0
@@ -3127,8 +3188,8 @@ GameObject:
   - component: {fileID: 1816870885764332977}
   - component: {fileID: 1816870885764332976}
   - component: {fileID: 1816870885764332975}
-  - component: {fileID: 1816870885764332979}
   - component: {fileID: 1816870885764332974}
+  - component: {fileID: 1816870885764332985}
   - component: {fileID: 1816870885764332980}
   - component: {fileID: 1816870885764332981}
   - component: {fileID: 1816870885764332982}
@@ -3280,10 +3341,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  playerHP: 10
   rotationSpeed: 10
   playerAnimator: {fileID: 0}
   alive: 1
+  stats: {fileID: 0}
   dashSpeed: 20
   dodgeDuration: 0.25
   iFrameDuration: 0.25
@@ -3370,23 +3431,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1816870885764332979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332224214560352023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b21c5750411e9b45b338080f630031c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireballPrefab: {fileID: 8254322831252680528, guid: 6b621efdb35b3674590d480fe2fa2eff, type: 3}
-  fireballSpeed: 25
-  fireballExplosionRadius: 3
-  explosionEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}
-  arrowIndicatorPrefab: {fileID: 2700091513918254190, guid: bcdd36801923fc749a46b597fd4168c3, type: 3}
 --- !u!114 &1816870885764332980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3463,10 +3507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb885db21b02a649b03de311563745c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alive: 0
-  mainCamera: {fileID: 0}
-  currentState: 0
-  pmv: {fileID: 0}
 --- !u!114 &1816870885764332984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3479,6 +3519,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b9cd86d777dad41902ff094efbb9a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 0}
+  alive: 1
   classs: {fileID: 11400000, guid: d89a5466d3526cc40b0987b12b6d054d, type: 2}
   maxHP: 100
   currentHP: 0
@@ -3487,6 +3529,20 @@ MonoBehaviour:
   dodgeDuration: 0.25
   dodgeCooldown: 1
   iFrameDuration: 0.15
+  currentState: 0
+--- !u!114 &1816870885764332985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332224214560352023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc00c50d13b40ed448cea1c565597967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill: {fileID: 11400000, guid: 104714751dc249f42a877d0da479b522, type: 2}
 --- !u!1 &1871331837847872510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4519,3 +4575,4 @@ SceneRoots:
   - {fileID: 1813462780}
   - {fileID: 1426448739}
   - {fileID: 1816870885764332973}
+  - {fileID: 801138551}
