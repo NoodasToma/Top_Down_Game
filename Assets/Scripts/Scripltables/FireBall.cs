@@ -21,12 +21,6 @@ public class FireBall : SkillSO
     
     public GameObject explosionEffect;
     private LineRenderer lineRenderer;
-
-    void OnEnable()
-    {
-    }
-    public override void OnStart(GameObject caster, Vector3 aim, Damage damage) { }
-    public override void OnHold(GameObject caster, Vector3 aim, Damage damage){}
     public override void OnRelease(GameObject caster, Vector3 aim, Damage damage)
     {
         Debug.Log("explossion");

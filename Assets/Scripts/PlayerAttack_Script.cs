@@ -10,8 +10,8 @@ using Combat;
 public class PlayerAttack_Script : MonoBehaviour
 {
     public PlayerClass pClass;
-    private PlayerClassStats player = new PlayerClassStats();
 
+    public ClassSO player;
     public LayerMask layer;
 
     public LayerMask wall;
@@ -51,12 +51,7 @@ public class PlayerAttack_Script : MonoBehaviour
     private float lastClickTime = 0f;
     private bool isAttacking = false;
 
-    private bool skillOnCD;
 
-
-
-
-    PlayerSkillScript playerSkill;
     ThrowingItems throwItem;
     public itemClass itemClass;
 
@@ -68,7 +63,6 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         constructChar(pClass);
         playerAnimator = GetComponent<Animator>();
-        playerSkill = GetComponent<PlayerSkillScript>();
         throwItem = GetComponent<ThrowingItems>();
     
         //Todo  at the start assign damaga range etc based on class
@@ -83,28 +77,7 @@ public class PlayerAttack_Script : MonoBehaviour
             if (lastAttackTime > comboResetTime) comboIndex = 0;
             lastClickTime = Time.time;
             if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
-
         }
-        if (!skillOnCD)
-        {  
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                
-            }
-
-            if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
-            {
-                skillOnCD = true;
-                skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
-                isAimingSkill = false; // Reset aiming state
-            }
-
-            if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
-            {
-                CancelSkill(); // Call cancel method
-            }
-        }
-
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
         {
@@ -142,11 +115,6 @@ public class PlayerAttack_Script : MonoBehaviour
             throwRoutine = StartCoroutine(ThrowCooldown());
     }
 
-    void CancelSkill()
-{
-    isAimingSkill = false;
-    playerSkill.CancelAiming(); // Tells skill script to stop aiming and hide indicator
-}
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -156,14 +124,6 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         yield return new WaitForSeconds(throwingItemCD);
         throwRoutine = null;
-    }
-    IEnumerator minorSkill()
-    {
-        playerSkill.minorSkill(player.playerClass);
-        playerAnimator.SetTrigger("Fireball");
-        yield return new WaitForSeconds(player.skillCdMinor);
-        skillRoutine = null;
-        skillOnCD = false;
     }
 
 
@@ -299,7 +259,7 @@ public class PlayerAttack_Script : MonoBehaviour
             float angle = Vector3.Angle(getAim(), positionEnemy);
             if (angle <= player.angleOfAttack && c.gameObject != null)
             {
-                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.forceOfAttack));
+                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.kncokback));
             }
         }
     }
@@ -328,7 +288,7 @@ public class PlayerAttack_Script : MonoBehaviour
             CameraShake(0.05f, 0.1f);
             freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
-            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.forceOfAttack));
+            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.kncokback));
         }
     }
 
@@ -337,33 +297,6 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         switch (playerClass)
         {
-            case PlayerClass.Sorcerer:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case PlayerClass.Fighter:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case PlayerClass.Rogue:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case PlayerClass.Ranger:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case PlayerClass.Alchemist:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case PlayerClass.Warlock:
-                player = new PlayerClassStats(pClass, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            default:
-
-                break;
         }
     }
 
@@ -389,11 +322,8 @@ public class PlayerAttack_Script : MonoBehaviour
         if (player.radiusOfRangedAttack != test_radiusOfRangedAttack)
             player.SetRadiusOfRangedAttack(test_radiusOfRangedAttack);
 
-        if (player.forceOfAttack != test_forceOfAttack)
+        if (player.kncokback != test_forceOfAttack)
             player.SetForceOfAttack(test_forceOfAttack);
-
-        if (player.skillCdMinor != test_skillCdMinor)
-            player.SetSkillCdMinor(test_skillCdMinor);
         if (player.playerClass != pClass) player.SetPlayerClass(pClass);
     }
 

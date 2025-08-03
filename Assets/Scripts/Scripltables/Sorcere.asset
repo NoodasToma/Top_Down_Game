@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fb5693502b8a242a63722c4bf19932, type: 3}
   m_Name: Sorcere
   m_EditorClassIdentifier: 
+  playerClass: 1
   damage: 100
   range: 20
   isRanged: 1
@@ -19,4 +20,3 @@ MonoBehaviour:
   angleOfAttack: 0
   radiusOfRangedAttack: 0
   kncokback: 0
-  skillCdMinor: 5.26

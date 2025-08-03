@@ -1,8 +1,4 @@
-public enum PlayerClass
-{
 
-    Fighter, Sorcerer, Rogue, Warlock, Alchemist, Ranger
-}
 
 public class PlayerClassStats
 {
