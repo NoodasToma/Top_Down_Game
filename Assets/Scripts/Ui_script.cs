@@ -84,7 +84,7 @@ public class Ui_script : MonoBehaviour
 
     void FireballCD()
     {
-        if (Input.GetKey(fireballKeyCode) && !fireballOnCooldown)
+        if (Input.GetKeyUp(fireballKeyCode) && !fireballOnCooldown)
         {
             StartCoroutine(FireballCooldown());
         }
