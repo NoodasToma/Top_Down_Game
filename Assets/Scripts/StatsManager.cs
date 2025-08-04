@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Combat;
-public class StatsManager : MonoBehaviour, IDamageable
+public class StatsManager : MonoBehaviour, IDamageable, IKillable
 {
     Ui_script ui_Script;
     public Animator playerAnimator;
@@ -74,15 +74,17 @@ public class StatsManager : MonoBehaviour, IDamageable
         // Visual feedback (flash effect)
         StartCoroutine(DamageFlash());
 
-        if (currentHP <= 0 && alive)
-        {
-            currentHP = 0;
-            alive = false;
-            ui_Script.gameOver();
-            GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
-            playerAnimator.SetTrigger("Dead");
-        }
+        if (currentHP <= 0 && alive) death(damage.source);
         ui_Script.setHpBar(currentHP);
+    }
+
+    public void death(GameObject killer)
+    {
+        currentHP = 0;
+        alive = false;
+        ui_Script.gameOver();
+        GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
+        playerAnimator.SetTrigger("Dead");        
     }
     IEnumerator DamageFlash()
     {

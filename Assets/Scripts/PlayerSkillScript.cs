@@ -98,7 +98,6 @@ public class PlayerSkillScript : MonoBehaviour
                 //Todo
                 break;
             default:
-
                 break;
         }
     }

@@ -10,7 +10,10 @@ namespace Combat
     {
         void execute(Damage damage, Vector3 direction);
     }
-
+    public interface IKillable
+    {
+        void death(GameObject killer);
+    }
     public enum DamageType
     {
         Physical,
