@@ -1269,7 +1269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &982895207
 Transform:
   m_ObjectHideFlags: 0
@@ -1292,7 +1292,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982895206}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ebd069d8061fb347a718a3ca26cc470, type: 3}
   m_Name: 
@@ -3368,6 +3368,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 292e3e07-29f4-4bfa-8efa-93c629485831
     m_ActionName: Player/Dodge[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1816870885764332985}
+        m_TargetAssemblyTypeName: SkillManager, Assembly-CSharp
+        m_MethodName: Skill1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9c25c472-f2e9-4a64-9eda-8e17771ce665
+    m_ActionName: Player/Skill1[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -3484,7 +3500,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc00c50d13b40ed448cea1c565597967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill: {fileID: 11400000, guid: 104714751dc249f42a877d0da479b522, type: 2}
+  minorSkill: {fileID: 0}
+  ulty: {fileID: 0}
 --- !u!1 &1871331837847872510
 GameObject:
   m_ObjectHideFlags: 0

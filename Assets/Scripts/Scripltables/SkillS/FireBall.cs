@@ -24,7 +24,7 @@ public class FireBall : SkillSO
 
     public override void OnRelease(GameObject caster, Vector3 aim, Damage damage)
     {
-        if (!state || onCooldown) { Debug.Log("is on cooldown  :    " + onCooldown); return; }
+        if (!state || onCooldown) return;
         state = false;
 
         Debug.Log("explossion");

@@ -5,6 +5,7 @@ using Combat;
 using UnityEngine.InputSystem;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 public class SkillManager : MonoBehaviour
 {
     public SkillSO minorSkill;
@@ -14,7 +15,7 @@ public class SkillManager : MonoBehaviour
     private Animator playerAnimator;
     void Start()
     {
-        minorSkill = Instantiate(minorSkill);
+        minorSkill = Instantiate(GetComponent<StatsManager>().classs.minorSkill);
         minorSkill.hideFlags = HideFlags.DontSave;
 
         playerAnimator = GetComponent<Animator>();

@@ -17,7 +17,8 @@ public class ClassSO : ScriptableObject
     public float radiusOfRangedAttack;
     public float kncokback;
 
-    public SkillSO skiill;
+    public SkillSO minorSkill;
+    public SkillSO ulty;
 
     public void SetPlayerClass(PlayerClass playerClass) => this.playerClass = playerClass;
     public void SetDamage(float damage) => this.damage = damage;
