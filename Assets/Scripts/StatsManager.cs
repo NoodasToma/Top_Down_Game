@@ -33,6 +33,9 @@ public class StatsManager : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start()
     {
+        ui_Script = GetComponent<Ui_script>();
+        if (ui_Script == null)
+            ui_Script = GameObject.FindGameObjectWithTag("HpBar")?.GetComponent<Ui_script>();
         currentState = STATE.Basic;
         playerAnimator = GetComponent<Animator>();
         currentHP = maxHP;
@@ -79,7 +82,6 @@ public class StatsManager : MonoBehaviour, IDamageable
             GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
             playerAnimator.SetTrigger("Dead");
         }
-
         ui_Script.setHpBar(currentHP);
     }
     IEnumerator DamageFlash()
