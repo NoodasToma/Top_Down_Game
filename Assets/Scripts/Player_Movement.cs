@@ -128,7 +128,8 @@ public class Player_Movement : MonoBehaviour
 
 
         // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  //no mor transform
-        rb.velocity = movementDir * speed;
+        rb.MovePosition(rb.position + movementDir * speed * Time.fixedDeltaTime);
+        // rb.velocity = movementDir * speed;
 
         playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
@@ -187,7 +188,10 @@ public class Player_Movement : MonoBehaviour
         while (timer < dodgeDuration)
         {
             // transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
-            rb.velocity = dodgeDir * fallingDashspeed;
+            rb.MovePosition(rb.position + dodgeDir * fallingDashspeed * Time.deltaTime);
+
+            // rb.MovePosition(dodgeDir * fallingDashspeed * Time.deltaTime)
+            // rb.velocity = dodgeDir * fallingDashspeed;
             timer += Time.deltaTime;
             fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
             yield return null;

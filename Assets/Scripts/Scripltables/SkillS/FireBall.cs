@@ -21,8 +21,12 @@ public class FireBall : SkillSO
     
     public GameObject explosionEffect;
     private LineRenderer lineRenderer;
+
     public override void OnRelease(GameObject caster, Vector3 aim, Damage damage)
     {
+        if (!state || onCooldown) { Debug.Log("is on cooldown  :    " + onCooldown); return; }
+        state = false;
+
         Debug.Log("explossion");
         GameObject.Destroy(currentIndicator);
         Vector3 spawnPos = caster.transform.position + Vector3.up * 1.6f + aim.normalized * 0.8f;
@@ -33,14 +37,10 @@ public class FireBall : SkillSO
         {
             rb.velocity = aim.normalized * fireballSpeed;
         }
-
         Destroy(fireball, 5f);
+        cooldownLeft = cooldown;
     }
 
-    public override void Execute(GameObject caster, Vector3 aim, Damage damage)
-    {
-        
-    }
 
     public override void renderIndicator(Vector3 origin, Vector3 aim, bool render)
     {
@@ -66,8 +66,4 @@ public class FireBall : SkillSO
         lineRenderer.SetPosition(1, end);
     }
 
-    public override IEnumerator Use(Vector3 origin, Vector3 aim)
-    {
-        throw new System.NotImplementedException();
-    }
 }
