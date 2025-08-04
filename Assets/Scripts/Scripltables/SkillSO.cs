@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Combat;
 
-[CreateAssetMenu(menuName = "Registry/Skill")]
+// [CreateAssetMenu(menuName = "Registry/Skill")]s
 public abstract class SkillSO : ScriptableObject
 {
     public Damage damage;

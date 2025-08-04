@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Combat;
-public abstract class Attack
+namespace Combat
 {
-    public Damage damageValue { get; protected set; }
-    public Vector3 direction { get; protected set; }
-
-    public Attack(Damage damage, Vector3 direction)
+    // [CreateAssetMenu(menuName = "Combat")]
+    public abstract class Attack : ScriptableObject
     {
-        damageValue = damage;
-        direction = direction;
-    }
+        public Damage damageValue { get; protected set; }
+        public Vector3 direction { get; protected set; }
 
-    public abstract void Execute(GameObject attacker, GameObject target);
+        public Attack(Damage damage, Vector3 direction)
+        {
+        }
+
+        public abstract void Execute(GameObject attacker, GameObject target);
+    }
 }

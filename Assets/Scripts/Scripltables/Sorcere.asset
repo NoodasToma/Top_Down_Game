@@ -20,3 +20,4 @@ MonoBehaviour:
   angleOfAttack: 0
   radiusOfRangedAttack: 0
   kncokback: 0
+  skiill: {fileID: 11400000, guid: 104714751dc249f42a877d0da479b522, type: 2}

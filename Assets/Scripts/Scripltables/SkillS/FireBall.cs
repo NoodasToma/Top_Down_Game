@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 
-[CreateAssetMenu(menuName = "Skills/Fireball")]
+[CreateAssetMenu(menuName = "Combat/Skills/Fireball")]
 public class FireBall : SkillSO
 {
     [SerializeField]
