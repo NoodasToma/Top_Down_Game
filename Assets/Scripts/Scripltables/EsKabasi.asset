@@ -15,8 +15,8 @@ MonoBehaviour:
   itemName: 
   duration: 60
   boostDamage: 0
-  damageMultiplier: 1.5
-  boostDefense: 0
-  defenseMultiplier: 0.5
+  damageMultiplier: 200
+  boostDefense: 1
+  defenseMultiplier: 0.02
   consumeSound: {fileID: 0}
   icon: {fileID: 0}

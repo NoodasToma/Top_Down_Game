@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: 
   duration: 60
-  boostDamage: 0
-  damageMultiplier: 1.5
+  boostDamage: 1
+  damageMultiplier: 200
   boostDefense: 0
   defenseMultiplier: 0.5
   consumeSound: {fileID: 0}
