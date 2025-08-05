@@ -5,7 +5,7 @@ using UnityEngine;
 public class ThrowingItems : MonoBehaviour
 {
     public GameObject throwablePrefab;
-    public GameObject healingPrefab;
+    public GameObject potionPrefab;
     public float throwableSpeed;
     private PlayerAttack_Script playerAttack_Script;
 
@@ -152,9 +152,7 @@ public class ThrowingItems : MonoBehaviour
         switch (item)
         {
             case itemClass.HealingPotion:
-                return healingPrefab;
-            case itemClass.Grenade:
-                return throwablePrefab;
+                return potionPrefab;
             default:
                 return null;
         }

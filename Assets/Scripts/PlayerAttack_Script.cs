@@ -52,6 +52,7 @@ public class PlayerAttack_Script : MonoBehaviour
     public float comboResetTime;
     private float lastClickTime = 0f;
     private bool isAttacking = false;
+    private StatsManager statsManager;
 
 
     ThrowingItems throwItem;
@@ -65,6 +66,7 @@ public class PlayerAttack_Script : MonoBehaviour
         constructChar(player.playerClass);
         playerAnimator = GetComponent<Animator>();
         throwItem = GetComponent<ThrowingItems>();
+        statsManager = GetComponent<StatsManager>();
     
         //Todo  at the start assign damaga range etc based on class
     }
@@ -257,7 +259,8 @@ public class PlayerAttack_Script : MonoBehaviour
             float angle = Vector3.Angle(getAim(), positionEnemy);
             if (angle <= player.angleOfAttack && c.gameObject != null)
             {
-                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.kncokback));
+                float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
             }
         }
     }
@@ -286,7 +289,8 @@ public class PlayerAttack_Script : MonoBehaviour
             CameraShake(0.05f, 0.1f);
             freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
-            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(player.damage, player.kncokback));
+            float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
         }
     }
     public void sorcererAttack()

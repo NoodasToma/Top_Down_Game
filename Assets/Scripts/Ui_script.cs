@@ -9,7 +9,7 @@ using Unity.VisualScripting;
 
 public class Ui_script : MonoBehaviour
 {
-    
+
     public Animator playerAnimator;
     Slider healthBar;
     //cooldown for fireball skill
@@ -25,6 +25,9 @@ public class Ui_script : MonoBehaviour
     //Pause Menu Screen
     public GameObject pauseMenuUI;
     public bool isPaused;
+
+    public GameObject HotBar;
+
 
 
     void Start()
@@ -49,19 +52,19 @@ public class Ui_script : MonoBehaviour
     {
         FireballCD();
         if (Input.GetKeyDown(KeyCode.R) && gameOverUI.activeSelf) restart();
-       if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
-{
-    if (!isPaused)
-        pause();
-    else
-        resume();
-}
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
+        {
+            if (!isPaused)
+                pause();
+            else
+                resume();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
-    {
-        Debug.Log("Escape pressed");
-        Debug.Log("gameOverUI active: " + gameOverUI.activeSelf);
-        Debug.Log("pauseMenuUI active: " + pauseMenuUI.activeSelf);
-    }
+        {
+            Debug.Log("Escape pressed");
+            Debug.Log("gameOverUI active: " + gameOverUI.activeSelf);
+            Debug.Log("pauseMenuUI active: " + pauseMenuUI.activeSelf);
+        }
     }
 
     public IEnumerator FireballCooldown()
@@ -118,15 +121,28 @@ public class Ui_script : MonoBehaviour
     public void pause()
     {
         pauseMenuUI.SetActive(true);
-         isPaused = true;
+        isPaused = true;
         Time.timeScale = 0f;
     }
     public void resume()
-    { 
-        pauseMenuUI.SetActive(false); 
-        Time.timeScale = 1f;          
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
         isPaused = false;
     }
+
+    public void UseConsumable(ConsumableSO item)
+{
+    var player = GameObject.FindGameObjectWithTag("Player");
+    if (player != null)
+    {
+        var handler = player.GetComponent<ConsumableHandler>();
+        if (handler != null)
+        {
+            handler.Consume(item);
+        }
+    }
+}
 
 
 }

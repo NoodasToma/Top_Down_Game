@@ -21,6 +21,11 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     public float dodgeCooldown = 1f;
     public float iFrameDuration = 0.15f;
 
+    [Header("Combat Modifiers")]
+    public float damageMultiplier = 1f;
+    public float damageTakenMultiplier = 1f;
+
+
 
 
     public enum STATE
@@ -68,7 +73,7 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
         }
 
 
-        currentHP -= damage.amount;
+        currentHP -= damage.amount * damageTakenMultiplier;;
 
         // Visual feedback (flash effect)
         // Visual feedback (flash effect)
