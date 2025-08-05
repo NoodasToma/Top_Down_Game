@@ -5,6 +5,8 @@ namespace Combat
     {
         void TakeDamage(Damage damage);
         void Heal(float ammount) { }
+
+        void SetHealth(float health) { }
     }
     public interface IAttack
     {

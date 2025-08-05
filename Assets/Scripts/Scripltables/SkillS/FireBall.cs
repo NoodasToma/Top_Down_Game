@@ -24,11 +24,19 @@ public class FireBall : SkillSO
 
     public override void OnRelease(GameObject caster, Vector3 aim, Damage damage)
     {
-        if (!state || onCooldown) return;
+        if (!state || onCooldown)
+        {
+            state = false;
+            Destroy(currentIndicator);
+            return;
+        }
         state = false;
-
         Debug.Log("explossion");
-        GameObject.Destroy(currentIndicator);
+        Destroy(currentIndicator);
+        cooldownLeft = cooldown;
+
+
+        //actual fireball logic
         Vector3 spawnPos = caster.transform.position + Vector3.up * 1.6f + aim.normalized * 0.8f;
 
         GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
@@ -38,12 +46,12 @@ public class FireBall : SkillSO
             rb.velocity = aim.normalized * fireballSpeed;
         }
         Destroy(fireball, 5f);
-        cooldownLeft = cooldown;
     }
 
 
     public override void renderIndicator(Vector3 origin, Vector3 aim, bool render)
     {
+        origin = origin + Vector3.up * 1f; 
 
         if (!render)
         {

@@ -58,7 +58,6 @@ public class PlayerAttack_Script : MonoBehaviour
     public itemClass itemClass;
 
     private bool isAimingThrow = false;
-    private bool isAimingSkill = false;
 
     // Start is called before the first frame update
     void Start()
@@ -176,12 +175,6 @@ public class PlayerAttack_Script : MonoBehaviour
         attackRoutine = null;
     }
 
-
-
-
-
-
-
     //returns the direction player is lookin
     public Vector3 getAim()
     {
@@ -189,8 +182,6 @@ public class PlayerAttack_Script : MonoBehaviour
         v.y = 0;
         return v.normalized;
     }
-
-
 
     //gizmos for debuggin
     void OnDrawGizmosSelected()
