@@ -12,7 +12,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     public float hp;
 
     private bool inRange;
-    public float attackRange;
+    private float attackRange;
     public float movementSpeed;
 
     public GameObject target;
@@ -40,7 +40,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     Slider enemyHealthBar;
     public GameObject bloodSplatterPrefab;
 
-    
+    private Animator animationController;
+
+
 
 
 
@@ -54,9 +56,13 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         StartCoroutine(calcDistance());
 
-        originalColor = GetComponent<Renderer>().material.color;
+        originalColor = GetComponentInChildren<Renderer>().material.color;
 
         attackScript = GetComponent<Enemy_Attack>();
+
+        animationController = GetComponent<Animator>();
+
+        attackRange = attackScript.attackRange;
     }
 
     IEnumerator calcDistance() // coroutine calculates distance to a player every 0.25 seconds
@@ -150,6 +156,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         Vector3 direction = new Vector3(targetLoc.normalized.x, 0f, targetLoc.normalized.z);
         transform.Translate(direction * movementSpeed * Time.deltaTime, Space.World);
+        animationController.SetBool("Walking", true);
 
 
     }
@@ -166,13 +173,13 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         Quaternion rotDir = Quaternion.LookRotation(targetLoc);
         if (targetLoc != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed);
 
-        attackScript.Attack();
+        attackScript.AttackAnimationTrigger();
     }
 
     // everything that needs to happen when enemy gets hit
-    public void TakeDamage(float damage, float force)
+    public void TakeDamage(float damage, float force,float stagger)
     {
-        TakeDamage(new Damage(damage, force));
+        TakeDamage(new Damage(damage, force,stagger));
     }
     public void TakeDamage(Damage damage)
     {
@@ -201,25 +208,52 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         setHealthBar(hp);
     }
     IEnumerator highglightAttack(float duration)
-{
-    Renderer ren = GetComponent<Renderer>();
-    ren.material.color = Color.white;  // Highlight enemy red on hit
+  {
+       Renderer ren = GetComponentInChildren<Renderer>();
+        ren.material.color = Color.white;  // Highlight enemy red on hit
 
-    // Instantiate blood splatter effect prefab at enemy's position
-    GameObject bloodSplatter = Instantiate(bloodSplatterPrefab, transform.position, Quaternion.identity);
+        // Instantiate blood splatter effect prefab at enemy's position
+        GameObject bloodSplatter = Instantiate(bloodSplatterPrefab, transform.position, Quaternion.identity);
 
-    // Optional: Parent the splatter to the enemy so it moves with them
-    bloodSplatter.transform.SetParent(transform);
+        // Optional: Parent the splatter to the enemy so it moves with them
+        bloodSplatter.transform.SetParent(transform);
+        animationController.SetBool("Walking", false);
+        animationController.SetTrigger("GotHIt");
 
-    // Wait for the duration of the highlight
-    yield return new WaitForSeconds(duration);
 
-    // Revert color
-    ren.material.color = originalColor;
+        float tempSpeed = movementSpeed;
+        movementSpeed = 0;
 
-    // Destroy blood splatter effect after highlight ends
-    Destroy(bloodSplatter);
-}
+        // Wait for the duration of the highlight
+        yield return new WaitForSeconds(duration);
+        movementSpeed = tempSpeed;
+        // Revert color
+        ren.material.color = originalColor;
+
+        // Destroy blood splatter effect after highlight ends
+        Destroy(bloodSplatter);
+
+        flashCoroutine = null;
+
+        if (hp <= 0)
+        {
+            GameObject ui = GameObject.Find("Healthbar");
+            if (ui != null)
+            {
+                Ui_script uiScript = ui.GetComponent<Ui_script>();
+                if (uiScript != null)
+                {
+                    uiScript.AddKill(); // this updates the kill counter
+                }
+            }
+
+            animationController.SetBool("Walking", false);
+
+            animationController.SetTrigger("Death");
+
+
+        }
+  } 
 
     void knockBack(float force)
     {

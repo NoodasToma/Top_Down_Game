@@ -53,6 +53,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+         if (stats.currentState == StatsManager.STATE.Staggered) return;
         if (alive)
         {
             RaycastHit hit;
@@ -62,6 +63,7 @@ public class Player_Movement : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (stats.currentState == StatsManager.STATE.Staggered) return;
         if (alive)
         {
             movePlayerWithAim();
@@ -90,6 +92,7 @@ public class Player_Movement : MonoBehaviour
 
     public void OnDodge(InputAction.CallbackContext context)
     {
+        if (stats.currentState == StatsManager.STATE.Staggered) return;
          if (alive)
         {
             if (!isDodging && !dodgeOnCooldown)

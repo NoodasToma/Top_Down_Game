@@ -74,6 +74,7 @@ public class PlayerAttack_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (statsManager.currentState == StatsManager.STATE.Staggered) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking && !comboOnCd)
         {
             float lastAttackTime = Time.time - lastClickTime;

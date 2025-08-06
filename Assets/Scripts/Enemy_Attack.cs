@@ -1,5 +1,6 @@
 using UnityEngine;
 using Combat;
+using System.Collections;
 public class Enemy_Attack : MonoBehaviour
 {
     [Header("Attack Settings")]
@@ -7,15 +8,24 @@ public class Enemy_Attack : MonoBehaviour
     public float attackCooldown;
     public float attackRange;
     public float attackHurtboxRadius;
-
+    public float enemyAttackForce; //determines how far  player goes when hit
+    public float enemyAttackStagger; // determines how long player gets staggered
     [Header("Debug")]
     public bool showGizmos = true;
 
     private float _nextAttackTime;
-   
+
+    private Animator enemyAttackAnimator;
+
+    private Coroutine attackRoutine;
+
+    
+
+
 
     void Start()
     {
+         enemyAttackAnimator = GetComponent<Animator>();
     }
 
     void Update()
@@ -37,13 +47,25 @@ public class Enemy_Attack : MonoBehaviour
                 if (col.CompareTag("Player"))
                 {
                     var player = col.GetComponent<IDamageable>();
-                    player.TakeDamage(new Damage(attackDamage));
+                    player.TakeDamage(new Damage(attackDamage,enemyAttackForce,enemyAttackStagger,gameObject));
                     break;
                 }
             }
             _nextAttackTime = Time.time + attackCooldown;
         }
         
+    }
+
+    IEnumerator AttackRoutineEnemy()
+    {
+
+
+
+        enemyAttackAnimator.SetTrigger("Attack");
+        yield return new WaitForSeconds(attackCooldown);
+
+        attackRoutine = null;
+
     }
 
     private void OnDrawGizmos()
@@ -58,5 +80,10 @@ public class Enemy_Attack : MonoBehaviour
             transform.position + transform.forward * attackHurtboxRadius * 0.5f,
             attackHurtboxRadius
         );
+    }
+
+      public void AttackAnimationTrigger()
+    {
+        if(attackRoutine==null) attackRoutine = StartCoroutine(AttackRoutineEnemy());
     }
 }

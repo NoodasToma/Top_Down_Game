@@ -25,12 +25,14 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     public float damageMultiplier = 1f;
     public float damageTakenMultiplier = 1f;
 
+    public float RecoveryDuration = 1f;
+
 
 
 
     public enum STATE
     {
-        Basic, Dodging
+        Basic, Dodging, Staggered, Recovering
 
     }
 
@@ -60,15 +62,16 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     public void TakeDamage(Damage damage)
     {
         if (!alive) return;
-        if (currentState == STATE.Dodging) return;
+        if (currentState == STATE.Dodging||currentState==STATE.Staggered) return;
 
         Character_Passives passives = GetComponent<Character_Passives>();
         PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
 
-        if (passives != null && attackScript != null && attackScript.pClass == PlayerClass.Sorcerer)
+        if (passives != null && attackScript != null && classs.playerClass == PlayerClass.Sorcerer)
         {
             // Let Character_Passives handle damage and cheat death for Sorcerer
             passives.CheckForCheatDeath(damage.amount);
+            StartCoroutine(StaggerRoutine(damage.knockBackForce,damage.staggerDuration,calcStaggerDir(damage.source)));
             return; // Exit so damage is handled only in CheckForCheatDeath
         }
 
@@ -77,10 +80,17 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
 
         // Visual feedback (flash effect)
         // Visual feedback (flash effect)
-        StartCoroutine(DamageFlash());
-
         if (currentHP <= 0 && alive) death(damage.source);
         ui_Script.setHpBar(currentHP);
+
+       
+        
+        StartCoroutine(StaggerRoutine(damage.knockBackForce,damage.staggerDuration,calcStaggerDir(damage.source)));
+    }
+    
+     private Vector3 calcStaggerDir(GameObject source)
+    {
+        return ((transform.position - source.transform.position)).normalized;
     }
 
     public void death(GameObject killer)
@@ -89,19 +99,40 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
         alive = false;
         ui_Script.gameOver();
         GameObject.Destroy(gameObject.GetComponent<PlayerAttack_Script>());
-        playerAnimator.SetTrigger("Dead");        
+        playerAnimator.SetTrigger("Dead");
     }
-    IEnumerator DamageFlash()
+
+    //staggers player and knocks him back 
+  IEnumerator StaggerRoutine(float knockBackDis,float staggerDuration, Vector3 knockBackDir)
     {
+        Debug.Log("RoutineStarted");
         var renderer = GetComponentInChildren<Renderer>();
         if (renderer != null && _originalMaterial != null)
         {
             // Create a temporary material instance for flashing
             renderer.material.color = Color.red;
-            yield return new WaitForSeconds(0.1f);
-
-            // Restore the original material properties
-            renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
         }
+
+        if (currentState != STATE.Recovering)
+        {
+            currentState = STATE.Staggered;
+            knockBackDir.Set(knockBackDir.x, 0, knockBackDir.z);
+            transform.position += knockBackDir*knockBackDis; // Vaska do this shi with rirg body idk how to dew it
+            yield return new WaitForSeconds(staggerDuration);
+
+            
+             renderer.material.color = Color.green;
+            
+            currentState = STATE.Recovering;
+            yield return new WaitForSeconds(RecoveryDuration);
+            if (renderer != null && _originalMaterial != null)
+            {
+                renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
+            }
+            currentState = STATE.Basic;
+        }
+
+        
+        
     }
 }

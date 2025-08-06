@@ -33,13 +33,16 @@ namespace Combat
         public Vector3 direction;
         public float knockBackForce;
 
-        public Damage(float amount, DamageType type, GameObject source, Vector3 direction, float knockBackForce)
+        public float staggerDuration;
+
+        public Damage(float amount, DamageType type, GameObject source, Vector3 direction, float knockBackForce, float staggerDuration)
         {
             this.amount = amount;
             this.type = type;
             this.source = source;
             this.direction = direction;
             this.knockBackForce = knockBackForce;
+            this.staggerDuration = staggerDuration;
         }
         public Damage(float amount)
         {
@@ -48,6 +51,7 @@ namespace Combat
             this.direction = Vector3.zero;
             this.type = DamageType.True;
             this.knockBackForce = 0f;
+            this.staggerDuration = 0f;
 
         }
         public Damage(float amount, float knockBackForce)
@@ -57,6 +61,27 @@ namespace Combat
             this.type = DamageType.True;
             this.direction = Vector3.zero;
             this.knockBackForce = knockBackForce;
+            this.staggerDuration = 0f;
+        }
+
+        public Damage(float amount, float knockBackForce, float staggerDuration)
+        {
+            this.amount = amount;
+            this.source = null;
+            this.type = DamageType.True;
+            this.direction = Vector3.zero;
+            this.knockBackForce = knockBackForce;
+            this.staggerDuration = staggerDuration;
+        }
+        
+         public Damage(float amount, float knockBackForce,float staggerDuration,GameObject source)
+        {
+            this.amount = amount;
+            this.source = source;
+            this.type = DamageType.True;
+            this.direction = Vector3.zero;
+            this.knockBackForce = knockBackForce;
+            this.staggerDuration = staggerDuration;
         }
     }
     public delegate void AttackAction(GameObject attacker, Damage damage);
