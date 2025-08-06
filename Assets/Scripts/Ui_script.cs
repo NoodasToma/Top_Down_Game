@@ -13,9 +13,8 @@ public class Ui_script : MonoBehaviour
     public Animator playerAnimator;
     Slider healthBar;
     //cooldown for fireball skill
-    public Image fireballimg;
-    public float fireballCDTime = 5f;
-    public bool fireballOnCooldown = false;
+    public Image skillImg;
+    public bool skillOnCooldown = false;
     public KeyCode fireballKeyCode;
     public TextMeshProUGUI scoreText; //kill counter
     private int killCount = 0;
@@ -30,27 +29,33 @@ public class Ui_script : MonoBehaviour
 
 
 
+
     void Start()
     {
         healthBar = gameObject.GetComponent<Slider>();
         float maxHP = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>().maxHP;
         scoreText = GameObject.FindGameObjectWithTag("killCounter").GetComponent<TextMeshProUGUI>();
         Debug.Log(scoreText);
+
         healthBar.maxValue = maxHP;
         setHpBar(maxHP);
         //fireball cooldown 
-        fireballimg.fillAmount = 1;
+        skillImg.fillAmount = 1;
+
+
         scoreText.text = "Kills: 0";
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
         isPaused = false;
 
     }
-
+    public  void SetSkillIcon(Sprite icon)
+    {
+        skillImg.sprite = icon;
+    }
     // Update is called once per frame
     void Update()
     {
-        FireballCD();
         if (Input.GetKeyDown(KeyCode.R) && gameOverUI.activeSelf) restart();
         if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
         {
@@ -67,30 +72,26 @@ public class Ui_script : MonoBehaviour
         }
     }
 
-    public IEnumerator FireballCooldown()
+    public IEnumerator SkillCooldown(float skillCD)
     {
-        if (fireballOnCooldown) yield break;
-        fireballOnCooldown = true;
-        fireballimg.fillAmount = 1;
-        float timer = fireballCDTime;
+        if (skillOnCooldown) yield break;
+        skillOnCooldown = true;
+        skillImg.fillAmount = 1;
+        float timer = skillCD;
 
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            fireballimg.fillAmount = timer / fireballCDTime;
+            skillImg.fillAmount = timer / skillCD;
             yield return null;
         }
 
-        fireballimg.fillAmount = 1;
-        fireballOnCooldown = false;
-    }
-
-    void FireballCD()
+        skillImg.fillAmount = 1;
+        skillOnCooldown = false;
+    } 
+    public void SkillCD(float skillCD)
     {
-        if (Input.GetKeyUp(fireballKeyCode) && !fireballOnCooldown)
-        {
-            StartCoroutine(FireballCooldown());
-        }
+        StartCoroutine(SkillCooldown(skillCD));
     }
 
     public void setHpBar(float val)

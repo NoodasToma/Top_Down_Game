@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: FireBall
   m_EditorClassIdentifier: 
   cooldown: 1
+  cooldownLeft: 0
   onCooldown: 0
+  state: 0
+  skillIcon: {fileID: 21300000, guid: d6f3d0ca8db8aef4f9b5b284ce73d4d2, type: 3}
   range: 100
   fireballSpeed: 10
   arrowIndicatorPrefab: {fileID: 2700091513918254190, guid: bcdd36801923fc749a46b597fd4168c3, type: 3}

@@ -4,6 +4,8 @@ using UnityEngine;
 using Combat;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UI;
+
 
 // [CreateAssetMenu(menuName = "Registry/Skill")]s
 public abstract class SkillSO : ScriptableObject
@@ -39,4 +41,6 @@ public abstract class SkillSO : ScriptableObject
     {
         return null;
     }
+    public Sprite skillIcon;
+
 }

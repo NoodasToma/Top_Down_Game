@@ -14,15 +14,25 @@ public class SkillManager : MonoBehaviour
     private PlayerAttack_Script playerAttack_Script;
     private Animator playerAnimator;
 
+    private Ui_script ui_Script;
 
     private bool lastIsUlty; //temp fix
     void Start()
     {
+        ui_Script = GetComponent<Ui_script>();
+        if (ui_Script == null)
+            ui_Script = GameObject.FindGameObjectWithTag("HpBar")?.GetComponent<Ui_script>();
+
+
         minorSkill = Instantiate(GetComponent<StatsManager>().classs.minorSkill);
-        if(minorSkill != null) minorSkill.hideFlags = HideFlags.DontSave;
+        if (minorSkill != null)
+        {
+            minorSkill.hideFlags = HideFlags.DontSave;
+            ui_Script?.SetSkillIcon(minorSkill?.skillIcon);
+        }
 
         ulty = Instantiate(GetComponent<StatsManager>().classs.minorSkill);
-        if(minorSkill != null)  ulty.hideFlags = HideFlags.DontSave;
+        if (minorSkill != null) ulty.hideFlags = HideFlags.DontSave;
 
         playerAnimator = GetComponent<Animator>();
         playerAttack_Script = GetComponent<PlayerAttack_Script>();
@@ -37,8 +47,11 @@ public class SkillManager : MonoBehaviour
         if (minorSkill.state) { UpdateAiming();  minorSkill.OnHold(gameObject, dir, new Damage()); };
         
         ulty?.updatCooldown(Time.deltaTime);
-        if (ulty != null && ulty.state) { UpdateAiming(); ulty.OnHold(gameObject, dir, new Damage()); };
-
+        if (ulty != null && ulty.state)
+        {
+            UpdateAiming();
+            ulty.OnHold(gameObject, dir, new Damage());
+        }
 
         if (Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
         {
@@ -60,6 +73,7 @@ public class SkillManager : MonoBehaviour
                 playerAnimator.SetTrigger("Fireball");//idk how exactly animations work needs update
                 minorSkill.OnRelease(this.gameObject, dir, damage);
                 minorSkill.onCooldown = true;
+                ui_Script.SkillCD(minorSkill.cooldown);
                 break;
             default:  break;
         }
@@ -86,7 +100,6 @@ public class SkillManager : MonoBehaviour
         Vector3 aim = playerAttack_Script.getAim();
         minorSkill.renderIndicator(origin, aim, !lastIsUlty);// if ulty was pressed last dont render minor skill else render 
         ulty.renderIndicator(origin, aim, lastIsUlty); //if ulty was pressed last render ullyt else dont
-
     }
     void CancelSkill(SkillSO skill)
     {
