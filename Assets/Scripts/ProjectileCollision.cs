@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Combat;
 public class ProjectileCollision : MonoBehaviour
 {
     public float damage;
@@ -38,7 +38,7 @@ public class ProjectileCollision : MonoBehaviour
             Vector3 knockDir = (c.transform.position - transform.position).normalized;
             knockDir.y = 0;
 
-            c.gameObject.GetComponent<Enemy_Movement>().takeDamage(damage, knockbackForce);
+            c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(damage, knockbackForce));
 
         }
 
@@ -56,7 +56,7 @@ public class ProjectileCollision : MonoBehaviour
             Vector3 knockDir = (c.transform.position - transform.position).normalized;
             knockDir.y = 0;
 
-            c.gameObject.GetComponent<Enemy_Movement>().takeDamage(-healAmount, 0); 
+            c.gameObject.GetComponent<IDamageable>().Heal(healAmount); 
 
         }
 

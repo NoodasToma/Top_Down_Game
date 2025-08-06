@@ -5,12 +5,15 @@ using OpenCover.Framework.Model;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using Combat;
 
 public class PlayerAttack_Script : MonoBehaviour
 {
     public playerClass Class;
     public playerClassStats player = new playerClassStats();
+    public PlayerClass pClass; //temporal for quick class switch
 
+    public ClassSO player;
     public LayerMask layer;
 
     public LayerMask wall;
@@ -22,6 +25,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
     private Coroutine frameFreezer;
 
+    [SerializeField]
+    private GameObject fireBoltPrefab;
 
     public float throwingItemCD = 5f;
     private Coroutine throwRoutine;
@@ -50,19 +55,16 @@ public class PlayerAttack_Script : MonoBehaviour
     private float lastClickTime = 0f;
     private bool isAttacking = false;
     private bool skillOnCD;
+    private StatsManager statsManager;
 
      public GameObject currentIndicator;
     public GameObject fireBoltPrefab;
     public bool rangedIsAiming= false;
 
-
-
-    PlayerSkillScript playerSkill;
     ThrowingItems throwItem;
     public itemClass itemClass;
 
     private bool isAimingThrow = false;
-    private bool isAimingSkill = false;
 
     private State currentState;
 
@@ -71,10 +73,11 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         
         constructChar(Class);
+        constructChar(player.playerClass);
         playerAnimator = GetComponent<Animator>();
-        playerSkill = GetComponent<PlayerSkillScript>();
         throwItem = GetComponent<ThrowingItems>();
-
+        statsManager = GetComponent<StatsManager>();
+    
         //Todo  at the start assign damaga range etc based on class
     }
 
@@ -88,29 +91,7 @@ public class PlayerAttack_Script : MonoBehaviour
             if (lastAttackTime > comboResetTime) comboIndex = 0;
             lastClickTime = Time.time;
             if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
-
         }
-       if (!skillOnCD)
-{
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-        isAimingSkill = true; // Start aiming skill
-        playerSkill.AimSkill(player.playerClass);
-    }
-
-    if (isAimingSkill && Input.GetKeyUp(KeyCode.E) && skillRoutine == null)
-    {
-        skillOnCD = true;
-        skillRoutine = StartCoroutine(minorSkill()); // Actually fire the skill
-        isAimingSkill = false; // Reset aiming state
-    }
-
-    if (isAimingSkill && Input.GetMouseButtonDown(1)) // Right-click cancels skill aiming
-    {
-        CancelSkill(); // Call cancel method
-    }
-}
-
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
         {
@@ -160,6 +141,11 @@ public class PlayerAttack_Script : MonoBehaviour
     playerSkill.CancelAiming(); // Same as skill cancel
 }
 
+    // void cancelRangedAimingAttack()
+    // {
+    //     rangedIsAiming = false;
+    //     playerSkill.CancelAiming(); // Same as skill cancel
+    // }
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -169,14 +155,6 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         yield return new WaitForSeconds(throwingItemCD);
         throwRoutine = null;
-    }
-    IEnumerator minorSkill()
-    {
-        playerSkill.minorSkill(player.playerClass);
-        playerAnimator.SetTrigger("Fireball");
-        yield return new WaitForSeconds(player.skillCdMinor);
-        skillRoutine = null;
-        skillOnCD = false;
     }
 
 
@@ -222,12 +200,6 @@ public class PlayerAttack_Script : MonoBehaviour
         attackRoutine = null;
     }
 
-
-
-
-
-
-
     //returns the direction player is lookin
     public Vector3 getAim()
     {
@@ -235,8 +207,6 @@ public class PlayerAttack_Script : MonoBehaviour
         v.y = 0;
         return v.normalized;
     }
-
-
 
     //gizmos for debuggin
     void OnDrawGizmosSelected()
@@ -258,6 +228,7 @@ public class PlayerAttack_Script : MonoBehaviour
             Gizmos.DrawRay(hitBoxOrigin, right * player.range);
         }
         else
+
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(hitBoxOrigin, getAim() * player.range);
@@ -267,27 +238,28 @@ public class PlayerAttack_Script : MonoBehaviour
 
     }
 
-    void basicAttack(playerClass playerClass)
+    void basicAttack(PlayerClass playerClass)
     {
         Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
         switch (playerClass)
         {
             case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 sorcererAttack();
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 FighterAttack(hitBoxOrigin);
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 RangerAttack(hitBoxOrigin);
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:
@@ -311,7 +283,8 @@ public class PlayerAttack_Script : MonoBehaviour
             float angle = Vector3.Angle(getAim(), positionEnemy);
             if (angle <= player.angleOfAttack && c.gameObject != null)
             {
-                c.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
+                float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
             }
         }
     }
@@ -340,7 +313,8 @@ public class PlayerAttack_Script : MonoBehaviour
             CameraShake(0.05f, 0.1f);
             freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
-            hit.transform.gameObject.GetComponent<Enemy_Movement>().takeDamage(player.damage, player.forceOfAttack);
+            float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
         }
     }
     public void sorcererAttack()
@@ -365,41 +339,15 @@ public class PlayerAttack_Script : MonoBehaviour
     }
     CameraShake(0.05f, 0.1f);
     freezeFrame(0.05f);
+
     Destroy(fireBolt, 5f);
 }
 
 
-    void constructChar(playerClass playerClass)
+    void constructChar(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                 test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case playerClass.Fighter:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case playerClass.Rogue:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case playerClass.Ranger:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case playerClass.Alchemist:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            case playerClass.Warlock:
-                player = new playerClassStats(Class, test_damage, test_range, test_isRanged,
-                test_cooldownOfAttack, test_angleOfAttack, test_radiusOfRangedAttack, test_forceOfAttack, test_skillCdMinor);
-                break;
-            default:
-
-                break;
         }
     }
 
@@ -425,12 +373,9 @@ public class PlayerAttack_Script : MonoBehaviour
         if (player.radiusOfRangedAttack != test_radiusOfRangedAttack)
             player.SetRadiusOfRangedAttack(test_radiusOfRangedAttack);
 
-        if (player.forceOfAttack != test_forceOfAttack)
+        if (player.kncokback != test_forceOfAttack)
             player.SetForceOfAttack(test_forceOfAttack);
-
-        if (player.skillCdMinor != test_skillCdMinor)
-            player.SetSkillCdMinor(test_skillCdMinor);
-        if (player.playerClass != Class) player.SetPlayerClass(Class);
+        if (player.playerClass != pClass) player.SetPlayerClass(pClass);
     }
 
 

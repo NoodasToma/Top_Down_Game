@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using Combat;
 public class Enemy_Attack : MonoBehaviour
 {
     [Header("Attack Settings")]
@@ -28,6 +28,10 @@ public class Enemy_Attack : MonoBehaviour
     {
         playerScript = GameObject.FindWithTag("Player").GetComponent<Player_Movement>();
         enemyAttackAnimator = gameObject.GetComponent<Animator>();
+   
+
+    void Start()
+    {
     }
 
     void Update()
@@ -53,6 +57,8 @@ public class Enemy_Attack : MonoBehaviour
                 if (playerScript.alive)
                 {
                     player.TakeDamage(attackDamage, enemyAttackForce, enemyAttackStagger, gameObject);
+                    var player = col.GetComponent<IDamageable>();
+                    player.TakeDamage(new Damage(attackDamage));
                     break;
                 }
             }

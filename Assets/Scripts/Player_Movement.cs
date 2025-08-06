@@ -10,8 +10,6 @@ public class Player_Movement : MonoBehaviour
 
     private Camera mainCamera;
     public float speed;
-    public float playerHP = 100f;
-
     private Vector2 move, mouseLook;
 
     public float rotationSpeed;
@@ -19,11 +17,9 @@ public class Player_Movement : MonoBehaviour
     private Vector3 rotationTarget;
 
     public Animator playerAnimator;
-    private Material _originalMaterial;
 
     public bool alive = true;
 
-    Ui_script ui_Script;
 
     public enum state
     {
@@ -32,6 +28,7 @@ public class Player_Movement : MonoBehaviour
     }
 
     public state currentState;
+    public StatsManager stats;
     public float dashSpeed;
 
 
@@ -45,25 +42,21 @@ public class Player_Movement : MonoBehaviour
     private bool isDodging = false;
     private bool dodgeOnCooldown = false;
 
+    [SerializeField]
+    private Rigidbody rb;
     public LayerMask walls;
 
 
-
-
+     
 
 
     // Start is called before the first frame update
     void Start()
     {
-        currentState = state.Basic;
-        ui_Script = GameObject.FindGameObjectWithTag("HpBar").GetComponent<Ui_script>();
+        stats = GetComponent<StatsManager>();
         playerAnimator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        var renderer = GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
-            _originalMaterial = new Material(renderer.material); // Create a copy
-        }
+        
     }
 
     // Update is called once per frame
@@ -73,22 +66,9 @@ public class Player_Movement : MonoBehaviour
        
         if (alive)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDodging && !dodgeOnCooldown)
-            {
-                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
-                if (dodgeDir != Vector3.zero)
-                {
-                    StartCoroutine(dodgeRoutine(dodgeDir));
-                }
-            }
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
-
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
-
-
-
-            debugIframes();
         }
     }
     void FixedUpdate()
@@ -144,6 +124,11 @@ public class Player_Movement : MonoBehaviour
         {
             // Create a temporary material instance for flashing
             renderer.material.color = Color.red;
+    {
+        if (alive)
+        {
+            movePlayerWithAim();
+            debugIframes();
         }
 
         if (currentState != state.Recovering)
@@ -174,6 +159,11 @@ public class Player_Movement : MonoBehaviour
     
 
 
+    
+
+
+
+//input events
     //get wasd input
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -187,13 +177,26 @@ public class Player_Movement : MonoBehaviour
 
     }
 
-
+    public void OnDodge(InputAction.CallbackContext context)
+    {
+         if (alive)
+        {
+            if (!isDodging && !dodgeOnCooldown)
+            {
+                Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
+                if (dodgeDir != Vector3.zero)
+                {
+                    StartCoroutine(dodgeRoutine(dodgeDir));
+                }
+            }
+        }
+    }
     // move player while changing the aim direction simalteniously
 
     void movePlayerWithAim()
     {
 
-        Vector3 lookPos = rotationTarget - transform.position;
+        Vector3 lookPos = rotationTarget - rb.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
 
@@ -201,17 +204,21 @@ public class Player_Movement : MonoBehaviour
 
         if (aimDir != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            // transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, rotation, rotationSpeed  * Time.fixedDeltaTime));
+
         }
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
 
 
-        if (movingToWall(movementDir)) movementDir = Vector3.zero;
+        // if (movingToWall(movementDir)) movementDir = Vector3.zero;
 
         movingAnim(movementDir);
 
 
-        transform.Translate(movementDir * speed * Time.deltaTime, Space.World);
+        // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  //no mor transform
+        rb.MovePosition(rb.position + movementDir * speed * Time.fixedDeltaTime);
+        // rb.velocity = movementDir * speed;
 
         playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
@@ -225,15 +232,15 @@ public class Player_Movement : MonoBehaviour
 
     public Vector3 getDirection() // direction player is looking at needed for player_attack_script
     {
-        Vector3 lookPos = rotationTarget - transform.position;
+        Vector3 lookPos = rotationTarget - rb.position;
         lookPos.y = 0;
         return lookPos.normalized;
     }
 
     bool isMovingBackwards(Vector3 v1, Vector3 v2) // check if enemy is moving and facing in opposite directions
     {
-        v1 = Vector3.Normalize(v1);
-        v2 = Vector3.Normalize(v2);
+        v1 = v1.normalized;
+        v2 = v2.normalized;
 
         if (Vector3.Dot(v1, v2) < 0) return true;
 
@@ -259,7 +266,7 @@ public class Player_Movement : MonoBehaviour
 
         isDodging = true;
         dodgeOnCooldown = true;
-        currentState = state.Dodging;
+        stats.currentState = StatsManager.STATE.Dodging;
 
         float fallingDashspeed = dashSpeed;
 
@@ -268,15 +275,19 @@ public class Player_Movement : MonoBehaviour
         playerAnimator.SetTrigger("Dodge");
 
         while (timer < dodgeDuration)
-        {if (movingToWall(dodgeDir)) break;
-            transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
+        {
+            // transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
+            rb.MovePosition(rb.position + dodgeDir * fallingDashspeed * Time.deltaTime);
+
+            // rb.MovePosition(dodgeDir * fallingDashspeed * Time.deltaTime)
+            // rb.velocity = dodgeDir * fallingDashspeed;
             timer += Time.deltaTime;
             fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
             yield return null;
         }
 
         yield return new WaitForSeconds(iFrameDuration);
-        currentState = state.Basic;
+        stats.currentState = StatsManager.STATE.Basic;
         isDodging = false;
 
         yield return new WaitForSeconds(dodgeCooldown); // cooldown wait
@@ -287,16 +298,16 @@ public class Player_Movement : MonoBehaviour
     void debugIframes()
     {
         var renderer = GetComponentInChildren<Renderer>();
-        if (currentState == state.Dodging) renderer.material.color = Color.black;
+        if (stats.currentState == StatsManager.STATE.Dodging) renderer.material.color = Color.black;
         else renderer.material.color = Color.white;
     }
 
-    bool movingToWall(Vector3 playerMovingDir)
-    {
-        RaycastHit hit;
-        bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
-        return hitsWall;
-    }
+    // bool movingToWall(Vector3 playerMovingDir)
+    // {
+    //     RaycastHit hit;
+    //     bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
+    //     return hitsWall;
+    // }
 
     void OnDrawGizmosSelected()
     {

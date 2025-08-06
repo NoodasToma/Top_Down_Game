@@ -63,69 +63,65 @@ public class PlayerSkillScript : MonoBehaviour
 
     void startAim()
     {
-        isAiming = true;
-        currentIndicator = Instantiate(arrowIndicatorPrefab);
-        lineRenderer = currentIndicator.GetComponent<LineRenderer>();
     }
     public void CancelAiming()
-{
-    isAiming = false;
-    
-    if (currentIndicator != null)
     {
-        Destroy(currentIndicator); // Destroy the arrow indicator object
-        currentIndicator = null;
+        isAiming = false;
+        
+        if (currentIndicator != null)
+        {
+            Destroy(currentIndicator); // Destroy the arrow indicator object
+            currentIndicator = null;
+        }
     }
-}
 
-    public void AimSkill(playerClass playerClass)
+    public void AimSkill(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 startAim();
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 //Todo
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 //Todo
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:
-
                 break;
         }
     }
 
-    public void minorSkill(playerClass playerClass)
+    public void minorSkill(PlayerClass playerClass)
     {
         switch (playerClass)
         {
-            case playerClass.Sorcerer:
+            case PlayerClass.Sorcerer:
                 fireball();
                 break;
-            case playerClass.Fighter:
+            case PlayerClass.Fighter:
                 //Todo
                 break;
-            case playerClass.Rogue:
+            case PlayerClass.Rogue:
                 //Todo
                 break;
-            case playerClass.Ranger:
+            case PlayerClass.Ranger:
                 //Todo
                 break;
-            case playerClass.Alchemist:
+            case PlayerClass.Alchemist:
                 //Todo
                 break;
-            case playerClass.Warlock:
+            case PlayerClass.Warlock:
                 //Todo
                 break;
             default:

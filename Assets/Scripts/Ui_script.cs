@@ -9,11 +9,12 @@ using Unity.VisualScripting;
 
 public class Ui_script : MonoBehaviour
 {
+
+    public Animator playerAnimator;
     Slider healthBar;
     //cooldown for fireball skill
-    public Image fireballimg;
-    public float fireballCDTime = 5f;
-    public bool fireballOnCooldown = false;
+    public Image skillImg;
+    public bool skillOnCooldown = false;
     public KeyCode fireballKeyCode;
     public TextMeshProUGUI scoreText; //kill counter
     private int killCount = 0;
@@ -24,70 +25,73 @@ public class Ui_script : MonoBehaviour
     public GameObject pauseMenuUI;
     public bool isPaused;
 
+    public GameObject HotBar;
+
 
 
 
     void Start()
     {
         healthBar = gameObject.GetComponent<Slider>();
-        float maxHp = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().playerHP;
+        float maxHP = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>().maxHP;
         scoreText = GameObject.FindGameObjectWithTag("killCounter").GetComponent<TextMeshProUGUI>();
         Debug.Log(scoreText);
-        healthBar.maxValue = maxHp;
-        setHpBar(maxHp);
+
+        healthBar.maxValue = maxHP;
+        setHpBar(maxHP);
         //fireball cooldown 
-        fireballimg.fillAmount = 1;
+        skillImg.fillAmount = 1;
+
+
         scoreText.text = "Kills: 0";
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
         isPaused = false;
 
     }
-
+    public  void SetSkillIcon(Sprite icon)
+    {
+        skillImg.sprite = icon;
+    }
     // Update is called once per frame
     void Update()
     {
-        FireballCD();
         if (Input.GetKeyDown(KeyCode.R) && gameOverUI.activeSelf) restart();
-       if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
-{
-    if (!isPaused)
-        pause();
-    else
-        resume();
-}
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeSelf)
+        {
+            if (!isPaused)
+                pause();
+            else
+                resume();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
-    {
-        Debug.Log("Escape pressed");
-        Debug.Log("gameOverUI active: " + gameOverUI.activeSelf);
-        Debug.Log("pauseMenuUI active: " + pauseMenuUI.activeSelf);
-    }
+        {
+            Debug.Log("Escape pressed");
+            Debug.Log("gameOverUI active: " + gameOverUI.activeSelf);
+            Debug.Log("pauseMenuUI active: " + pauseMenuUI.activeSelf);
+        }
     }
 
-    public IEnumerator FireballCooldown()
+    public IEnumerator SkillCooldown(float skillCD)
     {
-        if (fireballOnCooldown) yield break;
-        fireballOnCooldown = true;
-        fireballimg.fillAmount = 1;
-        float timer = fireballCDTime;
+        if (skillOnCooldown) yield break;
+        skillOnCooldown = true;
+        skillImg.fillAmount = 1;
+        float timer = skillCD;
 
         while (timer > 0)
         {
             timer -= Time.deltaTime;
-            fireballimg.fillAmount = timer / fireballCDTime;
+            skillImg.fillAmount = timer / skillCD;
             yield return null;
         }
 
-        fireballimg.fillAmount = 1;
-        fireballOnCooldown = false;
-    }
-
-    void FireballCD()
+        skillImg.fillAmount = 1;
+        skillOnCooldown = false;
+    } 
+    public void SkillCD(float skillCD)
     {
-        if (Input.GetKey(fireballKeyCode) && !fireballOnCooldown)
-        {
-            StartCoroutine(FireballCooldown());
-        }
+        StartCoroutine(SkillCooldown(skillCD));
     }
 
     public void setHpBar(float val)
@@ -118,15 +122,28 @@ public class Ui_script : MonoBehaviour
     public void pause()
     {
         pauseMenuUI.SetActive(true);
-         isPaused = true;
+        isPaused = true;
         Time.timeScale = 0f;
     }
     public void resume()
-    { 
-        pauseMenuUI.SetActive(false); 
-        Time.timeScale = 1f;          
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
         isPaused = false;
     }
+
+    public void UseConsumable(ConsumableSO item)
+{
+    var player = GameObject.FindGameObjectWithTag("Player");
+    if (player != null)
+    {
+        var handler = player.GetComponent<ConsumableHandler>();
+        if (handler != null)
+        {
+            handler.Consume(item);
+        }
+    }
+}
 
 
 }
