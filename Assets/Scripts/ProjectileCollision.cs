@@ -9,6 +9,8 @@ public class ProjectileCollision : MonoBehaviour
     public LayerMask enemyLayer;
     public float healAmount = 50f;
     public float healRadius = 3f;
+
+    public float staggerDur = 0.5f;
     public GameObject healEffect;
     public bool isHealing = false;
 
@@ -38,7 +40,7 @@ public class ProjectileCollision : MonoBehaviour
             Vector3 knockDir = (c.transform.position - transform.position).normalized;
             knockDir.y = 0;
 
-            c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(damage, knockbackForce));
+            c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(damage, knockbackForce,staggerDur));
 
         }
 

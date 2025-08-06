@@ -44,6 +44,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
     public float test_skillCdMinor;
 
+    public float test_staggerDur;
+
     public float comboCd;
 
     private bool comboOnCd;
@@ -261,7 +263,7 @@ public class PlayerAttack_Script : MonoBehaviour
             if (angle <= player.angleOfAttack && c.gameObject != null)
             {
                 float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
-                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
+                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur,gameObject));
             }
         }
     }
@@ -291,7 +293,7 @@ public class PlayerAttack_Script : MonoBehaviour
             freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
             float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
-            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback));
+            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur));
         }
     }
     public void sorcererAttack()
@@ -349,6 +351,8 @@ public class PlayerAttack_Script : MonoBehaviour
         if (player.kncokback != test_forceOfAttack)
             player.SetForceOfAttack(test_forceOfAttack);
         if (player.playerClass != pClass) player.SetPlayerClass(pClass);
+
+        if (player.staggerDur != test_staggerDur) player.SetStaggerDur(test_staggerDur);
     }
 
 

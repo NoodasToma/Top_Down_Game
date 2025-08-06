@@ -17,6 +17,8 @@ public class ClassSO : ScriptableObject
     public float radiusOfRangedAttack;
     public float kncokback;
 
+    public float staggerDur;
+
     public SkillSO minorSkill;
     public SkillSO ulty;
 
@@ -28,5 +30,8 @@ public class ClassSO : ScriptableObject
     public void SetAngleOfAttack(float angleOfAttack) => this.angleOfAttack = angleOfAttack;
     public void SetRadiusOfRangedAttack(float radiusOfRangedAttack) => this.radiusOfRangedAttack = radiusOfRangedAttack;
     public void SetForceOfAttack(float forceOfAttack) => this.kncokback = forceOfAttack;
+
+    public void SetStaggerDur(float staggerDur) => this.staggerDur = staggerDur;
+
     
 }

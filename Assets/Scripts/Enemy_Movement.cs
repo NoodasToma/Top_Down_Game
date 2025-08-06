@@ -156,7 +156,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         Vector3 direction = new Vector3(targetLoc.normalized.x, 0f, targetLoc.normalized.z);
         transform.Translate(direction * movementSpeed * Time.deltaTime, Space.World);
-        animationController.SetBool("Walking", true);
+        if(!animationController.GetCurrentAnimatorStateInfo(0).IsName("GotHit"))animationController.SetBool("Walking", true);
 
 
     }
@@ -184,7 +184,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     public void TakeDamage(Damage damage)
     {
         // take damage
-        float highlightTime = 0.25f;
+        float highlightTime = damage.staggerDuration;
         hp -= damage.amount;
         
         if (hp <= 0)
@@ -198,6 +198,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         //highlight
         if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
+        Debug.Log(highlightTime);
         flashCoroutine = StartCoroutine(highglightAttack(highlightTime));
 
         setHealthBar(hp);
@@ -227,6 +228,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         // Wait for the duration of the highlight
         yield return new WaitForSeconds(duration);
         movementSpeed = tempSpeed;
+        animationController.SetBool("Walking", true);
         // Revert color
         ren.material.color = originalColor;
 
