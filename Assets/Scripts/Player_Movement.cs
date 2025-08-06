@@ -25,13 +25,13 @@ public class Player_Movement : MonoBehaviour
 
     Ui_script ui_Script;
 
-    private enum state
+    public enum state
     {
-        Basic, Dodging
+        Basic, Dodging, Staggered,Recovering
 
     }
 
-    private state currentState;
+    public state currentState;
     public float dashSpeed;
 
 
@@ -39,6 +39,8 @@ public class Player_Movement : MonoBehaviour
 
     public float iFrameDuration;
     public float dodgeCooldown = 1f;
+
+    public float RecoveryDuration;
 
     private bool isDodging = false;
     private bool dodgeOnCooldown = false;
@@ -67,6 +69,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (currentState == state.Staggered) return;
        
         if (alive)
         {
@@ -90,15 +93,15 @@ public class Player_Movement : MonoBehaviour
     }
     void FixedUpdate()
 {
-    if (!alive) return;
+    if (!alive||currentState==state.Staggered) return;
     movePlayerWithAim(); 
 }
 
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage ,float knockBackDis,float staggerDuration, GameObject source)
     {
         if (!alive) return;
-        if (currentState == state.Dodging) return;
+        if (currentState == state.Dodging||currentState==state.Staggered) return;
 
         Character_Passives passives = GetComponent<Character_Passives>();
         PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
@@ -107,6 +110,7 @@ public class Player_Movement : MonoBehaviour
         {
             // Let Character_Passives handle damage and cheat death for Sorcerer
             passives.CheckForCheatDeath(damage);
+            StartCoroutine(StaggerRoutine(knockBackDis,staggerDuration,calcStaggerDir(source)));
             return; // Exit so damage is handled only in CheckForCheatDeath
         }
 
@@ -115,8 +119,6 @@ public class Player_Movement : MonoBehaviour
 
         // Visual feedback (flash effect)
         // Visual feedback (flash effect)
-        StartCoroutine(DamageFlash());
-
         if (playerHP <= 0 && alive)
         {
             playerHP = 0;
@@ -127,21 +129,49 @@ public class Player_Movement : MonoBehaviour
         }
 
         ui_Script.setHpBar(playerHP);
+        
+        StartCoroutine(StaggerRoutine(knockBackDis,staggerDuration,calcStaggerDir(source)));
+
+        
+        
     }
 
-    IEnumerator DamageFlash()
+    IEnumerator StaggerRoutine(float knockBackDis,float staggerDuration, Vector3 knockBackDir)
     {
+
         var renderer = GetComponentInChildren<Renderer>();
         if (renderer != null && _originalMaterial != null)
         {
             // Create a temporary material instance for flashing
             renderer.material.color = Color.red;
-            yield return new WaitForSeconds(0.1f);
-
-            // Restore the original material properties
-            renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
         }
+
+        if (currentState != state.Recovering)
+        {
+            currentState = state.Staggered;
+            knockBackDir.Set(knockBackDir.x, 0, knockBackDir.z);
+            transform.position += knockBackDir*knockBackDis;
+            yield return new WaitForSeconds(staggerDuration);
+
+            if (renderer != null && _originalMaterial != null)
+            {
+                renderer.material.CopyPropertiesFromMaterial(_originalMaterial);
+            }
+            currentState = state.Recovering;
+            yield return new WaitForSeconds(RecoveryDuration);
+            currentState = state.Basic;
+        }
+
+        
+        
     }
+
+    private Vector3 calcStaggerDir(GameObject source)
+    {
+        return ((transform.position - source.transform.position)).normalized;
+    }
+
+    
 
 
     //get wasd input

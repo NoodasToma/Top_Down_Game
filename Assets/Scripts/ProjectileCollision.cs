@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class ProjectileCollision : MonoBehaviour
 {
-    public float damage = 100f;
-    public float knockbackForce = 10f;
-    public float explosionRadius = 3f;
+    public float damage;
+    public float knockbackForce;
+    public float explosionRadius;
     public GameObject explosionEffect;
     public LayerMask enemyLayer;
-    public float healAmount = 50f;
-    public float healRadius = 3f;
+    public float healAmount;
+    public float healRadius;
     public GameObject healEffect;
     public bool isHealing = false;
 

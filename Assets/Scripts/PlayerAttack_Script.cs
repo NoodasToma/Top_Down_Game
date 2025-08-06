@@ -64,9 +64,12 @@ public class PlayerAttack_Script : MonoBehaviour
     private bool isAimingThrow = false;
     private bool isAimingSkill = false;
 
+    private State currentState;
+
     // Start is called before the first frame update
     void Start()
     {
+        
         constructChar(Class);
         playerAnimator = GetComponent<Animator>();
         playerSkill = GetComponent<PlayerSkillScript>();
@@ -78,6 +81,7 @@ public class PlayerAttack_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GetComponent<Player_Movement>().currentState == Player_Movement.state.Staggered) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking && !comboOnCd)
         {
             float lastAttackTime = Time.time - lastClickTime;
@@ -196,10 +200,10 @@ public class PlayerAttack_Script : MonoBehaviour
         // transform.position += push;
 
 
-        yield return new WaitForSeconds(player.cooldownOfAttack);
+        
 
         basicAttack(player.playerClass);
-
+        
         comboIndex++;
 
         if (comboIndex > 2)
@@ -213,7 +217,7 @@ public class PlayerAttack_Script : MonoBehaviour
         isAttacking = false;
 
         GetComponent<Player_Movement>().speed = speedTemp;
-
+        yield return new WaitForSeconds(player.cooldownOfAttack);
 
         attackRoutine = null;
     }
@@ -359,7 +363,8 @@ public class PlayerAttack_Script : MonoBehaviour
     {
         rb.velocity = getAim() * 55;
     }
-
+    CameraShake(0.05f, 0.1f);
+    freezeFrame(0.05f);
     Destroy(fireBolt, 5f);
 }
 

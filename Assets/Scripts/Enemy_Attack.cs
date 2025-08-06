@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy_Attack : MonoBehaviour
@@ -13,42 +14,64 @@ public class Enemy_Attack : MonoBehaviour
 
     private float _nextAttackTime;
     public Player_Movement playerScript;
-   
+
+    private Animator enemyAttackAnimator;
+
+    private Coroutine attackRoutine;
+
+    public float enemyAttackForce; //determines how far  player goes when hit
+
+    public float enemyAttackStagger; // determines how long player gets staggered
+
 
     void Start()
     {
         playerScript = GameObject.FindWithTag("Player").GetComponent<Player_Movement>();
+        enemyAttackAnimator = gameObject.GetComponent<Animator>();
     }
 
     void Update()
     {
-      
+
     }
+
+
+
 
     public void Attack()
     {
-         if (Time.time >= _nextAttackTime)
-        {
-             Collider[] hitColliders = Physics.OverlapSphere(
-             transform.position + transform.forward * attackHurtboxRadius * 0.5f,
-             attackHurtboxRadius
-            );
 
-            foreach (Collider col in hitColliders)
+        Collider[] hitColliders = Physics.OverlapSphere(
+        transform.position + transform.forward * attackHurtboxRadius * 0.5f,
+        attackHurtboxRadius);
+
+        foreach (Collider col in hitColliders)
+        {
+            if (col.CompareTag("Player"))
             {
-                if (col.CompareTag("Player"))
+                var player = col.GetComponent<Player_Movement>();
+                if (playerScript.alive)
                 {
-                    var player = col.GetComponent<Player_Movement>();
-                    if (playerScript.alive)
-                    {
-                        player.TakeDamage(attackDamage);
-                        break;
-                    }
+                    player.TakeDamage(attackDamage, enemyAttackForce, enemyAttackStagger, gameObject);
+                    break;
                 }
             }
-            _nextAttackTime = Time.time + attackCooldown;
         }
-        
+
+
+    }
+
+
+    IEnumerator AttackRoutineEnemy()
+    {
+
+
+
+        enemyAttackAnimator.SetTrigger("Attack");
+        yield return new WaitForSeconds(attackCooldown);
+
+        attackRoutine = null;
+
     }
 
     private void OnDrawGizmos()
@@ -63,5 +86,11 @@ public class Enemy_Attack : MonoBehaviour
             transform.position + transform.forward * attackHurtboxRadius * 0.5f,
             attackHurtboxRadius
         );
+    }
+
+
+    public void AttackAnimationTrigger()
+    {
+        if(attackRoutine==null) attackRoutine = StartCoroutine(AttackRoutineEnemy());
     }
 }

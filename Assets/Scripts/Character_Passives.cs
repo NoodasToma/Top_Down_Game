@@ -92,7 +92,7 @@ private void ApplyNormalDamage(float damage)
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, 6f);
         foreach (Collider enemy in hitEnemies)
         {
-            if (enemy.CompareTag("Enemy"))
+            if (enemy.CompareTag("enemy"))
             {
                 enemy.GetComponent<Enemy_Movement>()?.takeDamage(100f, 0f); // Arbitrary explosion damage
             }

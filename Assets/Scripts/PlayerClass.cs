@@ -22,6 +22,8 @@ public class playerClassStats
 
     public float skillCdMinor;
 
+
+
     public playerClassStats(playerClass playerClass, float damage, float range, bool isRanged, float cooldownOfAttack, float angleOfAttack, float radiusOfRangedAttack, float forceOfAttack, float skillCdMinor)
     {
         this.playerClass = playerClass;

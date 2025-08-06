@@ -44,7 +44,7 @@ public class SpawnEnemies : MonoBehaviour
 
     GameObject enemyToSpawn;
 
-if (totalSpawned < 5)
+if (totalSpawned < 50)
 {
     enemyToSpawn = enemy;
     enemyCount1++;
