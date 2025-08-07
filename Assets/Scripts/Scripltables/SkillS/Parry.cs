@@ -12,7 +12,7 @@ public class Parry : SkillSO
     public float parryWindow;
     public static float staggerDuration = 3f;
 
-    public float damageMultiplier;
+    public static float damageMultiplier = 1;
 
     private static StatsManager statsManager;
 
@@ -20,6 +20,7 @@ public class Parry : SkillSO
 
     public override void OnStart(GameObject caster, Vector3 aim, Damage damage)
     {
+        if (onCooldown) return;
         statsManager = caster.GetComponent<StatsManager>();
         caster.GetComponent<SkillManager>().StartCoroutine(parrying(caster));
         Debug.Log("Parryed1");
@@ -43,7 +44,12 @@ public class Parry : SkillSO
     }
     public static void doParry(Damage damage , Vector3 lookDir)
     {
-        if (Vector3.Angle(lookDir, damage.direction.normalized) < 45) damage.source.GetComponent<Enemy_Movement>().TakeDamage(new Damage(0, 1f, staggerDuration));
+        if (Vector3.Angle(lookDir, damage.direction.normalized) <= 90) {
+            if (Vector3.Distance(damage.source.transform.position, statsManager.gameObject.transform.position) < 5)
+            {
+                damage.source.GetComponent<Enemy_Movement>().TakeDamage(new Damage(damage.amount*damageMultiplier, 1f, staggerDuration));
+            }
+        } 
         else
         {
             statsManager.currentState = StatsManager.STATE.Basic;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90daf8f90b7fa11419420d304d960799, type: 3}
   m_Name: FireBall
   m_EditorClassIdentifier: 
-  cooldown: 1
+  cooldown: 5
   cooldownLeft: 0
   onCooldown: 0
   state: 0

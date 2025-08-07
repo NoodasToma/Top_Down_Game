@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c835aa7ff1bcac4da5752ff3e69f76a, type: 3}
   m_Name: Parry
   m_EditorClassIdentifier: 
-  cooldown: 1
+  cooldown: 2
   cooldownLeft: 0
   onCooldown: 0
   state: 0
   skillIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  parryWindow: 5
-  damageMultiplier: 0
+  parryWindow: 1
