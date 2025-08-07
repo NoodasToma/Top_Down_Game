@@ -32,7 +32,7 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
 
     public enum STATE
     {
-        Basic, Dodging, Staggered, Recovering
+        Basic, Dodging, Staggered, Recovering,Parrying
 
     }
 
@@ -63,6 +63,11 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     {
         if (!alive) return;
         if (currentState == STATE.Dodging||currentState==STATE.Staggered) return;
+        if (currentState == STATE.Parrying)
+        {
+            Parry.doParry(damage,PlayerAttack_Script.getAim());
+            return;
+        }
 
         Character_Passives passives = GetComponent<Character_Passives>();
         PlayerAttack_Script attackScript = GetComponent<PlayerAttack_Script>();
@@ -105,7 +110,7 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     //staggers player and knocks him back 
   IEnumerator StaggerRoutine(float knockBackDis,float staggerDuration, Vector3 knockBackDir)
     {
-        Debug.Log("RoutineStarted");
+        
         var renderer = GetComponentInChildren<Renderer>();
         if (renderer != null && _originalMaterial != null)
         {

@@ -3693,7 +3693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pClass: 0
-  player: {fileID: 11400000, guid: d89a5466d3526cc40b0987b12b6d054d, type: 2}
+  player: {fileID: 11400000, guid: 3cfd707e9e96e0a49a3496d4188bc38f, type: 2}
   layer:
     serializedVersion: 2
     m_Bits: 8
@@ -3710,6 +3710,7 @@ MonoBehaviour:
   test_radiusOfRangedAttack: 1
   test_forceOfAttack: 250
   test_skillCdMinor: 5
+  test_staggerDur: 0
   comboCd: 0.5
   comboResetTime: 1
   itemClass: 1
@@ -3910,7 +3911,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 1816870885764332975}
   alive: 1
-  classs: {fileID: 11400000, guid: d89a5466d3526cc40b0987b12b6d054d, type: 2}
+  classs: {fileID: 11400000, guid: 3cfd707e9e96e0a49a3496d4188bc38f, type: 2}
   maxHP: 100
   currentHP: 0
   moveSpeed: 5
@@ -3920,7 +3921,7 @@ MonoBehaviour:
   iFrameDuration: 0.15
   damageMultiplier: 1
   damageTakenMultiplier: 1
-  RecoveryDuration: 1
+  RecoveryDuration: 2
   currentState: 0
 --- !u!114 &1816870885764332985
 MonoBehaviour:

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using OpenCover.Framework.Model;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -181,13 +180,14 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
     //returns the direction player is lookin
-    public Vector3 getAim()
+    public static Vector3 getAim()
     {
-        Vector3 v = this.gameObject.GetComponent<Player_Movement>().getDirection();
+        Vector3 v = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().getDirection();
         v.y = 0;
         return v.normalized;
     }
 
+    
     //gizmos for debuggin
     void OnDrawGizmosSelected()
     {

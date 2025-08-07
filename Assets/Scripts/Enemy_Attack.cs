@@ -47,7 +47,7 @@ public class Enemy_Attack : MonoBehaviour
                 if (col.CompareTag("Player"))
                 {
                     var player = col.GetComponent<IDamageable>();
-                    player.TakeDamage(new Damage(attackDamage,enemyAttackForce,enemyAttackStagger,gameObject));
+                    player.TakeDamage(new Damage(attackDamage,DamageType.Physical,gameObject,gameObject.transform.position-col.gameObject.transform.position,enemyAttackForce,enemyAttackStagger));
                     break;
                 }
             }

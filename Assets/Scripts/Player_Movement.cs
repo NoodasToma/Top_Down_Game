@@ -59,6 +59,8 @@ public class Player_Movement : MonoBehaviour
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
+             debugIframes();
+
         }
     }
     void FixedUpdate()
@@ -67,7 +69,6 @@ public class Player_Movement : MonoBehaviour
         if (alive)
         {
             movePlayerWithAim();
-            debugIframes();
         }
     }
 
@@ -95,6 +96,7 @@ public class Player_Movement : MonoBehaviour
         if (stats.currentState == StatsManager.STATE.Staggered) return;
          if (alive)
         {
+            debugIframes();
             if (!isDodging && !dodgeOnCooldown)
             {
                 Vector3 dodgeDir = new Vector3(move.x, 0f, move.y).normalized;
@@ -212,8 +214,14 @@ public class Player_Movement : MonoBehaviour
     void debugIframes()
     {
         var renderer = GetComponentInChildren<Renderer>();
-        if (stats.currentState == StatsManager.STATE.Dodging) renderer.material.color = Color.black;
-        else renderer.material.color = Color.white;
+        switch (stats.currentState)
+        {
+            case StatsManager.STATE.Dodging: renderer.material.color = Color.black; break;
+            case StatsManager.STATE.Parrying: renderer.material.color = Color.blue; break;
+            case StatsManager.STATE.Staggered:renderer.material.color = Color.red; break;
+            case StatsManager.STATE.Recovering:renderer.material.color = Color.green; break;
+            default: renderer.material.color = Color.white;break;
+        }
     }
 
     // bool movingToWall(Vector3 playerMovingDir)

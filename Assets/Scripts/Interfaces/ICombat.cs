@@ -44,6 +44,7 @@ namespace Combat
             this.knockBackForce = knockBackForce;
             this.staggerDuration = staggerDuration;
         }
+        
         public Damage(float amount)
         {
             this.amount = amount;

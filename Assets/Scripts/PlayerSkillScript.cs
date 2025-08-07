@@ -10,7 +10,7 @@ public class PlayerSkillScript : MonoBehaviour
     public float fireballExplosionRadius = 3f;
     public GameObject explosionEffect;
     // fireball cooldown. if you change this make sure to change cooldown times in the UI script too    
-    private PlayerAttack_Script playerAttack_Script;
+    private PlayerAttack_Script playerAttack_Script; // Also Became Redundant
 
     public GameObject arrowIndicatorPrefab;
     private GameObject currentIndicator;
@@ -35,13 +35,13 @@ public class PlayerSkillScript : MonoBehaviour
     void fireball()
     {
         GameObject.Destroy(currentIndicator);
-        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + playerAttack_Script.getAim() * 0.8f;
+        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + PlayerAttack_Script.getAim() * 0.8f;
 
         GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
         Rigidbody rb = fireball.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.velocity = playerAttack_Script.getAim() * fireballSpeed;
+            rb.velocity = PlayerAttack_Script.getAim() * fireballSpeed;
         }
 
         Destroy(fireball, 5f);
@@ -52,7 +52,7 @@ public class PlayerSkillScript : MonoBehaviour
     void UpdateAiming()
     {
     Vector3 origin = transform.position + Vector3.up * 1f; // adjust height
-    Vector3 dir = playerAttack_Script.getAim();
+    Vector3 dir = PlayerAttack_Script.getAim();
     Vector3 end = origin + dir * 10f; // 5 units long line
 
     lineRenderer.SetPosition(0, origin);

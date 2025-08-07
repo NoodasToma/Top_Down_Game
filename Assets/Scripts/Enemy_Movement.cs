@@ -197,9 +197,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         if (isKnockable) knockBack(damage.knockBackForce);
 
         //highlight
-        if (flashCoroutine != null) StopCoroutine(flashCoroutine); // if the coroutine is already running and we hit enemy again it should stop and re run
+        if (flashCoroutine == null)   flashCoroutine = StartCoroutine(highglightAttack(highlightTime)); // if the coroutine is already running and we hit enemy again it should stop and re run
         Debug.Log(highlightTime);
-        flashCoroutine = StartCoroutine(highglightAttack(highlightTime));
+        
 
         setHealthBar(hp);
     }
@@ -209,8 +209,8 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         setHealthBar(hp);
     }
     IEnumerator highglightAttack(float duration)
-  {
-       Renderer ren = GetComponentInChildren<Renderer>();
+    {
+        Renderer ren = GetComponentInChildren<Renderer>();
         ren.material.color = Color.white;  // Highlight enemy red on hit
 
         // Instantiate blood splatter effect prefab at enemy's position
@@ -255,6 +255,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
 
         }
+        flashCoroutine = null;
   } 
 
     void knockBack(float force)

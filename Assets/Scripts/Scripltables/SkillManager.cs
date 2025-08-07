@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class SkillManager : MonoBehaviour
 {
     public SkillSO minorSkill;
     public SkillSO ulty;
-    private PlayerAttack_Script playerAttack_Script;
+    private PlayerAttack_Script playerAttack_Script; // redundant
     private Animator playerAnimator;
 
     private Ui_script ui_Script;
@@ -41,7 +42,7 @@ public class SkillManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 dir = playerAttack_Script.getAim();
+        Vector3 dir = PlayerAttack_Script.getAim();
 
         minorSkill.updatCooldown(Time.deltaTime);
         if (minorSkill.state) { UpdateAiming();  minorSkill.OnHold(gameObject, dir, new Damage()); };
@@ -63,7 +64,7 @@ public class SkillManager : MonoBehaviour
 
     public void Skill1(InputAction.CallbackContext context)
     {
-        Vector3 dir = playerAttack_Script.getAim();
+        Vector3 dir = PlayerAttack_Script.getAim();
         Damage damage = new Damage();        
         switch (context.phase)
         {
@@ -81,7 +82,7 @@ public class SkillManager : MonoBehaviour
     public void Ulty(InputAction.CallbackContext context)
     {
         Damage damage = new Damage();        
-        Vector3 dir = playerAttack_Script.getAim();
+        Vector3 dir = PlayerAttack_Script.getAim();
         switch (context.phase)
         {
             case InputActionPhase.Started:
@@ -97,7 +98,7 @@ public class SkillManager : MonoBehaviour
     void UpdateAiming()
     {
         Vector3 origin = gameObject.transform.position;
-        Vector3 aim = playerAttack_Script.getAim();
+        Vector3 aim = PlayerAttack_Script.getAim();
         minorSkill.renderIndicator(origin, aim, !lastIsUlty);// if ulty was pressed last dont render minor skill else render 
         ulty.renderIndicator(origin, aim, lastIsUlty); //if ulty was pressed last render ullyt else dont
     }

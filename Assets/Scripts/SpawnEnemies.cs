@@ -36,7 +36,7 @@ public class SpawnEnemies : MonoBehaviour
 
   public void spawnEnemy()
   {
-    if (stopSpawning || totalSpawned>=10) return;
+    if (stopSpawning || totalSpawned>=500) return;
     float spawnRadius = Random.Range(spawnRadiusmin, spawnRadiusmax);
     Vector2 spawnDir = Random.insideUnitCircle.normalized * spawnRadius;
     Vector3 spawnPos = transform.position + new Vector3(spawnDir.x, 0, spawnDir.y);
@@ -44,7 +44,7 @@ public class SpawnEnemies : MonoBehaviour
 
     GameObject enemyToSpawn;
 
-if (totalSpawned < 5)
+if (totalSpawned < 500)
 {
     enemyToSpawn = enemy;
     enemyCount1++;

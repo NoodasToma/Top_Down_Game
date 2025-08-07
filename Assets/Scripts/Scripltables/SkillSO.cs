@@ -17,6 +17,8 @@ public abstract class SkillSO : ScriptableObject
 
     public bool state;
 
+    public virtual void OnStart(GameObject caster) { state = true; }
+
     public virtual void OnStart(GameObject caster, Vector3 aim, Damage damage) { state = true; }
     public virtual void OnHold(GameObject caster, Vector3 aim, Damage damage) { }
     public virtual void OnRelease(GameObject caster, Vector3 aim, Damage damage) { }
