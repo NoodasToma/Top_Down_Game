@@ -53,7 +53,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         if (stats.currentState == StatsManager.STATE.Staggered) return;
+        if (stats.currentState == StatsManager.STATE.Staggered||stats.currentState == StatsManager.STATE.Parrying) return;
         if (alive)
         {
             RaycastHit hit;
@@ -65,7 +65,7 @@ public class Player_Movement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (stats.currentState == StatsManager.STATE.Staggered) return;
+        if (stats.currentState == StatsManager.STATE.Staggered||stats.currentState == StatsManager.STATE.Parrying) return;
         if (alive)
         {
             movePlayerWithAim();

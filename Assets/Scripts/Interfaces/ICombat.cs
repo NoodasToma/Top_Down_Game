@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 namespace Combat
 {
@@ -34,6 +35,7 @@ namespace Combat
         public float knockBackForce;
 
         public float staggerDuration;
+
 
         public Damage(float amount, DamageType type, GameObject source, Vector3 direction, float knockBackForce, float staggerDuration)
         {

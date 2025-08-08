@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Timers;
 
 public class Enemy_Movement : MonoBehaviour, IDamageable
 {
@@ -41,6 +42,14 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     public GameObject bloodSplatterPrefab;
 
     private Animator animationController;
+
+    public enum ENEMY_STATE
+    {
+        Basic,Parried
+
+    }
+
+    public ENEMY_STATE enemyState = ENEMY_STATE.Basic;
 
 
 
@@ -185,8 +194,11 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     {
         // take damage
         float highlightTime = damage.staggerDuration;
-        hp -= damage.amount;
-        
+
+
+        if (enemyState == ENEMY_STATE.Parried) hp -= damage.amount*2;
+        else hp -= damage.amount;
+
         if (hp <= 0)
         {
             GameObject.Find("Healthbar")?.GetComponent<Ui_script>()?.AddKill(); //if healthbar is faund find ui scritp and add kill
@@ -197,11 +209,12 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         if (isKnockable) knockBack(damage.knockBackForce);
 
         //highlight
-        if (flashCoroutine == null)   flashCoroutine = StartCoroutine(highglightAttack(highlightTime)); // if the coroutine is already running and we hit enemy again it should stop and re run
+        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime)); // if the coroutine is already running and we hit enemy again it should stop and re run
         Debug.Log(highlightTime);
-        
+
 
         setHealthBar(hp);
+        enemyState = ENEMY_STATE.Basic;
     }
     public void Heal(float amount)
     {
@@ -220,12 +233,14 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         bloodSplatter.transform.SetParent(transform);
         animationController.SetBool("Walking", false);
         animationController.SetTrigger("GotHIt");
+        Debug.Log("Staggered");
 
 
         float tempSpeed = movementSpeed;
         movementSpeed = 0;
 
         // Wait for the duration of the highlight
+        Debug.Log(ren.material.color.ToString());
         yield return new WaitForSeconds(duration);
         movementSpeed = tempSpeed;
         animationController.SetBool("Walking", true);
@@ -256,6 +271,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         }
         flashCoroutine = null;
+        if(enemyState == ENEMY_STATE.Parried)enemyState = ENEMY_STATE.Basic;
   } 
 
     void knockBack(float force)

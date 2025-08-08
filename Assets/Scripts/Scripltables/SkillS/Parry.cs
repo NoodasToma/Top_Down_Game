@@ -47,7 +47,8 @@ public class Parry : SkillSO
         if (Vector3.Angle(lookDir, damage.direction.normalized) <= 90) {
             if (Vector3.Distance(damage.source.transform.position, statsManager.gameObject.transform.position) < 5)
             {
-                damage.source.GetComponent<Enemy_Movement>().TakeDamage(new Damage(damage.amount*damageMultiplier, 1f, staggerDuration));
+                damage.source.GetComponent<Enemy_Movement>().TakeDamage(new Damage(0, 1f, staggerDuration));
+                damage.source.GetComponent<Enemy_Movement>().enemyState = Enemy_Movement.ENEMY_STATE.Parried;
             }
         } 
         else
