@@ -12,6 +12,8 @@ public class SkillManager : MonoBehaviour
 {
     public SkillSO minorSkill;
     public SkillSO ulty;
+
+    public SkillSO passive;
     private PlayerAttack_Script playerAttack_Script; // redundant
     private Animator playerAnimator;
 
@@ -37,6 +39,7 @@ public class SkillManager : MonoBehaviour
 
         playerAnimator = GetComponent<Animator>();
         playerAttack_Script = GetComponent<PlayerAttack_Script>();
+        passive = Instantiate(GetComponent<StatsManager>().classs.passive);
     }
 
     // Update is called once per frame
@@ -45,8 +48,9 @@ public class SkillManager : MonoBehaviour
         Vector3 dir = PlayerAttack_Script.getAim();
 
         minorSkill.updatCooldown(Time.deltaTime);
-        if (minorSkill.state) { UpdateAiming();  minorSkill.OnHold(gameObject, dir, new Damage()); };
-        
+        if (minorSkill.state) { UpdateAiming(); minorSkill.OnHold(gameObject, dir, new Damage()); }
+        ;
+
         ulty?.updatCooldown(Time.deltaTime);
         if (ulty != null && ulty.state)
         {
@@ -59,6 +63,8 @@ public class SkillManager : MonoBehaviour
             CancelSkill(minorSkill); // Call cancel method
             CancelSkill(ulty);
         }
+
+        passive.Passive();
 
     }
 

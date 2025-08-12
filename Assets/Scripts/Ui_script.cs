@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 public class Ui_script : MonoBehaviour
 {
 
+    
     public Animator playerAnimator;
     Slider healthBar;
     //cooldown for fireball skill
@@ -17,7 +18,7 @@ public class Ui_script : MonoBehaviour
     public bool skillOnCooldown = false;
     public KeyCode fireballKeyCode;
     public TextMeshProUGUI scoreText; //kill counter
-    private int killCount = 0;
+    public int killCount = 0;
     //Game Over Screen
     public GameObject gameOverUI;
     public SpawnEnemies spawnScript;
@@ -35,7 +36,7 @@ public class Ui_script : MonoBehaviour
         healthBar = gameObject.GetComponent<Slider>();
         float maxHP = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>().maxHP;
         scoreText = GameObject.FindGameObjectWithTag("killCounter").GetComponent<TextMeshProUGUI>();
-        Debug.Log(scoreText);
+
 
         healthBar.maxValue = maxHP;
         setHpBar(maxHP);
@@ -47,6 +48,8 @@ public class Ui_script : MonoBehaviour
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
         isPaused = false;
+
+        GameEventManager.OnEnemyKilled += AddKill;
 
     }
     public  void SetSkillIcon(Sprite icon)
@@ -101,6 +104,7 @@ public class Ui_script : MonoBehaviour
     //kill count
     public void AddKill()
     {
+    
         killCount++;
         Debug.Log("Kill added: " + killCount);
         scoreText.text = "Kills: " + killCount;

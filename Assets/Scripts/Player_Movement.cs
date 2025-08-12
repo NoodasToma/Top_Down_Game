@@ -14,7 +14,7 @@ public class Player_Movement : MonoBehaviour
 
     public float rotationSpeed;
 
-    private Vector3 rotationTarget;
+    public Vector3 rotationTarget;
 
     public Animator playerAnimator;
 
@@ -59,7 +59,9 @@ public class Player_Movement : MonoBehaviour
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(mouseLook);
             if (Physics.Raycast(ray, out hit)) rotationTarget = hit.point;
-             debugIframes();
+            debugIframes();
+
+
 
         }
     }
@@ -89,6 +91,7 @@ public class Player_Movement : MonoBehaviour
     {
         mouseLook = context.ReadValue<Vector2>();
 
+       
     }
 
     public void OnDodge(InputAction.CallbackContext context)
@@ -150,7 +153,7 @@ public class Player_Movement : MonoBehaviour
     {
         Vector3 lookPos = rotationTarget - rb.position;
         lookPos.y = 0;
-        return lookPos.normalized;
+        return lookPos;
     }
 
     bool isMovingBackwards(Vector3 v1, Vector3 v2) // check if enemy is moving and facing in opposite directions

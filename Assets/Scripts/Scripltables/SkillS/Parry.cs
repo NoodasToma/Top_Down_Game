@@ -28,7 +28,7 @@ public class Parry : SkillSO
 
     IEnumerator parrying(GameObject caster)
     {
-        Debug.Log("Parryed" + "  " + parryWindow);
+       
 
         statsManager.currentState = StatsManager.STATE.Parrying;
 

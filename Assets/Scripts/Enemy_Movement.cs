@@ -10,6 +10,7 @@ using System.Timers;
 
 public class Enemy_Movement : MonoBehaviour, IDamageable
 {
+
     public float hp;
 
     private bool inRange;
@@ -199,11 +200,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         if (enemyState == ENEMY_STATE.Parried) hp -= damage.amount*2;
         else hp -= damage.amount;
 
-        if (hp <= 0)
-        {
-            GameObject.Find("Healthbar")?.GetComponent<Ui_script>()?.AddKill(); //if healthbar is faund find ui scritp and add kill
-            GameObject.Destroy(this.gameObject);
-        }
+      
 
         //get knocked back
         if (isKnockable) knockBack(damage.knockBackForce);
@@ -233,14 +230,14 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         bloodSplatter.transform.SetParent(transform);
         animationController.SetBool("Walking", false);
         animationController.SetTrigger("GotHIt");
-        Debug.Log("Staggered");
+        
 
 
         float tempSpeed = movementSpeed;
         movementSpeed = 0;
 
         // Wait for the duration of the highlight
-        Debug.Log(ren.material.color.ToString());
+      
         yield return new WaitForSeconds(duration);
         movementSpeed = tempSpeed;
         animationController.SetBool("Walking", true);
@@ -254,19 +251,18 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         if (hp <= 0)
         {
-            GameObject ui = GameObject.Find("Healthbar");
-            if (ui != null)
-            {
-                Ui_script uiScript = ui.GetComponent<Ui_script>();
-                if (uiScript != null)
-                {
-                    uiScript.AddKill(); // this updates the kill counter
-                }
-            }
+            GameEventManager.EnemyKilled();
 
             animationController.SetBool("Walking", false);
 
             animationController.SetTrigger("Death");
+            movementSpeed = 0;
+            rotSpeed = 0;
+
+            yield return new WaitForSeconds(2f);
+
+            Destroy(gameObject);
+        
 
 
         }

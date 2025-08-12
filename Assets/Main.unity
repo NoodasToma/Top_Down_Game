@@ -1346,7 +1346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &982895207
 Transform:
   m_ObjectHideFlags: 0
@@ -1369,17 +1369,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982895206}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ebd069d8061fb347a718a3ca26cc470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRadiusmin: 40
-  spawnRadiusmax: 50
-  spawnRate: 1
-  enemy: {fileID: 7168537333027065006}
+  spawnRadiusmax: 150
+  spawnRate: 0.5
+  enemy: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
   stopSpawning: 0
-  strongEnemy: {fileID: 7168537333027065006}
+  strongEnemy: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
 --- !u!1 &1123889616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,6 +1587,7 @@ MonoBehaviour:
   skillOnCooldown: 0
   fireballKeyCode: 101
   scoreText: {fileID: 0}
+  killCount: 0
   gameOverUI: {fileID: 1172558573}
   spawnScript: {fileID: 982895208}
   pauseMenuUI: {fileID: 543857178}
@@ -2748,7 +2749,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.5
-  offset: {x: 0, y: 10, z: -2}
+  baseOffset: {x: 0, y: 10, z: -2}
+  maxOffset: {x: 10, y: 0, z: 10}
+  currentOffset: {x: 0, y: 0, z: 0}
+  deadZoneRadius: 5
+  cameraLock: 0
 --- !u!4 &1828519881
 Transform:
   m_ObjectHideFlags: 0
@@ -3728,6 +3733,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   rotationSpeed: 10
+  rotationTarget: {x: 0, y: 0, z: 0}
   playerAnimator: {fileID: 0}
   alive: 1
   stats: {fileID: 1816870885764332984}
@@ -3937,6 +3943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minorSkill: {fileID: 0}
   ulty: {fileID: 0}
+  passive: {fileID: 0}
 --- !u!114 &1816870885764332986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4435,13 +4442,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton
       objectReference: {fileID: 0}
-    - target: {fileID: 3767608544648233670, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3767608544648233670, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3767608544648233670, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6087829559239349927, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: hp
@@ -4839,11 +4850,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &7168537333027065006 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
-  m_PrefabInstance: {fileID: 4850685954433185473}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7278681480882794519
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,8 @@ public abstract class SkillSO : ScriptableObject
     public virtual void OnHold(GameObject caster, Vector3 aim, Damage damage) { }
     public virtual void OnRelease(GameObject caster, Vector3 aim, Damage damage) { }
 
+    public virtual void Passive(){}
+
     public virtual void renderIndicator(Vector3 origin, Vector3 aim, bool render) { }
 
     public virtual void setCooldownLeft(float amount)

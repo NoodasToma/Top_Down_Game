@@ -22,6 +22,8 @@ public class ClassSO : ScriptableObject
     public SkillSO minorSkill;
     public SkillSO ulty;
 
+    public SkillSO passive;
+
     public void SetPlayerClass(PlayerClass playerClass) => this.playerClass = playerClass;
     public void SetDamage(float damage) => this.damage = damage;
     public void SetRange(float range) => this.range = range;
