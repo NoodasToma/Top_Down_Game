@@ -536,7 +536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &543857179
 RectTransform:
   m_ObjectHideFlags: 0
@@ -979,7 +979,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &730720701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1472,7 +1472,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1172558574
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2752,7 +2752,7 @@ MonoBehaviour:
   baseOffset: {x: 0, y: 10, z: -2}
   maxOffset: {x: 10, y: 0, z: 10}
   currentOffset: {x: 0, y: 0, z: 0}
-  deadZoneRadius: 5
+  deadZoneRadius: 250
   cameraLock: 0
 --- !u!4 &1828519881
 Transform:
@@ -3697,7 +3697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pClass: 0
+  pClass: 5
   player: {fileID: 11400000, guid: 3cfd707e9e96e0a49a3496d4188bc38f, type: 2}
   layer:
     serializedVersion: 2
@@ -3710,14 +3710,14 @@ MonoBehaviour:
   test_damage: 10
   test_range: 5
   test_isRanged: 0
-  test_cooldownOfAttack: 0.5
+  test_cooldownOfAttack: 0.25
   test_angleOfAttack: 45
   test_radiusOfRangedAttack: 1
   test_forceOfAttack: 250
   test_skillCdMinor: 5
-  test_staggerDur: 0
+  test_staggerDur: 0.2
   comboCd: 0.5
-  comboResetTime: 1
+  comboResetTime: 0.5
   itemClass: 1
 --- !u!114 &1816870885764332977
 MonoBehaviour:
@@ -4444,15 +4444,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3767608544648233670, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3767608544648233670, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6087829559239349927, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
       propertyPath: hp

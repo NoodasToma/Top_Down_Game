@@ -46,7 +46,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
     public enum ENEMY_STATE
     {
-        Basic,Parried
+        Basic,Parried, Staggered
 
     }
 
@@ -93,7 +93,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        if (target == null) return;
+        Debug.Log(enemyState.ToString());
+        if (target == null) return; 
+        if (enemyState == ENEMY_STATE.Staggered) return;
         if (!inRange) moveTowardsPlayer();
         else attack();
 
@@ -211,7 +213,6 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
 
         setHealthBar(hp);
-        enemyState = ENEMY_STATE.Basic;
     }
     public void Heal(float amount)
     {
@@ -230,16 +231,14 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         bloodSplatter.transform.SetParent(transform);
         animationController.SetBool("Walking", false);
         animationController.SetTrigger("GotHIt");
-        
 
 
-        float tempSpeed = movementSpeed;
-        movementSpeed = 0;
 
+        enemyState = ENEMY_STATE.Staggered;
         // Wait for the duration of the highlight
       
         yield return new WaitForSeconds(duration);
-        movementSpeed = tempSpeed;
+
         animationController.SetBool("Walking", true);
         // Revert color
         ren.material.color = originalColor;
@@ -267,7 +266,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         }
         flashCoroutine = null;
-        if(enemyState == ENEMY_STATE.Parried)enemyState = ENEMY_STATE.Basic;
+        enemyState = ENEMY_STATE.Basic;
   } 
 
     void knockBack(float force)
