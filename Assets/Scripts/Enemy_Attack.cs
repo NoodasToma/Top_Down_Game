@@ -68,7 +68,7 @@ public class Enemy_Attack : MonoBehaviour
 
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (!showGizmos) return;
 
