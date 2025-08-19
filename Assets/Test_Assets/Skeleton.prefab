@@ -85,6 +85,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 69cb88cace73348469b5948bd086f37a, type: 2}
+  - {fileID: 2100000, guid: 0d2045c4ee155b54d96808682852a9da, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -432,6 +433,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   bloodSplatterPrefab: {fileID: 9196140948547642493, guid: c2847ff1ae91a91428cf51adeecccb2f, type: 3}
+  enemyState: 0
 --- !u!114 &5540757891725063077
 MonoBehaviour:
   m_ObjectHideFlags: 0

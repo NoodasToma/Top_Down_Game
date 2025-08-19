@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ebdaa13744e9ebb45920ce41e3dda892, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,5 +155,6 @@ MonoBehaviour:
     m_Bits: 8
   healAmount: 50
   healRadius: 3
+  staggerDur: 0.5
   healEffect: {fileID: 6176435055595890605, guid: 67bde89d0b2a6ae4ea584b9f810628bb, type: 3}
   isHealing: 1

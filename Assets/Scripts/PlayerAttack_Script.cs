@@ -297,26 +297,26 @@ public class PlayerAttack_Script : MonoBehaviour
         }
     }
     public void sorcererAttack()
-{
-    Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
-    GameObject fireBolt = Instantiate(fireBoltPrefab, spawnPos, Quaternion.identity);
-
-    // Ignore collision with player
-    Collider playerCollider = GetComponent<Collider>();
-    Collider fireBoltCollider = fireBolt.GetComponent<Collider>();
-    if (playerCollider != null && fireBoltCollider != null)
     {
-        Physics.IgnoreCollision(fireBoltCollider, playerCollider);
-    }
+        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
+        GameObject fireBolt = Instantiate(fireBoltPrefab, spawnPos, Quaternion.identity);
 
-    Rigidbody rb = fireBolt.GetComponent<Rigidbody>();
-    if (rb != null)
-    {
-        rb.velocity = getAim() * 55;
-    }
+        // Ignore collision with player
+        Collider playerCollider = GetComponent<Collider>();
+        Collider fireBoltCollider = fireBolt.GetComponent<Collider>();
+        if (playerCollider != null && fireBoltCollider != null)
+        {
+            Physics.IgnoreCollision(fireBoltCollider, playerCollider);
+        }
 
-    Destroy(fireBolt, 5f);
-}
+        Rigidbody rb = fireBolt.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = getAim() * 55;
+        }
+
+        Destroy(fireBolt, 5f);
+    }
 
 
     void constructChar(PlayerClass playerClass)

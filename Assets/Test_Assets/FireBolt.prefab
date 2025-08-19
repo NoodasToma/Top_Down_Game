@@ -4959,6 +4959,7 @@ MonoBehaviour:
     m_Bits: 8
   healAmount: 50
   healRadius: 3
+  staggerDur: 0.5
   healEffect: {fileID: 0}
   isHealing: 0
 --- !u!54 &1482833009129052795

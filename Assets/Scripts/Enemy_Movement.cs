@@ -80,13 +80,15 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         while (true)
         {
+            if (gameObject != null)
+            {
+                float distance = (target.transform.position - transform.position).magnitude;
+                inRange = distance <= attackRange;
 
-            float distance = (target.transform.position - transform.position).magnitude;
-            inRange = distance <= attackRange;
 
 
-
-            yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.25f);
+            }
         }
     }
 

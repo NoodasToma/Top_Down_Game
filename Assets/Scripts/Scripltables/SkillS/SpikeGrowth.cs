@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Combat;
 using UnityEngine;
 
 public class SpikeGrowth : MonoBehaviour
@@ -18,6 +19,8 @@ public class SpikeGrowth : MonoBehaviour
 
     public float damagePerSec;
 
+    private Coroutine damageRoutine;
+
     void Start()
     {
         
@@ -34,10 +37,9 @@ public class SpikeGrowth : MonoBehaviour
         {
             if (enemy.gameObject != null && !enemiesSlowed.Contains(enemy) || enemiesSlowed == null && enemy.gameObject != null)
             {
-                enemy.gameObject.GetComponent<Enemy_Movement>().movementSpeed /= speedReduction;
-                StartCoroutine(damage(enemy.gameObject.GetComponent<Enemy_Movement>()));
-
+                enemy.gameObject.GetComponent<Enemy_Movement>().movementSpeed /= speedReduction; 
             }
+           if(damageRoutine==null) damageRoutine=StartCoroutine(damage(enemy.gameObject.GetComponent<Enemy_Movement>()));
         }
 
      if (enemiesSlowed != null) { 
@@ -64,8 +66,10 @@ public class SpikeGrowth : MonoBehaviour
 
     IEnumerator damage(Enemy_Movement enemy)
     {
-        enemy.hp -= damagePerSec;
+        enemy.TakeDamage(new Damage(1, 0, 0.1f, gameObject));
+        Debug.Log("Damage Delt");
         yield return new WaitForSeconds(1f);
+        damageRoutine = null;
     }
 
      IEnumerator InitialDelay()
