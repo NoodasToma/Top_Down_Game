@@ -254,6 +254,8 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         {
             GameEventManager.EnemyKilled();
 
+            Destroy(gameObject.GetComponent<CapsuleCollider>());
+
             animationController.SetBool("Walking", false);
 
             animationController.SetTrigger("Death");

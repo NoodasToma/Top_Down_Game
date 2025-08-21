@@ -76,6 +76,7 @@ public class PlayerAttack_Script : MonoBehaviour
         if (statsManager.currentState == StatsManager.STATE.Staggered) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking && !comboOnCd)
         {
+            Debug.Log("keY got down");
             float lastAttackTime = Time.time - lastClickTime;
             if (lastAttackTime > comboResetTime) comboIndex = 0;
             lastClickTime = Time.time;
@@ -137,6 +138,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
     IEnumerator swing()  // coroutine that manages attack cooldowns
     {
+
+        Debug.Log("swong");
         isAttacking = true;
 
         float speedTemp = GetComponent<Player_Movement>().speed;
@@ -247,6 +250,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
     void FighterAttack(Vector3 originOfattack)
     {
+        Debug.Log("Attacked");
 
         Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
         if (hitEnemies.Length <= 0) return;
@@ -319,9 +323,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
     void constructChar(PlayerClass playerClass)
     {
-        switch (playerClass)
-        {
-        }
+       
     }
 
     void checkedForchangeFortesting()

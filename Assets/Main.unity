@@ -1400,9 +1400,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadiusmin: 40
   spawnRadiusmax: 150
-  spawnRate: 0.5
+  spawnRate: 1
   enemy: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
-  stopSpawning: 1
+  stopSpawning: 0
   strongEnemy: {fileID: 1875355484962158065, guid: 0f54ee5f5a42a81499121a5c551cc0f5, type: 3}
 --- !u!1 &1123889616
 GameObject:
@@ -3378,6 +3378,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106186785}
   m_CullTransparentMesh: 1
+--- !u!1 &2116803486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116803488}
+  - component: {fileID: 2116803487}
+  m_Layer: 0
+  m_Name: GameEventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2116803487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116803486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1349b34d42e5281449ee62faa2599f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2116803488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116803486}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.1721716, y: 20.650038, z: -5.131093}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2146859686
 GameObject:
   m_ObjectHideFlags: 0
@@ -7497,14 +7541,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e57ef6ff5a2bd3469a29609feffb5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pClass: 1
-  player: {fileID: 11400000, guid: d89a5466d3526cc40b0987b12b6d054d, type: 2}
+  pClass: 0
+  player: {fileID: 11400000, guid: 3cfd707e9e96e0a49a3496d4188bc38f, type: 2}
   layer:
     serializedVersion: 2
     m_Bits: 8
   wall:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   fireBoltPrefab: {fileID: 9016618275056328841, guid: 716a9b569fd8d6d4ebc5c112ffc35030, type: 3}
   throwingItemCD: 5
   test_damage: 10
@@ -7717,7 +7761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 1816870885764332975}
   alive: 1
-  classs: {fileID: 11400000, guid: d89a5466d3526cc40b0987b12b6d054d, type: 2}
+  classs: {fileID: 11400000, guid: 3cfd707e9e96e0a49a3496d4188bc38f, type: 2}
   maxHP: 10000
   currentHP: 0
   moveSpeed: 5
@@ -25126,3 +25170,4 @@ SceneRoots:
   - {fileID: 1816870885764332973}
   - {fileID: 4850685954433185473}
   - {fileID: 4888361200998129653}
+  - {fileID: 2116803488}

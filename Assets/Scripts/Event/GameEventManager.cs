@@ -12,7 +12,7 @@ public class GameEventManager : MonoBehaviour
     private static GameEventManager gameEventManager;
 
 
-    void Start()
+    void Awake()
     {
         gameEventManager = this;
     }
