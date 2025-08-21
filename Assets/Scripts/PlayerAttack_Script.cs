@@ -18,9 +18,7 @@ public class PlayerAttack_Script : MonoBehaviour
     private Animator playerAnimator;
 
     private Coroutine attackRoutine;
-    private Coroutine skillRoutine;
 
-    private Coroutine frameFreezer;
 
     [SerializeField]
     private GameObject fireBoltPrefab;
@@ -252,8 +250,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
         Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
         if (hitEnemies.Length <= 0) return;
-        CameraShake(0.1f, 0.2f);
-        freezeFrame(0.05f);
+        GameEventManager.CameraShake(0.1f, 0.2f);
+        GameEventManager.freezeFrame(0.05f);
         foreach (Collider c in hitEnemies)
         {
             Vector3 positionEnemy = c.transform.position - transform.position;
@@ -289,8 +287,8 @@ public class PlayerAttack_Script : MonoBehaviour
             }
 
             if (!isHit) return;
-            CameraShake(0.05f, 0.1f);
-            freezeFrame(0.05f);
+            GameEventManager.CameraShake(0.05f, 0.1f);
+            GameEventManager.freezeFrame(0.05f);
             Debug.Log(hit.transform.name);
             float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
             hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur));
@@ -356,43 +354,7 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
 
-    void CameraShake(float duration, float magnitude)
-    {
-        GameObject cameraHolder = GameObject.FindGameObjectWithTag("CameraHolder");
-        Vector3 orignalPos = cameraHolder.transform.localPosition;
-        StartCoroutine(screenShaker(duration, magnitude, cameraHolder, orignalPos));
-    }
+   
 
-    IEnumerator screenShaker(float duration, float magnitude, GameObject cameraholder, Vector3 originalPos)
-    {
-        float timePassed = 0f;
-
-        while (timePassed < duration)
-        {
-
-            float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-            float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-
-            cameraholder.transform.localPosition = originalPos + new Vector3(x, y, 0f);
-
-            timePassed += Time.deltaTime;
-
-            yield return null;
-        }
-
-        cameraholder.transform.localPosition = originalPos;
-    }
-
-    void freezeFrame(float duration)
-    {
-        if(frameFreezer==null) frameFreezer = StartCoroutine(frameFreeze(duration));
-    }
-
-    IEnumerator frameFreeze(float duration)
-    {
-        Time.timeScale = 0.5f;
-        yield return new WaitForSeconds(duration);
-        Time.timeScale = 1f;
-        frameFreezer = null;
-    }
+   
 }

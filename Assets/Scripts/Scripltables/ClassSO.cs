@@ -1,3 +1,4 @@
+using Combat;
 using UnityEngine;
 [System.Serializable]
 public enum PlayerClass
@@ -16,6 +17,8 @@ public class ClassSO : ScriptableObject
     public float angleOfAttack;
     public float radiusOfRangedAttack;
     public float kncokback;
+
+    public Attack attack;
 
     public float staggerDur;
 

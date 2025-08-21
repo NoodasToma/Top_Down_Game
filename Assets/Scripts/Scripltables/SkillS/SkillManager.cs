@@ -39,7 +39,7 @@ public class SkillManager : MonoBehaviour
 
         playerAnimator = GetComponent<Animator>();
         playerAttack_Script = GetComponent<PlayerAttack_Script>();
-        passive = Instantiate(GetComponent<StatsManager>().classs.passive);
+        passive = GetComponent<StatsManager>().classs.passive != null ? Instantiate(GetComponent<StatsManager>().classs.passive) : null;
     }
 
     // Update is called once per frame
@@ -64,7 +64,7 @@ public class SkillManager : MonoBehaviour
             CancelSkill(ulty);
         }
 
-        passive.Passive();
+        if (passive != null) passive.Passive();
 
     }
 
