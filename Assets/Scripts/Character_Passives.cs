@@ -41,7 +41,7 @@ public class Character_Passives : MonoBehaviour
 
     public void CheckForCheatDeath(float damage)
     {
-        if (attackScript == null || attackScript.pClass != PlayerClass.Sorcerer)
+        if (attackScript == null || stats.classs.playerClass != PlayerClass.Sorcerer)
         {
             // Not a sorcerer, apply normal damage
             ApplyNormalDamage(damage);

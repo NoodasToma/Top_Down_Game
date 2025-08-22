@@ -12,15 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fb5693502b8a242a63722c4bf19932, type: 3}
   m_Name: Fighter
   m_EditorClassIdentifier: 
-  playerClass: 1
-  damage: 10
-  range: 50
-  isRanged: 1
-  cooldownOfAttack: 0.25
-  angleOfAttack: 45
-  radiusOfRangedAttack: 1
-  kncokback: 250
-  staggerDur: 0.2
+  playerClass: 0
+  cdBetweenAttacks: 0.25
+  attack: {fileID: 11400000, guid: 6a29b6cf3d1988142bae97835a8c913a, type: 2}
   minorSkill: {fileID: 11400000, guid: e6dce1903776925488b5efc1ebe9849a, type: 2}
   ulty: {fileID: 0}
   passive: {fileID: 11400000, guid: 67fcc1417117c854085a7aa9cca956f8, type: 2}

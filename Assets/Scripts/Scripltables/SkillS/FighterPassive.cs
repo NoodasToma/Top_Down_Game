@@ -4,25 +4,31 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Combat/Skills/FighterPassive")]
 public class FighterPassive : SkillSO
 {
-    private readonly float baseDamage = 10f;
+    private  float baseDamage ;
     private readonly float resetTime = 5f;
 
     float currentMod = 1f;
-    PlayerAttack_Script playerAttack_Script;
+    StatsManager statsManager;
     Coroutine coroutine;
     bool subscribed = false;
 
+
+    void Awake()
+    {
+        baseDamage = statsManager.damageMultiplier;
+    }
     public override void Passive()
     {
         if (!subscribed) Debug.Log("Subscribing to kill event");
-        if (playerAttack_Script == null)
-            playerAttack_Script = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack_Script>();
+        if (statsManager == null)
+            statsManager = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>();
 
         if (!subscribed)
         {
             GameEventManager.OnEnemyKilled += OnKill;
             subscribed = true;
         }
+
     }
 
     void OnKill()
@@ -31,12 +37,12 @@ public class FighterPassive : SkillSO
         currentMod += 0.1f;
         Debug.Log("New damage multiplier: " + currentMod);
 
-        playerAttack_Script.test_damage = baseDamage * currentMod;
-        Debug.Log("New player damage: " + playerAttack_Script.test_damage);
+        statsManager.damageMultiplier =   currentMod;
+        Debug.Log("New player damage: " + statsManager.damageMultiplier);
 
         // Restart timer — only reset if no further kills occur
-        if (coroutine != null) playerAttack_Script.StopCoroutine(coroutine);
-        coroutine = playerAttack_Script.StartCoroutine(ResetDamageAfterDelay());
+        if (coroutine != null) statsManager.StopCoroutine(coroutine);
+        coroutine = statsManager.StartCoroutine(ResetDamageAfterDelay());
     }
 
     IEnumerator ResetDamageAfterDelay()
@@ -46,7 +52,7 @@ public class FighterPassive : SkillSO
 
         Debug.Log("No kills in " + resetTime + " seconds. Resetting damage.");
         currentMod = 1f;
-        playerAttack_Script.test_damage = baseDamage;
+        statsManager.damageMultiplier = baseDamage;
         coroutine = null;
     }
 }

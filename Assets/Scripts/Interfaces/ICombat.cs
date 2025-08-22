@@ -25,7 +25,8 @@ namespace Combat
         Poison,
         True
     }
-
+    
+    [System.Serializable]
     public struct Damage
     {
         public float amount;
@@ -46,7 +47,7 @@ namespace Combat
             this.knockBackForce = knockBackForce;
             this.staggerDuration = staggerDuration;
         }
-        
+
         public Damage(float amount)
         {
             this.amount = amount;
@@ -76,8 +77,8 @@ namespace Combat
             this.knockBackForce = knockBackForce;
             this.staggerDuration = staggerDuration;
         }
-        
-         public Damage(float amount, float knockBackForce,float staggerDuration,GameObject source)
+
+        public Damage(float amount, float knockBackForce, float staggerDuration, GameObject source)
         {
             this.amount = amount;
             this.source = source;

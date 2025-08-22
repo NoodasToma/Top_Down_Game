@@ -14,7 +14,7 @@ public class SkillManager : MonoBehaviour
     public SkillSO ulty;
 
     public SkillSO passive;
-    private PlayerAttack_Script playerAttack_Script; // redundant
+    
     private Animator playerAnimator;
 
     private Ui_script ui_Script;
@@ -38,7 +38,7 @@ public class SkillManager : MonoBehaviour
         if (minorSkill != null) ulty.hideFlags = HideFlags.DontSave;
 
         playerAnimator = GetComponent<Animator>();
-        playerAttack_Script = GetComponent<PlayerAttack_Script>();
+
         passive = GetComponent<StatsManager>().classs.passive != null ? Instantiate(GetComponent<StatsManager>().classs.passive) : null;
     }
 

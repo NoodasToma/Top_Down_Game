@@ -2,37 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Combat;
+using System;
 namespace Combat
 {
-    // [CreateAssetMenu(menuName = "Combat")]
+    [CreateAssetMenu(menuName = "Combat//Attack")]
     public abstract class Attack : ScriptableObject
     {
-        public Damage damageValue { get; protected set; }
-        public Vector3 directionValue { get; protected set; }
+        [Header("Attack Settings")]
+        [SerializeField] protected Damage damageValue;
+       
+        [SerializeField] protected float rangeValue;
+        [SerializeField] protected String animationValue;
+        [SerializeField] protected LayerMask layerMaskValue;
 
-        public Animation animationValue { get; protected set; }
+        // Optional public getters if other scripts need access
+        public Damage DamageValue => damageValue;
+    
+        public float RangeValue => rangeValue;
+        public String AnimationValue => animationValue;
+        public LayerMask LayerMaskValue => layerMaskValue;
 
-        public LayerMask layerMaskValue { get; protected set; }
+     
 
-        public Attack(Damage damage, Vector3 direction)
-        {
-            damageValue = damage;
-            directionValue = direction;
-        }
-        public Attack(Damage damage, Vector3 direction, Animation animation, LayerMask layerMask)
-        {
-            damageValue = damage;
-            directionValue = direction;
-            animationValue = animation;
-            layerMaskValue = layerMask;
-        }
-        public Attack(Damage damage, Vector3 direction, LayerMask layerMask)
-        {
-            damageValue = damage;
-            directionValue = direction;
-            layerMaskValue = layerMask;
-        }
+        
 
         public abstract void Execute(GameObject attacker, GameObject target);
+        public abstract void Execute(GameObject attacker);
     }
 }

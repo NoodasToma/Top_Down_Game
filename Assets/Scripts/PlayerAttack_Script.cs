@@ -8,7 +8,6 @@ using Combat;
 
 public class PlayerAttack_Script : MonoBehaviour
 {
-    public PlayerClass pClass; //temporal for quick class switch
 
     public ClassSO player;
     public LayerMask layer;
@@ -26,29 +25,6 @@ public class PlayerAttack_Script : MonoBehaviour
     public float throwingItemCD = 5f;
     private Coroutine throwRoutine;
 
-    public float test_damage;
-
-    public float test_range;
-
-    public bool test_isRanged;
-
-    public float test_cooldownOfAttack;
-    public float test_angleOfAttack;
-
-    public float test_radiusOfRangedAttack;
-
-    public float test_forceOfAttack;
-
-    public float test_skillCdMinor;
-
-    public float test_staggerDur;
-
-    public float comboCd;
-
-    private bool comboOnCd;
-
-    private int comboIndex = 0;
-    public float comboResetTime;
     private float lastClickTime = 0f;
     private bool isAttacking = false;
     private StatsManager statsManager;
@@ -62,11 +38,11 @@ public class PlayerAttack_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        constructChar(player.playerClass);
+
         playerAnimator = GetComponent<Animator>();
         throwItem = GetComponent<ThrowingItems>();
         statsManager = GetComponent<StatsManager>();
-    
+
         //Todo  at the start assign damaga range etc based on class
     }
 
@@ -74,13 +50,10 @@ public class PlayerAttack_Script : MonoBehaviour
     void Update()
     {
         if (statsManager.currentState == StatsManager.STATE.Staggered) return;
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking && !comboOnCd)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
         {
-            Debug.Log("keY got down");
-            float lastAttackTime = Time.time - lastClickTime;
-            if (lastAttackTime > comboResetTime) comboIndex = 0;
-            lastClickTime = Time.time;
-            if (attackRoutine == null) attackRoutine = StartCoroutine(swing());
+            playerAnimator.SetTrigger(player.attack.AnimationValue);
+            isAttacking = true;
         }
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
@@ -97,7 +70,7 @@ public class PlayerAttack_Script : MonoBehaviour
         {
             CancelThrow();
         }
-        checkedForchangeFortesting();
+
 
     }
 
@@ -136,49 +109,49 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
 
-    IEnumerator swing()  // coroutine that manages attack cooldowns
-    {
+    // IEnumerator swing()  // coroutine that manages attack cooldowns
+    // {
 
-        Debug.Log("swong");
-        isAttacking = true;
+    //     Debug.Log("swong");
+    //     isAttacking = true;
 
-        float speedTemp = GetComponent<Player_Movement>().speed;
-        if (!player.isRanged) GetComponent<Player_Movement>().speed = speedTemp / 4;
-
-
-        switch (comboIndex)
-        {
-            case 0: playerAnimator.SetTrigger("Attack"); break;
-            case 1: playerAnimator.SetTrigger("Fireball"); break;
-            case 2: playerAnimator.SetTrigger("Attack"); break;
-        }
+    //     float speedTemp = GetComponent<Player_Movement>().speed;
+    //     if (!player.isRanged) GetComponent<Player_Movement>().speed = speedTemp / 4;
 
 
-        // Vector3 push = getAim() * 1f;
-        // transform.position += push;
+    //     switch (comboIndex)
+    //     {
+    //         case 0: playerAnimator.SetTrigger("Attack"); break;
+    //         case 1: playerAnimator.SetTrigger("Fireball"); break;
+    //         case 2: playerAnimator.SetTrigger("Attack"); break;
+    //     }
 
 
-        yield return new WaitForSeconds(player.cooldownOfAttack);
-
-        basicAttack(player.playerClass);
-
-        comboIndex++;
-
-        if (comboIndex > 2)
-        {
-            comboIndex = 0;
-            comboOnCd = true;
-            yield return new WaitForSeconds(comboCd);  // Cooldown before new combo
-            comboOnCd = false;
-        }
-
-        isAttacking = false;
-
-        GetComponent<Player_Movement>().speed = speedTemp;
+    //     // Vector3 push = getAim() * 1f;
+    //     // transform.position += push;
 
 
-        attackRoutine = null;
-    }
+    //     yield return new WaitForSeconds(player.cooldownOfAttack);
+
+    //     basicAttack(player.playerClass);
+
+    //     comboIndex++;
+
+    //     if (comboIndex > 2)
+    //     {
+    //         comboIndex = 0;
+    //         comboOnCd = true;
+    //         yield return new WaitForSeconds(comboCd);  // Cooldown before new combo
+    //         comboOnCd = false;
+    //     }
+
+    //     isAttacking = false;
+
+    //     GetComponent<Player_Movement>().speed = speedTemp;
+
+
+    //     attackRoutine = null;
+    // }
 
     //returns the direction player is lookin
     public static Vector3 getAim()
@@ -188,116 +161,88 @@ public class PlayerAttack_Script : MonoBehaviour
         return v.normalized;
     }
 
-    
-    //gizmos for debuggin
-    void OnDrawGizmosSelected()
-    {
-        Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
-        if (!player.isRanged)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, player.range); // Match radius
-
-            Vector3 center = getAim();
-            Gizmos.color = Color.green;
-            Gizmos.DrawRay(hitBoxOrigin, center * player.range);
-
-            Vector3 left = Quaternion.Euler(0, player.angleOfAttack, 0) * center;
-            Vector3 right = Quaternion.Euler(0, -player.angleOfAttack, 0) * center;
-
-            Gizmos.DrawRay(hitBoxOrigin, left * player.range);
-            Gizmos.DrawRay(hitBoxOrigin, right * player.range);
-        }
-        else
-
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(hitBoxOrigin, getAim() * player.range);
-        }
 
 
 
-    }
+    // void basicAttack(PlayerClass playerClass)
+    // {
+    //     Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
+    //     switch (playerClass)
+    //     {
+    //         case PlayerClass.Sorcerer:
+    //             sorcererAttack();
+    //             break;
+    //         case PlayerClass.Fighter:
+    //             FighterAttack(hitBoxOrigin);
+    //             break;
+    //         case PlayerClass.Rogue:
+    //             //Todo
+    //             break;
+    //         case PlayerClass.Ranger:
+    //             RangerAttack(hitBoxOrigin);
+    //             break;
+    //         case PlayerClass.Alchemist:
+    //             //Todo
+    //             break;
+    //         case PlayerClass.Warlock:
+    //             //Todo
+    //             break;
+    //         default:
 
-    void basicAttack(PlayerClass playerClass)
-    {
-        Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
-        switch (playerClass)
-        {
-            case PlayerClass.Sorcerer:
-                sorcererAttack();
-                break;
-            case PlayerClass.Fighter:
-                FighterAttack(hitBoxOrigin);
-                break;
-            case PlayerClass.Rogue:
-                //Todo
-                break;
-            case PlayerClass.Ranger:
-                RangerAttack(hitBoxOrigin);
-                break;
-            case PlayerClass.Alchemist:
-                //Todo
-                break;
-            case PlayerClass.Warlock:
-                //Todo
-                break;
-            default:
+    //             break;
+    //     }
+    // }
 
-                break;
-        }
-    }
+    // void FighterAttack(Vector3 originOfattack)
+    // {
+    //     Debug.Log("Attacked");
 
-    void FighterAttack(Vector3 originOfattack)
-    {
-        Debug.Log("Attacked");
+    //     Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
+    //     if (hitEnemies.Length <= 0) return;
+    //     GameEventManager.CameraShake(0.1f, 0.2f);
+    //     GameEventManager.freezeFrame(0.05f);
+    //     foreach (Collider c in hitEnemies)
+    //     {
+    //         Vector3 positionEnemy = c.transform.position - transform.position;
+    //         positionEnemy.y = 0;
+    //         positionEnemy = positionEnemy.normalized;
+    //         float angle = Vector3.Angle(getAim(), positionEnemy);
+    //         if (angle <= player.angleOfAttack && c.gameObject != null)
+    //         {
+    //             float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+    //             c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur,gameObject));
+    //         }
+    //     }
+    // }
 
-        Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
-        if (hitEnemies.Length <= 0) return;
-        GameEventManager.CameraShake(0.1f, 0.2f);
-        GameEventManager.freezeFrame(0.05f);
-        foreach (Collider c in hitEnemies)
-        {
-            Vector3 positionEnemy = c.transform.position - transform.position;
-            positionEnemy.y = 0;
-            positionEnemy = positionEnemy.normalized;
-            float angle = Vector3.Angle(getAim(), positionEnemy);
-            if (angle <= player.angleOfAttack && c.gameObject != null)
-            {
-                float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
-                c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur,gameObject));
-            }
-        }
-    }
+    // void RangerAttack(Vector3 originOfattack)
+    // {
+    //     RaycastHit hit;
+    //     RaycastHit wallhit;
+    //     bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range,layer);
+    //     bool isWall = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out wallhit, player.range,wall);
 
-    void RangerAttack(Vector3 originOfattack)
-    {
-        RaycastHit hit;
-        RaycastHit wallhit;
-        bool isHit = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out hit, player.range,layer);
-        bool isWall = Physics.SphereCast(originOfattack, player.radiusOfRangedAttack, getAim(), out wallhit, player.range,wall);
 
-      
-    
-        if (isHit || isWall)
-        {
-            
-            if (isHit && isWall)
-            {
-             Debug.Log(originOfattack);
-             Debug.Log(hit.collider.name);
-             Debug.Log(wallhit.collider.name);
-             if ((wallhit.transform.position - originOfattack).magnitude <= (hit.transform.position - originOfattack).magnitude) return;
-            }
 
-            if (!isHit) return;
-            GameEventManager.CameraShake(0.05f, 0.1f);
-            GameEventManager.freezeFrame(0.05f);
-            Debug.Log(hit.transform.name);
-            float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
-            hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur));
-        }
-    }
+    //     if (isHit || isWall)
+    //     {
+
+    //         if (isHit && isWall)
+    //         {
+    //          Debug.Log(originOfattack);
+    //          Debug.Log(hit.collider.name);
+    //          Debug.Log(wallhit.collider.name);
+    //          if ((wallhit.transform.position - originOfattack).magnitude <= (hit.transform.position - originOfattack).magnitude) return;
+    //         }
+
+    //         if (!isHit) return;
+    //         GameEventManager.CameraShake(0.05f, 0.1f);
+    //         GameEventManager.freezeFrame(0.05f);
+    //         Debug.Log(hit.transform.name);
+    //         float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
+    //         hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur));
+    //     }
+    // }
     public void sorcererAttack()
     {
         Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
@@ -320,40 +265,16 @@ public class PlayerAttack_Script : MonoBehaviour
         Destroy(fireBolt, 5f);
     }
 
-
-    void constructChar(PlayerClass playerClass)
+    public void Attack()
     {
-       
+        player.attack.Execute(gameObject);
+        isAttacking = false;
     }
 
-    void checkedForchangeFortesting()
-    {
-        if (player == null) return;
 
-        if (player.damage != test_damage)
-            player.SetDamage(test_damage);
+  
 
-        if (player.range != test_range)
-            player.SetRange(test_range);
-
-        if (player.isRanged != test_isRanged)
-            player.SetIsRanged(test_isRanged);
-
-        if (player.cooldownOfAttack != test_cooldownOfAttack)
-            player.SetCooldownOfAttack(test_cooldownOfAttack);
-
-        if (player.angleOfAttack != test_angleOfAttack)
-            player.SetAngleOfAttack(test_angleOfAttack);
-
-        if (player.radiusOfRangedAttack != test_radiusOfRangedAttack)
-            player.SetRadiusOfRangedAttack(test_radiusOfRangedAttack);
-
-        if (player.kncokback != test_forceOfAttack)
-            player.SetForceOfAttack(test_forceOfAttack);
-        if (player.playerClass != pClass) player.SetPlayerClass(pClass);
-
-        if (player.staggerDur != test_staggerDur) player.SetStaggerDur(test_staggerDur);
-    }
+   
 
 
    

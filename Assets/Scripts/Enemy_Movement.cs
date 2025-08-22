@@ -206,11 +206,11 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
       
 
-        //get knocked back
-        if (isKnockable) knockBack(damage.knockBackForce);
+        
+        
 
         //highlight
-        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime)); // if the coroutine is already running and we hit enemy again it should stop and re run
+        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime,damage.knockBackForce)); // if the coroutine is already running and we hit enemy again it should stop and re run
         Debug.Log(highlightTime);
 
 
@@ -221,8 +221,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         hp += amount;
         setHealthBar(hp);
     }
-    IEnumerator highglightAttack(float duration)
+    IEnumerator highglightAttack(float duration,float force)
     {
+        if (isKnockable) knockBack(force);
         Renderer ren = GetComponentInChildren<Renderer>();
         ren.material.color = Color.white;  // Highlight enemy red on hit
 
@@ -271,14 +272,20 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         }
         flashCoroutine = null;
         enemyState = ENEMY_STATE.Basic;
-  } 
+  }
 
     void knockBack(float force)
     {
+        Debug.Log("enemy Kncocked " + force);
         Vector3 direction = transform.position - target.transform.position;
+
         direction.y = 0;
 
-        transform.Translate(direction * (force / weight) * Time.deltaTime, Space.World);
+        transform.Translate(direction.normalized * (force / weight), Space.World);
+
+        Debug.Log("enemy Kncocked " + force + " direction  " + direction + " force / weight  : " + (force / weight));
+
+        
     }
 
 
