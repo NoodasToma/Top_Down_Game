@@ -95,7 +95,6 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(enemyState.ToString());
         if (target == null) return; 
         if (enemyState == ENEMY_STATE.Staggered) return;
         if (!inRange) moveTowardsPlayer();

@@ -16,9 +16,6 @@ public class PlayerAttack_Script : MonoBehaviour
 
     private Animator playerAnimator;
 
-    private Coroutine attackRoutine;
-
-
     [SerializeField]
     private GameObject fireBoltPrefab;
 
@@ -26,6 +23,8 @@ public class PlayerAttack_Script : MonoBehaviour
     private Coroutine throwRoutine;
 
     private float lastClickTime = 0f;
+
+    private int comboIndex = 0;
     private bool isAttacking = false;
     private StatsManager statsManager;
 
@@ -34,6 +33,8 @@ public class PlayerAttack_Script : MonoBehaviour
     public itemClass itemClass;
 
     private bool isAimingThrow = false;
+
+    private Coroutine attackRout;
 
     // Start is called before the first frame update
     void Start()
@@ -49,11 +50,16 @@ public class PlayerAttack_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        Debug.Log(comboIndex);
+        if (lastClickTime + player.attackCombo.GetComboResetTime < Time.time) comboIndex = 0;
+
         if (statsManager.currentState == StatsManager.STATE.Staggered) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
         {
-            playerAnimator.SetTrigger(player.attack.AnimationValue);
+            lastClickTime=Time.time;
             isAttacking = true;
+            if(attackRout == null)attackRout=StartCoroutine(attackRoutine());
         }
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
@@ -71,6 +77,33 @@ public class PlayerAttack_Script : MonoBehaviour
             CancelThrow();
         }
 
+
+    }
+
+    IEnumerator attackRoutine()
+    {
+   
+        if (comboIndex <= player.attackCombo.GetComboLimit)
+        {
+            AnimationStarter(player.attackCombo.GetAttacks[comboIndex].AnimationValue);
+
+            if (comboIndex >= player.attackCombo.GetComboLimit)
+            {
+                yield return new WaitForSeconds(player.attackCombo.GetCooldownBetweenCombos);
+                comboIndex = 0;
+            }
+            else
+            {
+                yield return new WaitForSeconds(player.attackCombo.GetCooldownBetweenAttacks);
+                comboIndex++;
+            }
+
+
+
+        }
+
+        isAttacking = false;
+        attackRout = null;
 
     }
 
@@ -97,6 +130,7 @@ public class PlayerAttack_Script : MonoBehaviour
     //     rangedIsAiming = false;
     //     playerSkill.CancelAiming(); // Same as skill cancel
     // }
+
     void CancelThrow()
     {
         isAimingThrow = false;
@@ -109,49 +143,7 @@ public class PlayerAttack_Script : MonoBehaviour
     }
 
 
-    // IEnumerator swing()  // coroutine that manages attack cooldowns
-    // {
 
-    //     Debug.Log("swong");
-    //     isAttacking = true;
-
-    //     float speedTemp = GetComponent<Player_Movement>().speed;
-    //     if (!player.isRanged) GetComponent<Player_Movement>().speed = speedTemp / 4;
-
-
-    //     switch (comboIndex)
-    //     {
-    //         case 0: playerAnimator.SetTrigger("Attack"); break;
-    //         case 1: playerAnimator.SetTrigger("Fireball"); break;
-    //         case 2: playerAnimator.SetTrigger("Attack"); break;
-    //     }
-
-
-    //     // Vector3 push = getAim() * 1f;
-    //     // transform.position += push;
-
-
-    //     yield return new WaitForSeconds(player.cooldownOfAttack);
-
-    //     basicAttack(player.playerClass);
-
-    //     comboIndex++;
-
-    //     if (comboIndex > 2)
-    //     {
-    //         comboIndex = 0;
-    //         comboOnCd = true;
-    //         yield return new WaitForSeconds(comboCd);  // Cooldown before new combo
-    //         comboOnCd = false;
-    //     }
-
-    //     isAttacking = false;
-
-    //     GetComponent<Player_Movement>().speed = speedTemp;
-
-
-    //     attackRoutine = null;
-    // }
 
     //returns the direction player is lookin
     public static Vector3 getAim()
@@ -164,56 +156,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
 
 
-    // void basicAttack(PlayerClass playerClass)
-    // {
-    //     Vector3 hitBoxOrigin = transform.position + getAim() * 0.5f;
-    //     switch (playerClass)
-    //     {
-    //         case PlayerClass.Sorcerer:
-    //             sorcererAttack();
-    //             break;
-    //         case PlayerClass.Fighter:
-    //             FighterAttack(hitBoxOrigin);
-    //             break;
-    //         case PlayerClass.Rogue:
-    //             //Todo
-    //             break;
-    //         case PlayerClass.Ranger:
-    //             RangerAttack(hitBoxOrigin);
-    //             break;
-    //         case PlayerClass.Alchemist:
-    //             //Todo
-    //             break;
-    //         case PlayerClass.Warlock:
-    //             //Todo
-    //             break;
-    //         default:
 
-    //             break;
-    //     }
-    // }
-
-    // void FighterAttack(Vector3 originOfattack)
-    // {
-    //     Debug.Log("Attacked");
-
-    //     Collider[] hitEnemies = Physics.OverlapSphere(originOfattack, player.range, layer);
-    //     if (hitEnemies.Length <= 0) return;
-    //     GameEventManager.CameraShake(0.1f, 0.2f);
-    //     GameEventManager.freezeFrame(0.05f);
-    //     foreach (Collider c in hitEnemies)
-    //     {
-    //         Vector3 positionEnemy = c.transform.position - transform.position;
-    //         positionEnemy.y = 0;
-    //         positionEnemy = positionEnemy.normalized;
-    //         float angle = Vector3.Angle(getAim(), positionEnemy);
-    //         if (angle <= player.angleOfAttack && c.gameObject != null)
-    //         {
-    //             float finalDamage = player.damage * (statsManager != null ? statsManager.damageMultiplier : 1f);
-    //             c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur,gameObject));
-    //         }
-    //     }
-    // }
 
     // void RangerAttack(Vector3 originOfattack)
     // {
@@ -243,41 +186,41 @@ public class PlayerAttack_Script : MonoBehaviour
     //         hit.transform.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, player.kncokback,player.staggerDur));
     //     }
     // }
-    public void sorcererAttack()
-    {
-        Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
-        GameObject fireBolt = Instantiate(fireBoltPrefab, spawnPos, Quaternion.identity);
 
-        // Ignore collision with player
-        Collider playerCollider = GetComponent<Collider>();
-        Collider fireBoltCollider = fireBolt.GetComponent<Collider>();
-        if (playerCollider != null && fireBoltCollider != null)
-        {
-            Physics.IgnoreCollision(fireBoltCollider, playerCollider);
-        }
 
-        Rigidbody rb = fireBolt.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.velocity = getAim() * 55;
-        }
+    // public void sorcererAttack()
+    // {
+    //     Vector3 spawnPos = transform.position + Vector3.up * 1.6f + getAim() * 0.8f;
+    //     GameObject fireBolt = Instantiate(fireBoltPrefab, spawnPos, Quaternion.identity);
 
-        Destroy(fireBolt, 5f);
-    }
+    //     // Ignore collision with player
+    //     Collider playerCollider = GetComponent<Collider>();
+    //     Collider fireBoltCollider = fireBolt.GetComponent<Collider>();
+    //     if (playerCollider != null && fireBoltCollider != null)
+    //     {
+    //         Physics.IgnoreCollision(fireBoltCollider, playerCollider);
+    //     }
+
+    //     Rigidbody rb = fireBolt.GetComponent<Rigidbody>();
+    //     if (rb != null)
+    //     {
+    //         rb.velocity = getAim() * 55;
+    //     }
+
+    //     Destroy(fireBolt, 5f);
+    // }
 
     public void Attack()
     {
-        player.attack.Execute(gameObject);
-        isAttacking = false;
+        player.attackCombo.startCombo(gameObject, comboIndex);
+        
     }
 
+    public void AnimationStarter(String variable)
+    {
+        playerAnimator.SetTrigger(variable);
+    }
 
-  
-
-   
-
-
-   
 
    
 }

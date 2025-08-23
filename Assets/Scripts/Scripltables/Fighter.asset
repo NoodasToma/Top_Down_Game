@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerClass: 0
   cdBetweenAttacks: 0.25
-  attack: {fileID: 11400000, guid: 6a29b6cf3d1988142bae97835a8c913a, type: 2}
+  attackCombo: {fileID: 11400000, guid: adbbffcb349777944929f6e1c12a5e59, type: 2}
   minorSkill: {fileID: 11400000, guid: e6dce1903776925488b5efc1ebe9849a, type: 2}
   ulty: {fileID: 0}
   passive: {fileID: 11400000, guid: 67fcc1417117c854085a7aa9cca956f8, type: 2}

@@ -19,7 +19,7 @@ public class FighterPassive : SkillSO
     }
     public override void Passive()
     {
-        if (!subscribed) Debug.Log("Subscribing to kill event");
+        if (!subscribed)
         if (statsManager == null)
             statsManager = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>();
 

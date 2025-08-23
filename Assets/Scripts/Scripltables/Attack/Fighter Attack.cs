@@ -68,7 +68,9 @@ public class FighterAttack : Attack
         Gizmos.DrawRay(hitBoxOrigin, right * rangeValue);
 
     }
-     
+
 
 
 }
+
+

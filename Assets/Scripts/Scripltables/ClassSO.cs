@@ -15,7 +15,7 @@ public class ClassSO : ScriptableObject
     
     public float cdBetweenAttacks;
     
-    public Attack attack;
+    public Combo attackCombo; // in case of single attacks combo will consist of leght 1 
 
     public SkillSO minorSkill;
     public SkillSO ulty;
