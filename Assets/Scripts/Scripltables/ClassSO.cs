@@ -13,7 +13,6 @@ public class ClassSO : ScriptableObject
 
     SkillManager skillManager;
     
-    public float cdBetweenAttacks;
     
     public Combo attackCombo; // in case of single attacks combo will consist of leght 1 
 

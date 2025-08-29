@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Combat;
 using System;
+using System.Linq;
 namespace Combat
 {
     [CreateAssetMenu(menuName = "Combat//Attack")]
@@ -28,6 +29,11 @@ namespace Combat
 
         public abstract void Execute(GameObject attacker, GameObject target);
         public abstract void Execute(GameObject attacker);
+
+        public float getFinalDamage(float damage)
+        {
+            return StatsManager.damateDealtMultipliers.Aggregate(damage, (a, b) => a * b);
+        }
     }
 
 

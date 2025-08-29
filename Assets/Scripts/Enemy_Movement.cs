@@ -72,7 +72,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         animationController = GetComponent<Animator>();
 
-        attackRange = attackScript.attackRange;
+        attackRange = 5;
     }
 
     IEnumerator calcDistance() // coroutine calculates distance to a player every 0.25 seconds
@@ -186,14 +186,11 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         Quaternion rotDir = Quaternion.LookRotation(targetLoc);
         if (targetLoc != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, rotDir, rotSpeed);
 
-        attackScript.AttackAnimationTrigger();
+        attackScript.Attack();
     }
 
     // everything that needs to happen when enemy gets hit
-    public void TakeDamage(float damage, float force,float stagger)
-    {
-        TakeDamage(new Damage(damage, force,stagger));
-    }
+    
     public void TakeDamage(Damage damage)
     {
         // take damage
@@ -202,14 +199,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         if (enemyState == ENEMY_STATE.Parried) hp -= damage.amount*2;
         else hp -= damage.amount;
-
-      
-
-        
-        
-
+                
         //highlight
-        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime,damage.knockBackForce)); // if the coroutine is already running and we hit enemy again it should stop and re run
+        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime,damage.knockBackForce,damage.source)); // if the coroutine is already running and we hit enemy again it should stop and re run
         Debug.Log(highlightTime);
 
 
@@ -220,9 +212,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         hp += amount;
         setHealthBar(hp);
     }
-    IEnumerator highglightAttack(float duration,float force)
+    IEnumerator highglightAttack(float duration,float force,GameObject source)
     {
-        if (isKnockable) knockBack(force);
+        
         Renderer ren = GetComponentInChildren<Renderer>();
         ren.material.color = Color.white;  // Highlight enemy red on hit
 
@@ -238,7 +230,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         enemyState = ENEMY_STATE.Staggered;
         // Wait for the duration of the highlight
-      
+        if (isKnockable) knockBack(force,source);
         yield return new WaitForSeconds(duration);
 
         animationController.SetBool("Walking", true);
@@ -273,18 +265,19 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         enemyState = ENEMY_STATE.Basic;
   }
 
-    void knockBack(float force)
+    void knockBack(float force,GameObject source)
     {
-        Debug.Log("enemy Kncocked " + force);
-        Vector3 direction = transform.position - target.transform.position;
-
-        direction.y = 0;
-
-        transform.Translate(direction.normalized * (force / weight), Space.World);
-
-        Debug.Log("enemy Kncocked " + force + " direction  " + direction + " force / weight  : " + (force / weight));
+        if (source == null) return;
 
         
+        Vector3 knockDir = (transform.position - source.transform.position).normalized;
+        knockDir.y = 0f;
+
+       
+        float knockDistance = force / weight;
+
+
+        transform.position = knockDir * knockDistance;
     }
 
 

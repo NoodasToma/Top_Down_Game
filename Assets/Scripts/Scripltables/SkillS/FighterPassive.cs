@@ -8,20 +8,17 @@ public class FighterPassive : SkillSO
     private readonly float resetTime = 5f;
 
     float currentMod = 1f;
-    StatsManager statsManager;
+
     Coroutine coroutine;
     bool subscribed = false;
 
+    private int modIndex;
 
-    void Awake()
-    {
-        baseDamage = statsManager.damageMultiplier;
-    }
+
+   
     public override void Passive()
     {
-        if (!subscribed)
-        if (statsManager == null)
-            statsManager = GameObject.FindGameObjectWithTag("Player").GetComponent<StatsManager>();
+
 
         if (!subscribed)
         {
@@ -33,16 +30,26 @@ public class FighterPassive : SkillSO
 
     void OnKill()
     {
+        if (currentMod == 1)
+        {
+            currentMod += 0.1f;
+            StatsManager.damateDealtMultipliers.Add(currentMod);
+            modIndex = StatsManager.damateDealtMultipliers.IndexOf(currentMod);
+        }
+        else
+        {
+            currentMod += 0.1f;
+            StatsManager.damateDealtMultipliers[modIndex] = currentMod;
+        }
         Debug.Log("Kill event received in FighterPassive!  " + resetTime);
-        currentMod += 0.1f;
+        
         Debug.Log("New damage multiplier: " + currentMod);
 
-        statsManager.damageMultiplier =   currentMod;
-        Debug.Log("New player damage: " + statsManager.damageMultiplier);
+        MonoBehaviour routineStarter =  new MonoBehaviour();
 
         // Restart timer — only reset if no further kills occur
-        if (coroutine != null) statsManager.StopCoroutine(coroutine);
-        coroutine = statsManager.StartCoroutine(ResetDamageAfterDelay());
+        if (coroutine != null) routineStarter.StopCoroutine(coroutine);
+        coroutine = routineStarter.StartCoroutine(ResetDamageAfterDelay());
     }
 
     IEnumerator ResetDamageAfterDelay()
@@ -52,7 +59,7 @@ public class FighterPassive : SkillSO
 
         Debug.Log("No kills in " + resetTime + " seconds. Resetting damage.");
         currentMod = 1f;
-        statsManager.damageMultiplier = baseDamage;
+        StatsManager.damateDealtMultipliers.RemoveAt(modIndex);
         coroutine = null;
     }
 }

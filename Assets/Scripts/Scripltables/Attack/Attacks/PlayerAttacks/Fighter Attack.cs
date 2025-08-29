@@ -36,8 +36,7 @@ public class FighterAttack : Attack
             float angle = Vector3.Angle(PlayerAttack_Script.getAim(), positionEnemy);
             if (angle <= coneRadiusVal && c.gameObject != null)
             {
-                float finalDamage = damageValue.amount * (statsManager != null ? statsManager.damageMultiplier : 1f);
-                Debug.Log("knockedBack   " + damageValue.knockBackForce);
+                float finalDamage = getFinalDamage(damageValue.amount);
                 c.gameObject.GetComponent<IDamageable>().TakeDamage(new Damage(finalDamage, damageValue.knockBackForce, damageValue.staggerDuration, attacker));
             }
         }

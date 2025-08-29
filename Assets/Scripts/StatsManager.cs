@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Combat;
+using System.Linq;
 public class StatsManager : MonoBehaviour, IDamageable, IKillable
 {
     Ui_script ui_Script;
@@ -22,8 +23,10 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     public float iFrameDuration = 0.15f;
 
     [Header("Combat Modifiers")]
-    public float damageMultiplier = 1f;
-    public float damageTakenMultiplier = 1f;
+    
+    public static List<float> damateDealtMultipliers = new List<float>();
+
+    public static List<float> defenceMultipliers = new List<float>();
 
     public float RecoveryDuration = 1f;
 
@@ -80,8 +83,8 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
             return; // Exit so damage is handled only in CheckForCheatDeath
         }
 
-
-        currentHP -= damage.amount * damageTakenMultiplier;;
+        
+        currentHP -= defenceMultipliers.Aggregate(damage.amount,(total,next)=>total*next);
 
         // Visual feedback (flash effect)
         // Visual feedback (flash effect)

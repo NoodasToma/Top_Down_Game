@@ -51,16 +51,17 @@ public class PlayerAttack_Script : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(comboIndex);
+       
         if (lastClickTime + player.attackCombo.GetComboResetTime < Time.time) comboIndex = 0;
 
         if (statsManager.currentState == StatsManager.STATE.Staggered) return;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
         {
-            lastClickTime=Time.time;
+            lastClickTime = Time.time;
             isAttacking = true;
-            if(attackRout == null)attackRout=StartCoroutine(attackRoutine());
+            if (attackRout == null) attackRout = StartCoroutine(attackRoutine());
         }
+        else Debug.Log("is Attacking" + isAttacking);
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
         {
@@ -82,7 +83,7 @@ public class PlayerAttack_Script : MonoBehaviour
 
     IEnumerator attackRoutine()
     {
-   
+
         if (comboIndex <= player.attackCombo.GetComboLimit)
         {
             AnimationStarter(player.attackCombo.GetAttacks[comboIndex].AnimationValue);
@@ -102,8 +103,8 @@ public class PlayerAttack_Script : MonoBehaviour
 
         }
 
-        isAttacking = false;
         attackRout = null;
+        isAttacking = false;
 
     }
 
@@ -213,13 +214,14 @@ public class PlayerAttack_Script : MonoBehaviour
     public void Attack()
     {
         player.attackCombo.startCombo(gameObject, comboIndex);
-        
     }
 
     public void AnimationStarter(String variable)
     {
         playerAnimator.SetTrigger(variable);
     }
+    
+
 
 
    

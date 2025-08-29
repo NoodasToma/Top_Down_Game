@@ -446,12 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0542c67266895488126720a9194ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 15
-  attackCooldown: 2
-  attackRange: 3
-  attackHurtboxRadius: 3
-  enemyAttackForce: 5
-  enemyAttackStagger: 0.25
+  enemyAttacks: {fileID: 11400000, guid: c40513b891e1ec249a076625fa4eb4f6, type: 2}
   showGizmos: 1
 --- !u!136 &8428911981222564447
 CapsuleCollider:

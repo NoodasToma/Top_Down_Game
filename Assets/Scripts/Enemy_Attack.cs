@@ -4,86 +4,82 @@ using System.Collections;
 public class Enemy_Attack : MonoBehaviour
 {
     [Header("Attack Settings")]
-    public float attackDamage;
-    public float attackCooldown;
-    public float attackRange;
-    public float attackHurtboxRadius;
-    public float enemyAttackForce; //determines how far  player goes when hit
-    public float enemyAttackStagger; // determines how long player gets staggered
+
+    public Combo enemyAttacks;
+ 
     [Header("Debug")]
     public bool showGizmos = true;
 
-    private float _nextAttackTime;
+    private float lastClickTime;
 
     private Animator enemyAttackAnimator;
 
-    private Coroutine attackRoutine;
+    private int attackIndex;
 
-    
+
+    private bool isAttacking;
+
+
+
+
 
 
 
     void Start()
     {
-         enemyAttackAnimator = GetComponent<Animator>();
+        enemyAttackAnimator = GetComponent<Animator>();
     }
 
     void Update()
     {
-      
+        if (Time.time >= lastClickTime + enemyAttacks.GetComboResetTime) attackIndex = 0;
     }
 
     public void Attack()
     {
-         if (Time.time >= _nextAttackTime)
-        {
-             Collider[] hitColliders = Physics.OverlapSphere(
-             transform.position + transform.forward * attackHurtboxRadius * 0.5f,
-             attackHurtboxRadius
-            );
-
-            foreach (Collider col in hitColliders)
-            {
-                if (col.CompareTag("Player"))
-                {
-                    var player = col.GetComponent<IDamageable>();
-                    player.TakeDamage(new Damage(attackDamage,DamageType.Physical,gameObject,gameObject.transform.position-col.gameObject.transform.position,enemyAttackForce,enemyAttackStagger));
-                    break;
-                }
-            }
-            _nextAttackTime = Time.time + attackCooldown;
-        }
         
+        if (attackIndex > enemyAttacks.GetAttacks.Length - 1)
+            {
+                attackIndex = 0;
+            StartCoroutine(comboCd());
+            }
+
+        if (Time.time >= lastClickTime + enemyAttacks.GetCooldownBetweenAttacks && !isAttacking)
+        {
+
+            enemyAttackAnimator.SetTrigger(enemyAttacks.GetAttacks[attackIndex].AnimationValue);
+            lastClickTime = Time.time;
+            attackIndex++;
+            isAttacking = true;
+
+        }
+
+
     }
 
-    IEnumerator AttackRoutineEnemy()
+    IEnumerator comboCd()
     {
-
-
-
-        enemyAttackAnimator.SetTrigger("Attack");
-        yield return new WaitForSeconds(attackCooldown);
-
-        attackRoutine = null;
-
+        isAttacking = true;
+        yield return new WaitForSeconds(enemyAttacks.GetCooldownBetweenCombos);
+        isAttacking = false;
     }
+
+
 
     private void OnDrawGizmosSelected()
     {
         if (!showGizmos) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, enemyAttacks.GetAttacks[attackIndex].RangeValue);
 
-        Gizmos.color = new Color(1, 0, 1, 0.5f);
-        Gizmos.DrawSphere(
-            transform.position + transform.forward * attackHurtboxRadius * 0.5f,
-            attackHurtboxRadius
-        );
+
     }
 
-      public void AttackAnimationTrigger()
+    public void attackExecutor()
     {
-        if(attackRoutine==null) attackRoutine = StartCoroutine(AttackRoutineEnemy());
+        enemyAttacks.startCombo(gameObject, attackIndex);
+        isAttacking = false;
     }
+
 }

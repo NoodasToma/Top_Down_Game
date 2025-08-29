@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class ConsumableHandler : MonoBehaviour
 {
-    private StatsManager stats;
+ 
 
     private float originalDamageMultiplier = 1f;
     private float originalDamageTakenMultiplier = 1f;
 
     void Start()
     {
-        stats = GetComponent<StatsManager>();
+        
     }
 
     public void Consume(ConsumableSO item)
@@ -24,14 +24,12 @@ public class ConsumableHandler : MonoBehaviour
 
         if (item.boostDamage)
         {
-            originalDamageMultiplier = stats.damageMultiplier;
-            stats.damageMultiplier *= item.damageMultiplier;
+            StatsManager.damateDealtMultipliers.Add(item.damageMultiplier);
         }
 
         if (item.boostDefense)
         {
-            originalDamageTakenMultiplier = stats.damageTakenMultiplier;
-            stats.damageTakenMultiplier *= item.defenseMultiplier;
+           StatsManager.defenceMultipliers.Add(item.defenseMultiplier);
         }
 
         // Optional sound
@@ -42,9 +40,9 @@ public class ConsumableHandler : MonoBehaviour
 
         // Revert to original values
         if (item.boostDamage)
-            stats.damageMultiplier = originalDamageMultiplier;
+            StatsManager.damateDealtMultipliers.Remove(item.damageMultiplier);
 
         if (item.boostDefense)
-            stats.damageTakenMultiplier = originalDamageTakenMultiplier;
+            StatsManager.defenceMultipliers.Remove(item.defenseMultiplier);
     }
 }

@@ -22,8 +22,8 @@ using UnityEngine;
         public Attack[] GetAttacks => attacks;
         public float GetCooldownBetweenAttacks => cooldownBetweenAttacks;
         public void startCombo(GameObject attacker, int comboIndex)
-  {
-    if (comboIndex <= comboLimit) attacks[comboIndex].Execute(attacker);
-  }
+          {
+            if (comboIndex <= comboLimit) attacks[comboIndex].Execute(attacker);
+          }
 
     }
