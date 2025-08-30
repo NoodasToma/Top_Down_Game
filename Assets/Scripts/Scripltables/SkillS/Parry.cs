@@ -7,7 +7,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(menuName = "Combat/Skills/Parry")]
-public class Parry : SkillSO
+public class Parry : MinorSkill
 {
     public float parryWindow;
     public static float staggerDuration = 3f;
@@ -18,39 +18,26 @@ public class Parry : SkillSO
 
 
 
-    public override void OnStart(GameObject caster, Vector3 aim, Damage damage)
-    {
-        if (onCooldown) return;
-        statsManager = caster.GetComponent<StatsManager>();
-        caster.GetComponent<SkillManager>().StartCoroutine(parrying(caster));
-        Debug.Log("Parryed1");
-    }
+    
 
     IEnumerator parrying(GameObject caster)
     {
-       
-
         statsManager.currentState = StatsManager.STATE.Parrying;
-
-        Renderer ren = caster.GetComponentInChildren<Renderer>();
-        Color originalColor = ren.material.color;
-        ren.material.color = Color.blue;
         yield return new WaitForSeconds(parryWindow);
-        ren.material.color = originalColor;
         statsManager.currentState = StatsManager.STATE.Basic;
-
-
-
     }
-    public static void doParry(Damage damage , Vector3 lookDir)
+    
+
+    public static void doParry(Damage damage, Vector3 lookDir)
     {
-        if (Vector3.Angle(lookDir, damage.direction.normalized) <= 90) {
+        if (Vector3.Angle(lookDir, damage.direction.normalized) <= 90)
+        {
             if (Vector3.Distance(damage.source.transform.position, statsManager.gameObject.transform.position) < 5)
             {
                 damage.source.GetComponent<Enemy_Movement>().TakeDamage(new Damage(0, 1f, staggerDuration));
                 damage.source.GetComponent<Enemy_Movement>().enemyState = Enemy_Movement.ENEMY_STATE.Parried;
             }
-        } 
+        }
         else
         {
             statsManager.currentState = StatsManager.STATE.Basic;
@@ -59,4 +46,10 @@ public class Parry : SkillSO
     }
 
     
+
+    public override void skill(GameObject caster)
+    {
+        statsManager = caster.GetComponent<StatsManager>();
+        GameEventManager.gameEventManager.StartCoroutine(parrying(caster));
+    }
 }

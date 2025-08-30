@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Combat/Skills/FighterPassive")]
-public class FighterPassive : SkillSO
+public class FighterPassive : Passive
 {
     private  float baseDamage ;
     private readonly float resetTime = 5f;
@@ -16,7 +16,7 @@ public class FighterPassive : SkillSO
 
 
    
-    public override void Passive()
+    public override void execute(GameObject caster)
     {
 
 
@@ -27,6 +27,8 @@ public class FighterPassive : SkillSO
         }
 
     }
+
+    
 
     void OnKill()
     {

@@ -6597,11 +6597,11 @@ GameObject:
   - component: {fileID: 1816870885764332987}
   - component: {fileID: 1816870885764332975}
   - component: {fileID: 1816870885764332974}
-  - component: {fileID: 1816870885764332985}
   - component: {fileID: 1816870885764332980}
   - component: {fileID: 1816870885764332981}
   - component: {fileID: 1816870885764332984}
   - component: {fileID: 1816870885764332986}
+  - component: {fileID: 1816870885764332988}
   m_Layer: 0
   m_Name: Test_Human
   m_TagString: Player
@@ -7839,7 +7839,7 @@ MonoBehaviour:
     m_ActionName: Player/Dodge[/Keyboard/leftShift]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1816870885764332985}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SkillManager, Assembly-CSharp
         m_MethodName: Skill1
         m_Mode: 0
@@ -7921,21 +7921,6 @@ MonoBehaviour:
   defenceMultipliersDebug: []
   RecoveryDuration: 2
   currentState: 0
---- !u!114 &1816870885764332985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332224214560352023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc00c50d13b40ed448cea1c565597967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minorSkill: {fileID: 0}
-  ulty: {fileID: 0}
-  passive: {fileID: 0}
 --- !u!114 &1816870885764332986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7970,6 +7955,21 @@ MonoBehaviour:
   fireBoltPrefab: {fileID: 0}
   throwingItemCD: 5
   itemClass: 0
+--- !u!114 &1816870885764332988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332224214560352023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc00c50d13b40ed448cea1c565597967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  passive: {fileID: 11400000, guid: 67fcc1417117c854085a7aa9cca956f8, type: 2}
+  minorSkill: {fileID: 11400000, guid: e6dce1903776925488b5efc1ebe9849a, type: 2}
+  ultimate: {fileID: 0}
 --- !u!1 &1830992244202816586
 GameObject:
   m_ObjectHideFlags: 0

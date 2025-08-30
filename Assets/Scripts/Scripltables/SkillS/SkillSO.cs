@@ -5,46 +5,134 @@ using Combat;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
+using System;
 
 
-// [CreateAssetMenu(menuName = "Registry/Skill")]s
-public abstract class SkillSO : ScriptableObject
+
+public interface SkillSO
 {
-    public Damage damage;
-    public float cooldown;
-    public float cooldownLeft;
-    public bool onCooldown;
-
-    public bool state;
-
-    public virtual void OnStart(GameObject caster) { state = true; }
-
-    public virtual void OnStart(GameObject caster, Vector3 aim, Damage damage) { state = true; }
-    public virtual void OnHold(GameObject caster, Vector3 aim, Damage damage) { }
-    public virtual void OnRelease(GameObject caster, Vector3 aim, Damage damage) { }
-
-    public virtual void Passive(){}
-
-    public virtual void renderIndicator(Vector3 origin, Vector3 aim, bool render) { }
-
-    public virtual void setCooldownLeft(float amount)
-    {
-        if (amount <= 0f) onCooldown = false;
-        else cooldownLeft = amount;
-        return;
-    }
-    public virtual void updatCooldown(float delta)
-    {
-        if (onCooldown)
-            setCooldownLeft(cooldownLeft - delta);
-    }
-
-    // public virtual Skill getInstance(){ return new Skill(this); }
-
-    public virtual GameObject getIndicator()
-    {
-        return null;
-    }
-    public Sprite skillIcon;
-
+    public bool IsOnCd();
+    public void execute(GameObject caster);
 }
+
+public abstract class Passive : ScriptableObject, SkillSO
+{
+    public virtual void execute(GameObject caster)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual bool IsOnCd()
+    {
+        return false;
+    }
+}
+
+public abstract class CdPassive : Passive
+{
+    public float cd;
+
+
+
+    public GameObject screenIcon;
+
+    public bool onCd;
+
+    public override bool IsOnCd()
+    {
+        return onCd;
+    }
+
+    public override void execute(GameObject caster)
+    {
+        onCd = true;
+        passive(caster);
+        GameEventManager.gameEventManager.StartCoroutine(coolDownRoutine());
+    }
+    public virtual IEnumerator coolDownRoutine()
+    {
+        yield return new WaitForSeconds(cd);
+        onCd = false;
+    }
+
+    public abstract void passive(GameObject caster);
+}
+
+
+public abstract class MinorSkill : ScriptableObject, SkillSO
+{
+    public float cd;
+    public String animationValue;
+
+    public bool onCd;
+
+    public GameObject screenIcon;
+
+    public virtual IEnumerator coolDownRoutine()
+    {
+
+        yield return new WaitForSeconds(cd);
+        onCd = false;
+    }
+
+    public bool IsOnCd()
+    {
+        return onCd;
+    }
+
+
+
+    public virtual void execute(GameObject caster)
+    {
+        onCd = true;
+        skill(caster);
+        GameEventManager.gameEventManager.StartCoroutine(coolDownRoutine());
+    }
+
+    public abstract void skill(GameObject caster);
+    
+    
+}
+
+public abstract class MinorSkillWithIndicator : MinorSkill
+{
+
+    GameObject indicator;
+    public abstract void OnPress();
+
+    public abstract void OnHold();
+
+    public virtual void OnRelease(GameObject caster) {
+        execute(caster);
+    }
+}
+
+public abstract class Ultimate : ScriptableObject, SkillSO
+{
+    public float maxGauge;
+    float gauge;
+    public String animationValue;
+    public bool gaugeFilled;
+
+    GameObject screenIcon;
+
+    public bool IsOnCd()
+    {
+        return gaugeFilled;
+    }
+
+    public void execute(GameObject caster)
+    {
+        ult(caster);
+        gaugeFilled=false;
+    }
+
+    public abstract void ult(GameObject caster);
+
+    public void fillGouge(float amounth)
+    {
+        gauge += amounth;
+        if (gauge >= maxGauge) gaugeFilled = true;
+    }
+}
+

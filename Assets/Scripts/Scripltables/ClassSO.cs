@@ -11,7 +11,7 @@ public class ClassSO : ScriptableObject
     [SerializeField]
     public PlayerClass playerClass;
 
-    SkillManager skillManager;
+    
     
     
     public Combo attackCombo; // in case of single attacks combo will consist of leght 1 

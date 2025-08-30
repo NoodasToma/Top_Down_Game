@@ -53,7 +53,8 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stats.currentState == StatsManager.STATE.Staggered||stats.currentState == StatsManager.STATE.Parrying) return;
+        debugIframes();
+        if (stats.currentState == StatsManager.STATE.Staggered || stats.currentState == StatsManager.STATE.Parrying) return;
         if (alive)
         {
             RaycastHit hit;

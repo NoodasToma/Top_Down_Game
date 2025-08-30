@@ -4,18 +4,27 @@ using Combat;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Combat/Skills/RangerSkill")]
-public class RangerSkill : SkillSO
+public class RangerSkill : MinorSkillWithIndicator
 {
     public GameObject spikes;
 
-
-    public override void OnRelease(GameObject caster, Vector3 aim, Damage damage)
+    public override void OnHold()
     {
-        Debug.Log("SKill used" + getSpawnpos());
-        Instantiate(spikes,getSpawnpos(),Quaternion.identity);
-
+        throw new System.NotImplementedException();
     }
 
+    public override void OnPress()
+    {
+        throw new System.NotImplementedException();
+    }
+
+   
+
+    public override void skill(GameObject caster)
+    {
+         Debug.Log("SKill used" + getSpawnpos());
+        Instantiate(spikes,getSpawnpos(),Quaternion.identity);
+    }
 
     private Vector3 getSpawnpos()
     {
