@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4d8d00ddac55e4fb65469fb86fd21f, type: 3}
   m_Name: EnemySkeletonCombo
   m_EditorClassIdentifier: 
-  cooldownBetweenAttacks: 0.25
-  cooldownBetweenCombos: 5
-  comboResetTime: 2
+  cooldownBetweenAttacks: 1
+  cooldownBetweenCombos: 2
+  comboResetTime: 10
   comboLimit: 1
   attacks:
   - {fileID: 11400000, guid: aa01886c08e532f44958b4fd5d0346a9, type: 2}

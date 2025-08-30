@@ -422,7 +422,7 @@ MonoBehaviour:
   movementSpeed: 5
   target: {fileID: 0}
   rotSpeed: 5
-  weight: 10
+  weight: 15
   isKnockable: 1
   distanceFromAllies: 1
   distanceFromWalls: 1
@@ -1766,6 +1766,7 @@ GameObject:
   - component: {fileID: 752950517574354647}
   - component: {fileID: 6130258722345675744}
   - component: {fileID: 351899491504000268}
+  - component: {fileID: 7475774364600046203}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1838,7 +1839,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &351899491504000268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1856,6 +1857,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7475774364600046203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871425423262120032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f337892c32bfaa42a6a7a3b7c0f6478, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8903059582551565279
 GameObject:
   m_ObjectHideFlags: 0

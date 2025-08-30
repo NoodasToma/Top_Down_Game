@@ -35,6 +35,7 @@ public class FighterPassive : SkillSO
             currentMod += 0.1f;
             StatsManager.damateDealtMultipliers.Add(currentMod);
             modIndex = StatsManager.damateDealtMultipliers.IndexOf(currentMod);
+            Debug.Log(modIndex);
         }
         else
         {
@@ -45,11 +46,11 @@ public class FighterPassive : SkillSO
         
         Debug.Log("New damage multiplier: " + currentMod);
 
-        MonoBehaviour routineStarter =  new MonoBehaviour();
+        
 
         // Restart timer — only reset if no further kills occur
-        if (coroutine != null) routineStarter.StopCoroutine(coroutine);
-        coroutine = routineStarter.StartCoroutine(ResetDamageAfterDelay());
+        if (coroutine != null) GameEventManager.gameEventManager.StopCoroutine(coroutine);
+        coroutine = GameEventManager.gameEventManager.StartCoroutine(ResetDamageAfterDelay());
     }
 
     IEnumerator ResetDamageAfterDelay()

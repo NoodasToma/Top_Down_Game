@@ -193,16 +193,27 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
     
     public void TakeDamage(Damage damage)
     {
+
+        Debug.Log("Damage amount : " + damage.amount);
         // take damage
         float highlightTime = damage.staggerDuration;
 
 
         if (enemyState == ENEMY_STATE.Parried) hp -= damage.amount*2;
         else hp -= damage.amount;
-                
+
+        if (hp <= 0)
+        {
+            StartCoroutine(Die());
+            setHealthBar(0);
+            return;
+        }
+        
+        if (isKnockable) knockBack(damage.knockBackForce, damage.source);
+
+       
         //highlight
-        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime,damage.knockBackForce,damage.source)); // if the coroutine is already running and we hit enemy again it should stop and re run
-        Debug.Log(highlightTime);
+        if (flashCoroutine == null) flashCoroutine = StartCoroutine(highglightAttack(highlightTime)); // if the coroutine is already running and we hit enemy again it should stop and re run
 
 
         setHealthBar(hp);
@@ -212,9 +223,9 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         hp += amount;
         setHealthBar(hp);
     }
-    IEnumerator highglightAttack(float duration,float force,GameObject source)
+    IEnumerator highglightAttack(float duration)
     {
-        
+
         Renderer ren = GetComponentInChildren<Renderer>();
         ren.material.color = Color.white;  // Highlight enemy red on hit
 
@@ -230,7 +241,6 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
 
         enemyState = ENEMY_STATE.Staggered;
         // Wait for the duration of the highlight
-        if (isKnockable) knockBack(force,source);
         yield return new WaitForSeconds(duration);
 
         animationController.SetBool("Walking", true);
@@ -240,30 +250,29 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         // Destroy blood splatter effect after highlight ends
         Destroy(bloodSplatter);
 
-        flashCoroutine = null;
 
-        if (hp <= 0)
-        {
-            GameEventManager.EnemyKilled();
-
-            Destroy(gameObject.GetComponent<CapsuleCollider>());
-
-            animationController.SetBool("Walking", false);
-
-            animationController.SetTrigger("Death");
-            movementSpeed = 0;
-            rotSpeed = 0;
-
-            yield return new WaitForSeconds(2f);
-
-            Destroy(gameObject);
-        
-
-
-        }
         flashCoroutine = null;
         enemyState = ENEMY_STATE.Basic;
   }
+
+    IEnumerator Die()
+    {
+        Debug.Log("EnemyDied");
+        
+
+        animationController.SetBool("Walking", false);
+
+        animationController.SetTrigger("Death");
+        movementSpeed = 0;
+        rotSpeed = 0;
+
+        yield return new WaitForSeconds(2f); // should be lenht of the animation
+
+        Destroy(transform.root.gameObject);
+
+        Debug.Log("Enemy Destroyed");
+        GameEventManager.EnemyKilled();
+    }
 
     void knockBack(float force,GameObject source)
     {
@@ -277,7 +286,7 @@ public class Enemy_Movement : MonoBehaviour, IDamageable
         float knockDistance = force / weight;
 
 
-        transform.position = knockDir * knockDistance;
+        transform.position += knockDir * knockDistance;
     }
 
 

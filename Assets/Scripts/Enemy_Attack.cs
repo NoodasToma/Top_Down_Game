@@ -10,7 +10,7 @@ public class Enemy_Attack : MonoBehaviour
     [Header("Debug")]
     public bool showGizmos = true;
 
-    private float lastClickTime;
+    private float lastClickTime = 0;
 
     private Animator enemyAttackAnimator;
 
@@ -28,21 +28,37 @@ public class Enemy_Attack : MonoBehaviour
     void Start()
     {
         enemyAttackAnimator = GetComponent<Animator>();
+
+        if (enemyAttacks.GetComboResetTime < enemyAttacks.GetCooldownBetweenCombos || enemyAttacks.GetCooldownBetweenCombos < enemyAttacks.GetCooldownBetweenAttacks)
+        {
+            throw new System.Exception("improper attack timers");
+        }
     }
 
     void Update()
     {
-        if (Time.time >= lastClickTime + enemyAttacks.GetComboResetTime) attackIndex = 0;
+        if (Time.time >= lastClickTime + enemyAttacks.GetComboResetTime)
+        {
+            attackIndex = 0;
+            isAttacking = false;
+        }
+
+         if (enemyAttacks.GetComboResetTime < enemyAttacks.GetCooldownBetweenCombos || enemyAttacks.GetCooldownBetweenCombos < enemyAttacks.GetCooldownBetweenAttacks)
+        {
+            throw new System.Exception("improper attack timers");
+        }
+
     }
 
     public void Attack()
     {
-        
-        if (attackIndex > enemyAttacks.GetAttacks.Length - 1)
-            {
-                attackIndex = 0;
+
+        if (attackIndex > enemyAttacks.GetAttacks.Length - 1 && !isAttacking)
+        {
+            attackIndex = 0;
+            isAttacking = true;
             StartCoroutine(comboCd());
-            }
+        }
 
         if (Time.time >= lastClickTime + enemyAttacks.GetCooldownBetweenAttacks && !isAttacking)
         {
@@ -59,7 +75,6 @@ public class Enemy_Attack : MonoBehaviour
 
     IEnumerator comboCd()
     {
-        isAttacking = true;
         yield return new WaitForSeconds(enemyAttacks.GetCooldownBetweenCombos);
         isAttacking = false;
     }

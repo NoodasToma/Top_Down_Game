@@ -115,7 +115,7 @@ public class Player_Movement : MonoBehaviour
     void movePlayerWithAim()
     {
 
-        Vector3 lookPos = rotationTarget - rb.position;
+        Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
         var rotation = Quaternion.LookRotation(lookPos);
 
@@ -123,8 +123,8 @@ public class Player_Movement : MonoBehaviour
 
         if (aimDir != Vector3.zero)
         {
-            // transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, rotation, rotationSpeed  * Time.fixedDeltaTime));
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed);
+            // rb.MoveRotation(Quaternion.Slerp(rb.rotation, rotation, rotationSpeed  * Time.fixedDeltaTime));
 
         }
         Vector3 movementDir = new Vector3(move.x, 0f, move.y);
@@ -135,9 +135,9 @@ public class Player_Movement : MonoBehaviour
         movingAnim(movementDir);
 
 
-        // transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  //no mor transform
-        rb.MovePosition(rb.position + movementDir * speed * Time.fixedDeltaTime);
-        // rb.velocity = movementDir * speed;
+        transform.Translate(movementDir * speed * Time.deltaTime, Space.World);  //no mor transform
+        // rb.MovePosition(rb.position + movementDir * speed * Time.fixedDeltaTime);
+        // // rb.velocity = movementDir * speed;
 
         playerAnimator.SetBool("MovesBack", isMovingBackwards(movementDir, lookPos));
 
@@ -151,7 +151,7 @@ public class Player_Movement : MonoBehaviour
 
     public Vector3 getDirection() // direction player is looking at needed for player_attack_script
     {
-        Vector3 lookPos = rotationTarget - rb.position;
+        Vector3 lookPos = rotationTarget - transform.position;
         lookPos.y = 0;
         return lookPos;
     }
@@ -195,11 +195,11 @@ public class Player_Movement : MonoBehaviour
 
         while (timer < dodgeDuration)
         {
-            // transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
-            rb.MovePosition(rb.position + dodgeDir * fallingDashspeed * Time.deltaTime);
+            transform.Translate(dodgeDir * fallingDashspeed * Time.deltaTime, Space.World);
+            // rb.MovePosition(rb.position + dodgeDir * fallingDashspeed * Time.deltaTime);
 
-            // rb.MovePosition(dodgeDir * fallingDashspeed * Time.deltaTime)
-            // rb.velocity = dodgeDir * fallingDashspeed;
+            // // rb.MovePosition(dodgeDir * fallingDashspeed * Time.deltaTime)
+            // // rb.velocity = dodgeDir * fallingDashspeed;
             timer += Time.deltaTime;
             fallingDashspeed -= dashSpeed / 10 * Time.deltaTime;
             yield return null;
@@ -227,12 +227,12 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    // bool movingToWall(Vector3 playerMovingDir)
-    // {
-    //     RaycastHit hit;
-    //     bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
-    //     return hitsWall;
-    // }
+    bool movingToWall(Vector3 playerMovingDir)
+    {
+        RaycastHit hit;
+        bool hitsWall = Physics.SphereCast(transform.position,1f, playerMovingDir.normalized, out hit, 1f, walls);
+        return hitsWall;
+    }
 
     void OnDrawGizmosSelected()
     {

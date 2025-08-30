@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameEventManager : MonoBehaviour
@@ -9,7 +10,8 @@ public class GameEventManager : MonoBehaviour
 
     private static Coroutine frameFreezer;
 
-    private static GameEventManager gameEventManager;
+    public static GameEventManager gameEventManager;
+
 
 
     void Awake()

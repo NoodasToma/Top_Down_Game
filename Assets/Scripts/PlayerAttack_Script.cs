@@ -45,13 +45,21 @@ public class PlayerAttack_Script : MonoBehaviour
         statsManager = GetComponent<StatsManager>();
 
         //Todo  at the start assign damaga range etc based on class
+          if (player.attackCombo.GetComboResetTime < player.attackCombo.GetCooldownBetweenCombos || player.attackCombo.GetCooldownBetweenCombos < player.attackCombo.GetCooldownBetweenAttacks)
+        {
+            throw new System.Exception("improper attack timers");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
 
-       
+         if (player.attackCombo.GetComboResetTime < player.attackCombo.GetCooldownBetweenCombos || player.attackCombo.GetCooldownBetweenCombos < player.attackCombo.GetCooldownBetweenAttacks)
+        {
+            throw new System.Exception("improper attack timers");
+        }
+        
         if (lastClickTime + player.attackCombo.GetComboResetTime < Time.time) comboIndex = 0;
 
         if (statsManager.currentState == StatsManager.STATE.Staggered) return;
@@ -61,7 +69,7 @@ public class PlayerAttack_Script : MonoBehaviour
             isAttacking = true;
             if (attackRout == null) attackRout = StartCoroutine(attackRoutine());
         }
-        else Debug.Log("is Attacking" + isAttacking);
+       
 
         if (Input.GetKeyDown(KeyCode.G) && throwRoutine == null)
         {

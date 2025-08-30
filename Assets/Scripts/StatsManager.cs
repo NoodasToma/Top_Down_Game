@@ -28,6 +28,10 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
 
     public static List<float> defenceMultipliers = new List<float>();
 
+    [SerializeField] public  List<float> damateDealtMultipliersDebug = new List<float>();
+
+   [SerializeField] public  List<float> defenceMultipliersDebug = new List<float>();
+
     public float RecoveryDuration = 1f;
 
 
@@ -60,7 +64,8 @@ public class StatsManager : MonoBehaviour, IDamageable, IKillable
     // Update is called once per frame
     void Update()
     {
-
+        damateDealtMultipliersDebug = damateDealtMultipliers;
+        defenceMultipliersDebug = defenceMultipliers;
     }
     public void TakeDamage(Damage damage)
     {
